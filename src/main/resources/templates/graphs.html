@@ -1,0 +1,40 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MedTrackerGraphs</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages':['corechart', 'line']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', /*[[${col0}]]*/'col0');
+        data.addColumn('number', /*[[${col1}]]*/'col1');
+<!--        data.addColumn('number', /*[[${col2}]]*/'col2');-->
+
+
+
+       data.addRows([
+       /*[# th:each="row : ${chartData}"]*/
+        [[${row}]],
+        /*[/]*/
+       ]);
+
+
+          var options = {
+            title: /*[[${graphTitle}]]*/ "",
+          };
+
+          var chart = new google.visualization.LineChart(document.getElementById('chartLine'));
+
+          chart.draw(data, options);
+        }
+    </script>
+
+</head>
+<body>
+<h1 th:text="${graphPageTitle}"></h1>
+    <div id="chartLine" style="width: 900px; height: 500px"></div>
+</body>
+</html>

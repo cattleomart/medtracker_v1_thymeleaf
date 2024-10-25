@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+</head>
+<body>
+    <h1>UPLOAD PAGE</h1>
+
+    <div id="landing" style="width: 900px; height: 500px">
+        <input id="fileupload" type="file" name="fileupload" />
+        <button id="upload-button" onclick="uploadFile()">Upload</button>
+        <a th:href="@{/graphs}">View graphs</a>
+    </div>
+
+
+    <script>
+        async function uploadFile() {
+            let formData = new FormData();
+            formData.append("data", fileupload.files[0]);
+            await fetch('http://localhost:3100/upload', {
+                method: "POST",
+                body: formData
+            }).then(result =>    result.text())
+                .then(text => alert(text));
+        }
+    </script>
+</body>
+</html>
