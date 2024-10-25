@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -47,19 +44,22 @@ public class MainWebController {
     log.info("graphs started");
 
     model.addAttribute("graphPageTitle", "Medication evaluation graphs");
-    model.addAttribute("graphTitle", "Blood pressure graph");
+    model.addAttribute("graphTitle", "Blood pressure");
     model.addAttribute("col0", "Date");
-    model.addAttribute("col1", "Blood pressure");
+    model.addAttribute("col1", "BP Systole");
 //    model.addAttribute("col2", "Fred");
 
     model.addAttribute("chartData",evaluationDataService.getEvaluationData());
     log.info("graphs complete");
     return "graphs";
     }
-    @ResponseStatus(value = HttpStatus.OK)
+
+
+//    @ResponseStatus(value = HttpStatus.OK)
     @PostMapping("/upload")
-    public void create(@RequestPart("data") MultipartFile file) throws IOException {
-        evaluationDataService.uploadEvaluation(file.getOriginalFilename(), file.getContentType(), file.getBytes());
+    public String mapReapExcelData(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
+        evaluationDataService.importEvaluation(reapExcelDataFile);
+        return "upload";
     }
 
 

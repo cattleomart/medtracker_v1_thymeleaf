@@ -5,15 +5,26 @@ public class EvaluationEntry {
         return date;
     }
 
-    public Integer getRecordedValue() {
-        return recordedValue;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setBloodPressureSystole(Integer bloodPressureSystole) {
+        this.bloodPressureSystole = bloodPressureSystole;
+    }
+
+    public Integer getBloodPressureSystole() {
+        return bloodPressureSystole;
     }
 
     private String date;
-    private  Integer recordedValue;
+    private  Integer bloodPressureSystole;
 
     public EvaluationEntry(String newDatePrefix, Integer index) {
         date = newDatePrefix + index;
-        recordedValue = index;
+        bloodPressureSystole = index;
+    }
+
+    public EvaluationEntry() {
     }
 }

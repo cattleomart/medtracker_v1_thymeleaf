@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Evaluation {
+    public void setEntries(List<EvaluationEntry> entries) {
+        this.entries = entries;
+    }
+
     public List<EvaluationEntry> getEntries() {
         return entries;
     }
@@ -18,5 +22,6 @@ public class Evaluation {
         }
     }
 
-
+    public Evaluation() {
+    }
 }
