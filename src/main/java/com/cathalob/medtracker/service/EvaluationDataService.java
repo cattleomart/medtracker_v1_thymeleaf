@@ -35,7 +35,7 @@ public class EvaluationDataService {
         log.info("getEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluation.getEntries()) {
-            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureSystole()));
+            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound, EvaluationEntry.BpSystoleLowerBound));
         }
 
         log.info("getEvaluationData completed ");
@@ -56,11 +56,24 @@ public class EvaluationDataService {
             EvaluationEntry entry = new EvaluationEntry();
             log.info(""+ i);
             XSSFRow row = worksheet.getRow(i);
+
             Date dateCellValue = row.getCell(0).getDateCellValue();
             entry.setDate(formatDate(dateCellValue));
-            XSSFCell bpCell = row.getCell(7);
-            if (bpCell != null){
-            entry.setBloodPressureSystole(convertedBPStringValue(bpCell.getStringCellValue()));}
+            XSSFCell bpSystoleCell = row.getCell(10);
+            if (bpSystoleCell != null){
+                entry.setBloodPressureSystole((((int) bpSystoleCell.getNumericCellValue())));
+            }
+            XSSFCell bpDiastoleCell = row.getCell(11);
+            if (bpDiastoleCell != null){
+                entry.setBloodPressureDiastole((((int) bpDiastoleCell.getNumericCellValue())));
+            }
+            XSSFCell bpHeartRateCell = row.getCell(12);
+            if (bpHeartRateCell != null){
+                entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
+            }
+
+
+
             entries.add(entry);
         }
         evaluation.setEntries(entries);

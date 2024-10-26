@@ -46,7 +46,9 @@ public class MainWebController {
     model.addAttribute("graphPageTitle", "Medication evaluation graphs");
     model.addAttribute("graphTitle", "Blood pressure");
     model.addAttribute("col0", "Date");
-    model.addAttribute("col1", "BP Systole");
+    model.addAttribute("col1", "Systole");
+    model.addAttribute("col2", "Systole Upper Bound");
+    model.addAttribute("col3", "Systole Lower Bound");
 //    model.addAttribute("col2", "Fred");
 
     model.addAttribute("chartData",evaluationDataService.getEvaluationData());

@@ -11,7 +11,8 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', /*[[${col0}]]*/'col0');
         data.addColumn('number', /*[[${col1}]]*/'col1');
-<!--        data.addColumn('number', /*[[${col2}]]*/'col2');-->
+        data.addColumn('number', /*[[${col2}]]*/'col2');
+        data.addColumn('number', /*[[${col3}]]*/'col3');
 
 
 
@@ -24,6 +25,12 @@
 
           var options = {
             title: /*[[${graphTitle}]]*/ "",
+             series: {
+            0: { color: 'blue' },
+            1: { color: 'blue', lineDashStyle: [2, 2] },
+            2: { color: 'blue', lineDashStyle: [2, 2] }
+          }
+
           };
 
           var chart = new google.visualization.LineChart(document.getElementById('chartLine'));
