@@ -49,6 +49,9 @@ public class MainWebController {
     model.addAttribute("col1", "Systole");
     model.addAttribute("col2", "Systole Upper Bound");
     model.addAttribute("col3", "Systole Lower Bound");
+        model.addAttribute("col4", "Diastole");
+        model.addAttribute("col5", "Diastole Upper Bound");
+        model.addAttribute("col6", "Diastole Lower Bound");
 //    model.addAttribute("col2", "Fred");
 
     model.addAttribute("chartData",evaluationDataService.getEvaluationData());

@@ -35,7 +35,9 @@ public class EvaluationDataService {
         log.info("getEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluation.getEntries()) {
-            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound, EvaluationEntry.BpSystoleLowerBound));
+            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound,
+                    EvaluationEntry.BpSystoleLowerBound, entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
+                    EvaluationEntry.BpDiastoleLowerBound));
         }
 
         log.info("getEvaluationData completed ");
