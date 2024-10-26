@@ -2,56 +2,15 @@
 <head>
     <meta charset="UTF-8">
     <title>MedTrackerGraphs</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" th:inline="javascript">
-        google.charts.load('current', {'packages':['corechart', 'line']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', /*[[${col0}]]*/'col0');
-
-<!--        Systole-->
-        data.addColumn('number', /*[[${col1}]]*/'col1');
-        data.addColumn('number', /*[[${col2}]]*/'col2');
-        data.addColumn('number', /*[[${col3}]]*/'col3');
-
-<!--        Diastole-->
-        data.addColumn('number', /*[[${col4}]]*/'col4');
-        data.addColumn('number', /*[[${col5}]]*/'col5');
-        data.addColumn('number', /*[[${col6}]]*/'col6');
-
-
-
-       data.addRows([
-       /*[# th:each="row : ${chartData}"]*/
-        [[${row}]],
-        /*[/]*/
-       ]);
-
-
-          var options = {
-            title: /*[[${graphTitle}]]*/ "",
-             series: {
-            0: { color: 'red' },
-            1: { color: 'red', lineDashStyle: [2, 2] },
-            2: { color: 'red', lineDashStyle: [2, 2] },
-            3: { color: 'blue' },
-            4: { color: 'blue', lineDashStyle: [2, 2] },
-            5: { color: 'blue', lineDashStyle: [2, 2] }
-          }
-
-          };
-
-          var chart = new google.visualization.LineChart(document.getElementById('chartLine'));
-
-          chart.draw(data, options);
-        }
-    </script>
-
 </head>
 <body>
 <h1 th:text="${graphPageTitle}"></h1>
-    <div id="chartLine" style="height: 500px"></div>
+<div style="inline">
+    <span style="font-weight: bold">Imported file: </span>
+    <span th:text="${importedFileName}"></span>
+    </div>
+<h3 th:text="${bpSectionTitle}"></h3>
+<div th:insert="~{systoleGraph :: systoleGraph}"></div>
+<div th:insert="~{diastoleGraph :: diastoleGraph}"></div>
 </body>
 </html>

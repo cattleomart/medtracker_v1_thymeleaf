@@ -30,25 +30,36 @@ public class EvaluationDataService {
         Evaluation evaluation = db.get("1");
         return evaluation;
     }
-    public List<List<Object>> getEvaluationData(){
+
+    public List<List<Object>> getSystoleEvaluationData(){
         Evaluation evaluation = getEvaluation();
-        log.info("getEvaluationData started ");
+        log.info("getSysEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluation.getEntries()) {
             listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound,
-                    EvaluationEntry.BpSystoleLowerBound, entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
-                    EvaluationEntry.BpDiastoleLowerBound));
+                    EvaluationEntry.BpSystoleLowerBound));
         }
 
-        log.info("getEvaluationData completed ");
-        log.info("listdata", listData.toString());
+        log.info("getSysEvaluationData completed ");
+        return listData;
+    }public List<List<Object>> getDiastoleEvaluationData(){
+        Evaluation evaluation = getEvaluation();
+        log.info("getDiaEvaluationData started ");
+        List<List<Object>> listData = new ArrayList<>();
+        for (EvaluationEntry entry : evaluation.getEntries()) {
+            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
+                    EvaluationEntry.BpDiastoleLowerBound));
+        }
+        log.info("getDiaEvaluationData completed ");
         return listData;
     }
 
     public void importEvaluation(MultipartFile excelFile) throws IOException {
-        log.info("filename: " + excelFile.getOriginalFilename());
+        String originalFilename = excelFile.getOriginalFilename();
+        log.info("filename: " + originalFilename);
         Evaluation evaluation = new Evaluation();
         db.put("1", evaluation);
+        evaluation.setImportedFilename(originalFilename);
 
         List<EvaluationEntry> entries = new ArrayList<EvaluationEntry>();
         XSSFWorkbook workbook = new XSSFWorkbook(excelFile.getInputStream());
@@ -74,18 +85,15 @@ public class EvaluationDataService {
                 entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
             }
 
-
-
             entries.add(entry);
         }
         evaluation.setEntries(entries);
     }
-    private Integer convertedBPStringValue(String stringValue){
-        String[] timeAndBP = stringValue.split(" - ");
-        String[] bp = timeAndBP[1].split("/");
-        String sys = bp[0];
-       return Integer.valueOf(sys);
+
+    public String getEvaluationOriginFilename(){
+        return getEvaluation().getImportedFilename();
     }
+
 
     private String formatDate(Date date){
         SimpleDateFormat sdf =

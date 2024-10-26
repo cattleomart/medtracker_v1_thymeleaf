@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Systole graph</title>
+</head>
+<body>
+<div th:fragment="systoleGraph">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages':['corechart', 'line']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', /*[[${col0}]]*/'col0');
+
+        data.addColumn('number', /*[[${col1}]]*/'col1');
+        data.addColumn('number', /*[[${col2}]]*/'col2');
+        data.addColumn('number', /*[[${col3}]]*/'col3');
+
+       data.addRows([
+       /*[# th:each="row : ${systoleChartData}"]*/
+        [[${row}]],
+        /*[/]*/
+       ]);
+
+
+          var options = {
+            title: /*[[${systoleGraphTitle}]]*/ "",
+             series: {
+            0: { color: 'red' },
+            1: { color: 'red', lineDashStyle: [2, 2] },
+            2: { color: 'red', lineDashStyle: [2, 2] }
+
+          }
+
+          };
+
+          var chart = new google.visualization.LineChart(document.getElementById('systoleGraph'));
+
+          chart.draw(data, options);
+        }
+    </script>
+    <div id="systoleGraph" style="height: 500px"></div>
+</div>
+</body>
+</html>

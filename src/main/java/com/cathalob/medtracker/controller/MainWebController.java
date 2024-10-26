@@ -43,21 +43,28 @@ public class MainWebController {
     public String graphs(Model model){
     log.info("graphs started");
 
-    model.addAttribute("graphPageTitle", "Medication evaluation graphs");
-    model.addAttribute("graphTitle", "Blood pressure");
+    model.addAttribute("graphPageTitle", "Evaluation Graphs");
+    model.addAttribute("importedFileName", evaluationDataService.getEvaluationOriginFilename());
+    model.addAttribute("bpSectionTitle", "Blood pressure");
     model.addAttribute("col0", "Date");
-    model.addAttribute("col1", "Systole");
-    model.addAttribute("col2", "Systole Upper Bound");
-    model.addAttribute("col3", "Systole Lower Bound");
-        model.addAttribute("col4", "Diastole");
-        model.addAttribute("col5", "Diastole Upper Bound");
-        model.addAttribute("col6", "Diastole Lower Bound");
-//    model.addAttribute("col2", "Fred");
 
-    model.addAttribute("chartData",evaluationDataService.getEvaluationData());
+    model.addAttribute("systoleGraphTitle", "Systole");
+    model.addAttribute("col1", "Reading");
+    model.addAttribute("col2", "Upper Bound");
+    model.addAttribute("col3", "Lower Bound");
+
+    model.addAttribute("diastoleGraphTitle", "Diastole");
+    model.addAttribute("col4", "Reading");
+    model.addAttribute("col5", "Upper Bound");
+    model.addAttribute("col6", "Lower Bound");
+
+    model.addAttribute("systoleChartData",evaluationDataService.getSystoleEvaluationData());
+    model.addAttribute("diastoleChartData",evaluationDataService.getDiastoleEvaluationData());
     log.info("graphs complete");
     return "graphs";
     }
+
+
 
 
 //    @ResponseStatus(value = HttpStatus.OK)
