@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Upload</title>
+    <link rel="stylesheet" th:href="@{css/main.css}">
 </head>
 <body>
-    <h1>UPLOAD PAGE</h1>
+<div th:insert="~{headerAndFooter :: header}"></div>
+    <h1>Upload</h1>
+<div style="margin-left: 100px">
+    <h2>Import file (.xlxs)</h2>
 
-<div>
-    <h2>Excel import</h2>
     <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
         <input type="file" th:name="file">
+
         <input th:type="submit" value="Import" />
     </form>
-
-    <a th:href="@{/graphs}">View graphs</a>
 </div>
-
-
 </body>
 </html>

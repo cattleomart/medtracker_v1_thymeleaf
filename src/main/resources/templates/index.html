@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>MedTracker</title>
-
+    <link rel="stylesheet" th:href="@{css/main.css}">
 </head>
 <body>
-    <h1>MedTracker</h1>
-    <div id="landing" style="width: 900px; height: 500px">
 
+    <div th:insert="~{headerAndFooter :: header}"></div>
+    <div>
+        <h1>Welcome to Med Tracker</h1>
     </div>
 
 

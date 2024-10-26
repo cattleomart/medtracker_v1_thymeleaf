@@ -23,19 +23,22 @@ public class MainWebController {
     public MainWebController() {
 
     }
-
     @GetMapping("/")
     public String index() {
-
         log.info("Index started");
-
         log.info("Index complete");
-
         return "index";
     }
 
     @GetMapping("/upload")
     public String upload(){
+        return "upload";
+    }
+
+    //    @ResponseStatus(value = HttpStatus.OK)
+    @PostMapping("/upload")
+    public String mapReapExcelData(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
+        evaluationDataService.importEvaluation(reapExcelDataFile);
         return "upload";
     }
 
@@ -67,12 +70,7 @@ public class MainWebController {
 
 
 
-//    @ResponseStatus(value = HttpStatus.OK)
-    @PostMapping("/upload")
-    public String mapReapExcelData(@RequestParam("file") MultipartFile reapExcelDataFile) throws IOException {
-        evaluationDataService.importEvaluation(reapExcelDataFile);
-        return "upload";
-    }
+
 
 
 

@@ -2,8 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <title>MedTrackerGraphs</title>
+    <link rel="stylesheet" th:href="@{css/main.css}">
 </head>
 <body>
+<div th:insert="~{headerAndFooter :: header}"></div>
 <h1 th:text="${graphPageTitle}"></h1>
 <div style="inline">
     <span style="font-weight: bold">Imported file: </span>

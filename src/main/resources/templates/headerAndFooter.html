@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+    a {
+        color: #78ab46;
+    }
+</style>
+<head >
+    <title>Fragments</title>
+
+</head>
+
+<body>
+
+
+<div th:fragment="header">
+    <div class="topnav">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/graphs}">View graphs</a>
+        <a th:href="@{/upload}">Upload</a>
+
+    </div>
+
+
+</div>
+<div th:fragment="footer">
+    <p>Footer</p>
+</div>
+</body>
+
+</html>
+
