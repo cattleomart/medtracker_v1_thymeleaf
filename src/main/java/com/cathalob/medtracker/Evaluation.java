@@ -1,5 +1,7 @@
 package com.cathalob.medtracker;
 
+
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,9 +25,9 @@ public class Evaluation {
     public Evaluation(String newDatePrefix) {
         setImportedFilename("Uninitialized");
         entries = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            entries.add(new EvaluationEntry(newDatePrefix, i));
-        }
+
+            entries.add(new EvaluationEntry(newDatePrefix, 1));
+
     }
 
     public Evaluation() {

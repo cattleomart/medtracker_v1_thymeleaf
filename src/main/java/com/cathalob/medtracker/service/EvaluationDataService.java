@@ -2,6 +2,7 @@ package com.cathalob.medtracker.service;
 
 import com.cathalob.medtracker.Evaluation;
 import com.cathalob.medtracker.EvaluationEntry;
+import com.cathalob.medtracker.repository.EvaluationEntryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -11,43 +12,41 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
 @Service
 public class EvaluationDataService {
 
-    private final Map<String, Evaluation> db = new HashMap<>(){{
-        put("1",new Evaluation("2024/12/"));
-    }};
+    private final EvaluationEntryRepository medTrackerRepository;
 
-    public EvaluationDataService() {
+    public EvaluationDataService(EvaluationEntryRepository medTrackerRepository) {
+        this.medTrackerRepository = medTrackerRepository;
     }
 
-
     public Evaluation getEvaluation(){
-        Evaluation evaluation = db.get("1");
+        Evaluation evaluation = new Evaluation();
         return evaluation;
+    }
+    public Iterable<EvaluationEntry> getEvaluationEntries(){
+        return medTrackerRepository.findAll();
     }
 
     public List<List<Object>> getSystoleEvaluationData(){
-        Evaluation evaluation = getEvaluation();
         log.info("getSysEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
-        for (EvaluationEntry entry : evaluation.getEntries()) {
-            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound,
+        for (EvaluationEntry entry : getEvaluationEntries()) {
+            listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound,
                     EvaluationEntry.BpSystoleLowerBound));
         }
 
         log.info("getSysEvaluationData completed ");
         return listData;
     }public List<List<Object>> getDiastoleEvaluationData(){
-        Evaluation evaluation = getEvaluation();
         log.info("getDiaEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
-        for (EvaluationEntry entry : evaluation.getEntries()) {
-            listData.add(Arrays.asList(entry.getDate(), entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
+        for (EvaluationEntry entry : getEvaluationEntries()) {
+            listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
                     EvaluationEntry.BpDiastoleLowerBound));
         }
         log.info("getDiaEvaluationData completed ");
@@ -57,9 +56,6 @@ public class EvaluationDataService {
     public void importEvaluation(MultipartFile excelFile) throws IOException {
         String originalFilename = excelFile.getOriginalFilename();
         log.info("filename: " + originalFilename);
-        Evaluation evaluation = new Evaluation();
-        db.put("1", evaluation);
-        evaluation.setImportedFilename(originalFilename);
 
         List<EvaluationEntry> entries = new ArrayList<EvaluationEntry>();
         XSSFWorkbook workbook = new XSSFWorkbook(excelFile.getInputStream());
@@ -71,7 +67,7 @@ public class EvaluationDataService {
             XSSFRow row = worksheet.getRow(i);
 
             Date dateCellValue = row.getCell(0).getDateCellValue();
-            entry.setDate(formatDate(dateCellValue));
+            entry.setRecordDate(dateCellValue);
             XSSFCell bpSystoleCell = row.getCell(10);
             if (bpSystoleCell != null){
                 entry.setBloodPressureSystole((((int) bpSystoleCell.getNumericCellValue())));
@@ -87,17 +83,10 @@ public class EvaluationDataService {
 
             entries.add(entry);
         }
-        evaluation.setEntries(entries);
+        medTrackerRepository.saveAll(entries);
     }
 
     public String getEvaluationOriginFilename(){
-        return getEvaluation().getImportedFilename();
-    }
-
-
-    private String formatDate(Date date){
-        SimpleDateFormat sdf =
-                new SimpleDateFormat("yy-MM-dd");
-        return sdf.format(date);
+        return "Deprecated";
     }
     }

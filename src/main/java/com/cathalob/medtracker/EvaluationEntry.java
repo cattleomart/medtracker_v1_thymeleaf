@@ -1,12 +1,21 @@
 package com.cathalob.medtracker;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.Date;
+
+@Table("EVALUATIONENTRY")
 public class EvaluationEntry {
-    private String date;
-    public String getDate() {
-        return date;
+    @Id
+    private Integer id;
+
+    private Date recordDate;
+    public Date getRecordDate() {
+        return recordDate;
     }
-    public void setDate(String date) {
-        this.date = date;
+    public void setRecordDate(Date recordDate) {
+        this.recordDate = recordDate;
     }
 
     private  Integer bloodPressureSystole;
@@ -41,7 +50,7 @@ public class EvaluationEntry {
     public static Integer BpDiastoleUpperBound = 80;
     public  static Integer BpDiastoleLowerBound = 60;
     public EvaluationEntry(String newDatePrefix, Integer index) {
-        date = newDatePrefix + "0" + index;
+        recordDate = new Date();
         bloodPressureSystole = 105 + (index * 2);
         bloodPressureDiastole = 70 + (index * 2);
         heartRate = 60 + (index * 2);
