@@ -21,7 +21,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/", "/css/*", "/registration", "/login").permitAll()
-                .anyRequest().authenticated()).formLogin(form -> form.loginPage("/login").permitAll()).logout(LogoutConfigurer::permitAll);
+                .anyRequest().authenticated()).formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/graphs", true).permitAll()).logout(LogoutConfigurer::permitAll);
                 return httpSecurity.build();
     }
 

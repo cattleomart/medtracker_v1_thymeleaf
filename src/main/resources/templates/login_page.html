@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Login page</title>
+    <link rel="stylesheet" th:href="@{css/main.css}">
+
 </head>
 <body>
+<div th:insert="~{headerAndFooter :: header}"></div>
 <div th:if="${param.success}">
     You successfully registered. Please use your credentials to log in.
 </div>
@@ -20,6 +23,5 @@
     <input name="password" type="password" placeholder="Password">
     <input type="submit" value="Log in">
 </form>
-<a href="/">Main page</a>
 </body>
 </html>

@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<style>
-    a {
-        color: #78ab46;
-    }
-</style>
 <head >
     <title>Fragments</title>
-
 </head>
 
 <body>
-
-
 <div th:fragment="header">
+    <div class="headerAndNav">
+        <div class="headerContainer">
+            <H1>Med Tracker</H1>
+        </div>
     <div class="topnav">
         <a th:href="@{/}">Home</a>
-        <a th:href="@{/graphs}">View graphs</a>
+        <a th:href="@{/graphs}">Data Overview</a>
         <a th:href="@{/upload}">Upload</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
 
     </div>
 

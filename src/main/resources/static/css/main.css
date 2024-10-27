@@ -1,4 +1,9 @@
 /* Add a black background color to the top navigation */
+
+body {
+    font: normal 14px Verdana, Arial, sans-serif;
+}
+
 .topnav {
   background-color: #808080;
   overflow: hidden;
@@ -24,4 +29,18 @@
 .topnav a.active {
   background-color: #04AA6D;
   color: white;
+}
+
+.topnav form {
+  float: right;
+}
+
+.headerAndNav {
+    display: grid;
+    background-color: orange;
+    margin-bottom: 20px;
+}
+.headerContainer {
+    margin-left: 20px;
+
 }

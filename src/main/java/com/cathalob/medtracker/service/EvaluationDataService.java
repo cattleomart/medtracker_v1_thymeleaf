@@ -82,7 +82,5 @@ public class EvaluationDataService {
         evaluationEntryRepository.saveAll(entries);
     }
 
-    public String getEvaluationOriginFilename(){
-        return "Deprecated";
-    }
+
     }

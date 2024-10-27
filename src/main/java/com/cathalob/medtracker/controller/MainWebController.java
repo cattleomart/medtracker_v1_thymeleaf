@@ -42,8 +42,7 @@ public class MainWebController {
     public String graphs(Model model){
     log.info("graphs started");
 
-    model.addAttribute("graphPageTitle", "Evaluation Graphs");
-    model.addAttribute("importedFileName", evaluationDataService.getEvaluationOriginFilename());
+    model.addAttribute("graphPageTitle", "Data Visualizations");
     model.addAttribute("bpSectionTitle", "Blood pressure");
     model.addAttribute("col0", "Date");
 
