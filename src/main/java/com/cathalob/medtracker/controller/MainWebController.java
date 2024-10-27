@@ -1,10 +1,7 @@
 package com.cathalob.medtracker.controller;
-
 import com.cathalob.medtracker.service.EvaluationDataService;
-import com.cathalob.medtracker.service.GraphDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +12,7 @@ import java.io.IOException;
 @Controller
 @Slf4j
 public class MainWebController {
-    @Autowired
-    GraphDataService graphDataService;
+
 @Autowired
    EvaluationDataService evaluationDataService;
 

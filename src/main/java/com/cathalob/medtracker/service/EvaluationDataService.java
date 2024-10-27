@@ -1,7 +1,7 @@
 package com.cathalob.medtracker.service;
 
-import com.cathalob.medtracker.Evaluation;
-import com.cathalob.medtracker.EvaluationEntry;
+
+import com.cathalob.medtracker.model.EvaluationEntry;
 import com.cathalob.medtracker.repository.EvaluationEntryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -18,18 +18,14 @@ import java.util.*;
 @Service
 public class EvaluationDataService {
 
-    private final EvaluationEntryRepository medTrackerRepository;
+    private final EvaluationEntryRepository evaluationEntryRepository;
 
     public EvaluationDataService(EvaluationEntryRepository medTrackerRepository) {
-        this.medTrackerRepository = medTrackerRepository;
+        this.evaluationEntryRepository = medTrackerRepository;
     }
 
-    public Evaluation getEvaluation(){
-        Evaluation evaluation = new Evaluation();
-        return evaluation;
-    }
     public Iterable<EvaluationEntry> getEvaluationEntries(){
-        return medTrackerRepository.findAll();
+        return evaluationEntryRepository.findAll();
     }
 
     public List<List<Object>> getSystoleEvaluationData(){
@@ -68,22 +64,22 @@ public class EvaluationDataService {
 
             Date dateCellValue = row.getCell(0).getDateCellValue();
             entry.setRecordDate(dateCellValue);
-            XSSFCell bpSystoleCell = row.getCell(10);
+            XSSFCell bpSystoleCell = row.getCell(8);
             if (bpSystoleCell != null){
                 entry.setBloodPressureSystole((((int) bpSystoleCell.getNumericCellValue())));
             }
-            XSSFCell bpDiastoleCell = row.getCell(11);
+            XSSFCell bpDiastoleCell = row.getCell(9);
             if (bpDiastoleCell != null){
                 entry.setBloodPressureDiastole((((int) bpDiastoleCell.getNumericCellValue())));
             }
-            XSSFCell bpHeartRateCell = row.getCell(12);
+            XSSFCell bpHeartRateCell = row.getCell(10);
             if (bpHeartRateCell != null){
                 entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
             }
 
             entries.add(entry);
         }
-        medTrackerRepository.saveAll(entries);
+        evaluationEntryRepository.saveAll(entries);
     }
 
     public String getEvaluationOriginFilename(){
