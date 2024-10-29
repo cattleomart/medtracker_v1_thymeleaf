@@ -2,6 +2,7 @@ package com.cathalob.medtracker.service;
 
 
 import com.cathalob.medtracker.model.EvaluationEntry;
+import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.repository.EvaluationEntryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -24,24 +25,24 @@ public class EvaluationDataService {
         this.evaluationEntryRepository = medTrackerRepository;
     }
 
-    public Iterable<EvaluationEntry> getEvaluationEntries(){
+    public Iterable<EvaluationEntry> getEvaluationEntries(UserModel userModel){
         return evaluationEntryRepository.findAll();
     }
 
-    public List<List<Object>> getSystoleEvaluationData(){
+    public List<List<Object>> getSystoleEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
         log.info("getSysEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
-        for (EvaluationEntry entry : getEvaluationEntries()) {
+        for (EvaluationEntry entry : evaluationEntries) {
             listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound,
                     EvaluationEntry.BpSystoleLowerBound));
         }
 
         log.info("getSysEvaluationData completed ");
         return listData;
-    }public List<List<Object>> getDiastoleEvaluationData(){
+    }public List<List<Object>> getDiastoleEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
         log.info("getDiaEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
-        for (EvaluationEntry entry : getEvaluationEntries()) {
+        for (EvaluationEntry entry : evaluationEntries) {
             listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
                     EvaluationEntry.BpDiastoleLowerBound));
         }
@@ -49,7 +50,7 @@ public class EvaluationDataService {
         return listData;
     }
 
-    public void importEvaluation(MultipartFile excelFile) throws IOException {
+    public void importEvaluation(MultipartFile excelFile, UserModel userModel) throws IOException {
         String originalFilename = excelFile.getOriginalFilename();
         log.info("filename: " + originalFilename);
 
@@ -59,6 +60,7 @@ public class EvaluationDataService {
 
         for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
             EvaluationEntry entry = new EvaluationEntry();
+            entry.setUserModel(userModel);
             log.info(""+ i);
             XSSFRow row = worksheet.getRow(i);
 

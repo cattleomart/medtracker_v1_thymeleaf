@@ -14,11 +14,16 @@ public class EvaluationEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usermodel_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private UserModel userModel = new UserModel();
+    private UserModel userModel;
     private Date recordDate;
     public Date getRecordDate() {
         return recordDate;
