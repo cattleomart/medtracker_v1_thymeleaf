@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity(name ="EVALUATIONENTRY")
 public class EvaluationEntry {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usermodel_id", nullable = false)

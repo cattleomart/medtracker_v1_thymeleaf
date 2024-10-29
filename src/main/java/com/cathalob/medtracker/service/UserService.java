@@ -18,7 +18,6 @@ import java.util.stream.StreamSupport;
 @AllArgsConstructor
 public class UserService {
 
-    private static List<UserModel> users = new ArrayList<>();
 
     private final PasswordEncoder passwordEncoder;
     @Autowired
@@ -31,14 +30,13 @@ public class UserService {
         user.setUsername("admin");
         user.setPassword(passwordEncoder.encode("abc"));
         userModelRepository.save(user);
-        users.add(user);
 
     }
 
     public void register(UserModel user) {
         user.setRole(UserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        users.add(user);
+        userModelRepository.save(user);
     }
 
     public UserModel findByLogin(String login) {
