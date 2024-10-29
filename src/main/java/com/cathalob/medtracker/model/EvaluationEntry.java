@@ -1,18 +1,15 @@
 package com.cathalob.medtracker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+
 
 import java.util.Date;
 //,
 //    foreign key (userModel_id) references userModel(userModel_id)
-@Table("EVALUATIONENTRY")
+@Entity(name ="EVALUATIONENTRY")
 public class EvaluationEntry {
     @Id
     private Integer id;
