@@ -2,13 +2,17 @@ package com.cathalob.medtracker.service;
 
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.UserRole;
+import com.cathalob.medtracker.repository.UserModelRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +21,8 @@ public class UserService {
     private static List<UserModel> users = new ArrayList<>();
 
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final UserModelRepository userModelRepository;
 
     @PostConstruct
     public void postConstruct() {
@@ -24,7 +30,9 @@ public class UserService {
         user.setRole(UserRole.ADMIN);
         user.setUsername("admin");
         user.setPassword(passwordEncoder.encode("abc"));
+        userModelRepository.save(user);
         users.add(user);
+
     }
 
     public void register(UserModel user) {
@@ -34,7 +42,11 @@ public class UserService {
     }
 
     public UserModel findByLogin(String login) {
-        return users.stream().filter(user -> user.getUsername().equals(login))
+
+        List<UserModel> dbUsers =
+                StreamSupport.stream(userModelRepository.findAll().spliterator(), false)
+                        .toList();
+        return dbUsers.stream().filter(user -> user.getUsername().equals(login))
                 .findFirst()
                 .orElse(null);
     }
