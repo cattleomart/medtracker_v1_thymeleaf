@@ -53,7 +53,7 @@ public class EvaluationDataService {
         String originalFilename = excelFile.getOriginalFilename();
         log.info("filename: " + originalFilename);
 
-        List<EvaluationEntry> entries = new ArrayList<EvaluationEntry>();
+        List<EvaluationEntry> entries = new ArrayList<>();
         XSSFWorkbook workbook = new XSSFWorkbook(excelFile.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
 
@@ -64,15 +64,15 @@ public class EvaluationDataService {
 
             Date dateCellValue = row.getCell(0).getDateCellValue();
             entry.setRecordDate(dateCellValue);
-            XSSFCell bpSystoleCell = row.getCell(8);
+            XSSFCell bpSystoleCell = row.getCell(9);
             if (bpSystoleCell != null){
                 entry.setBloodPressureSystole((((int) bpSystoleCell.getNumericCellValue())));
             }
-            XSSFCell bpDiastoleCell = row.getCell(9);
+            XSSFCell bpDiastoleCell = row.getCell(10);
             if (bpDiastoleCell != null){
                 entry.setBloodPressureDiastole((((int) bpDiastoleCell.getNumericCellValue())));
             }
-            XSSFCell bpHeartRateCell = row.getCell(10);
+            XSSFCell bpHeartRateCell = row.getCell(11);
             if (bpHeartRateCell != null){
                 entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
             }
