@@ -17,3 +17,4 @@ create table if not exists evaluationEntry (
     foreign key (userModel_id) references userModel(id)
 );
 
+

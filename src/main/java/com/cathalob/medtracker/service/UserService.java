@@ -23,16 +23,6 @@ public class UserService {
     @Autowired
     private final UserModelRepository userModelRepository;
 
-    @PostConstruct
-    public void postConstruct() {
-        UserModel user = new UserModel();
-        user.setRole(UserRole.ADMIN);
-        user.setUsername("admin");
-        user.setPassword(passwordEncoder.encode("abc"));
-        userModelRepository.save(user);
-
-    }
-
     public void register(UserModel user) {
         user.setRole(UserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
