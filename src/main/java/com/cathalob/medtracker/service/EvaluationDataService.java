@@ -26,7 +26,7 @@ public class EvaluationDataService {
     }
 
     public Iterable<EvaluationEntry> getEvaluationEntries(UserModel userModel){
-        return evaluationEntryRepository.findAll();
+        return evaluationEntryRepository.findEvaluationEntriesForUserId(userModel.getId());
     }
 
     public List<List<Object>> getSystoleEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
@@ -79,7 +79,9 @@ public class EvaluationDataService {
                 entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
             }
 
+            if (entry.hasData()) {
             entries.add(entry);
+            }
         }
         evaluationEntryRepository.saveAll(entries);
     }

@@ -73,4 +73,10 @@ public class EvaluationEntry {
     }
 
 
+    public boolean hasData(){
+
+        return bloodPressureDiastole != null && bloodPressureSystole != null && heartRate != null;
+
+    }
+
 }
