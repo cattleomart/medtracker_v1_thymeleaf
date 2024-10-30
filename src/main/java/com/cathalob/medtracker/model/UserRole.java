@@ -1,4 +1,4 @@
 package com.cathalob.medtracker.model;
 public enum UserRole {
-    ADMIN, USER
+    ADMIN, USER, PRACT
 }
