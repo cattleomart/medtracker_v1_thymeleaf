@@ -22,8 +22,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/", "/css/*", "/registration", "/login").permitAll()
-                .anyRequest().authenticated()).formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/graphs", true).permitAll()).logout(LogoutConfigurer::permitAll);
+        httpSecurity.authorizeHttpRequests(request -> request
+                        .requestMatchers("/", "/css/*", "/registration", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER")
+                .anyRequest().authenticated())
+                .formLogin(form -> form.loginPage("/login")
+                        .defaultSuccessUrl("/graphs", true).permitAll()).
+                logout(LogoutConfigurer::permitAll);
                 return httpSecurity.build();
     }
 

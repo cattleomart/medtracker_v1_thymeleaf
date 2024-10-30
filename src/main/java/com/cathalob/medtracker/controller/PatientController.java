@@ -10,8 +10,5 @@ public class PatientController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/user/practitionerRoleRequest")
-    public String practitionerRoleRequest(){
-        return "user/practitionerRoleRequest";
-    }
+
 }

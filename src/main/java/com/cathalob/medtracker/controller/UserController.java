@@ -35,6 +35,9 @@ public class UserController {
         userService.register(user);
         return "redirect:/login_page?success";
 }
-
+    @GetMapping("/user/practitionerRoleRequest")
+    public String practitionerRoleRequest(){
+        return "user/practitionerRoleRequest";
+    }
 
 }
