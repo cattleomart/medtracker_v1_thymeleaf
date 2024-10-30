@@ -1,6 +1,7 @@
 package com.cathalob.medtracker.service;
 
 import com.cathalob.medtracker.dto.UserModelDTO;
+import com.cathalob.medtracker.err.UserAlreadyExistsException;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.UserRole;
 import com.cathalob.medtracker.repository.UserModelRepository;
@@ -24,8 +25,10 @@ public class UserService {
     @Autowired
     private final UserModelRepository userModelRepository;
 
-    public void register(UserModelDTO userModelDTO)   {
-//        if (findByLogin(userModelDTO.getUsername()) != null){}
+    public void register(UserModelDTO userModelDTO) throws UserAlreadyExistsException {
+        if (findByLogin(userModelDTO.getUsername()) != null){
+            throw new UserAlreadyExistsException("User with email already exists");
+        }
 
         UserModel user = new UserModel();
         user.setUsername(userModelDTO.getUsername());
