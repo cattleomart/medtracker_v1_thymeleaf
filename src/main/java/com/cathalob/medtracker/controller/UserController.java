@@ -1,7 +1,9 @@
 package com.cathalob.medtracker.controller;
 
-import com.cathalob.medtracker.model.UserModel;
+import com.cathalob.medtracker.dto.UserModelDTO;
+
 import com.cathalob.medtracker.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,13 +24,14 @@ public class UserController {
     }
 
     @GetMapping("/registration")
-    public String gatRegistrationPage(Model model){
-        model.addAttribute("user", new UserModel());
+    public String getRegistrationPage(Model model){
+        model.addAttribute("user", new UserModelDTO());
         return "registration_page";
     }
 @PostMapping("/registration")
-    public String registerUser(@ModelAttribute UserModel user){
+    public String registerUser(@ModelAttribute @Valid UserModelDTO user ){
         log.info("registration post");
+
         userService.register(user);
         return "redirect:/login_page?success";
 }
