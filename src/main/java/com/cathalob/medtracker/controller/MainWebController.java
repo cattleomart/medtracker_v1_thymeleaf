@@ -38,6 +38,10 @@ public class MainWebController {
         return "upload";
     }
 
+    @GetMapping("/about")
+    public String about(){
+        return "about";
+    }
     @PostMapping("/upload")
     public String mapReapExcelData(@RequestParam("file") MultipartFile reapExcelDataFile, Authentication authentication) throws IOException {
      evaluationDataService.importEvaluation(reapExcelDataFile, getUserModel(authentication));

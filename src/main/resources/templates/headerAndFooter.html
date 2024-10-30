@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head >
     <title>Fragments</title>
 </head>
@@ -11,19 +11,34 @@
             <H1>Med Tracker</H1>
         </div>
     <div class="topnav">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/graphs}">Data Overview</a>
-        <a th:href="@{/upload}">Upload</a>
-        <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: Role requests</a>
-        <a th:href="@{/user/practitionerRoleRequest}">Request Role</a>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Logout">
-        </form>
+
+        <div>
+            <a th:href="@{/}">Home</a>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <a th:href="@{/graphs}">Data Overview</a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <a th:href="@{/upload}">Upload</a>
+        </div>
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: Role requests</a>
+        </div>
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
+            <a th:href="@{/user/practitionerRoleRequest}">Request Role</a>
+        </div>
+        <div>
+            <a th:href="@{/about}">About</a>
+        </div>
+        <div sec:authorize="isAuthenticated()" class="authStatus">
+            <div sec:authentication="name" class="authStatusName">Name of authenticated user</div>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Logout">
+            </form>
+        </div>
     </div>
-
     </div>
-
-
 </div>
 <div th:fragment="footer">
     <p>Footer</p>

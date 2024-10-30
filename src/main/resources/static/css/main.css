@@ -31,9 +31,6 @@ body {
   color: white;
 }
 
-.topnav form {
-  float: right;
-}
 
 .headerAndNav {
     display: grid;
@@ -44,3 +41,37 @@ body {
     margin-left: 20px;
 
 }
+.authStatus {
+    float: right;
+}
+
+.authStatusName {
+    display: inline;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    display: inline;
+}
+
+.authStatus form {
+    display: inline;
+}
+
+.authStatus input[type=submit] {
+            background-color: orange;
+            border: none;
+            color: #fff;
+            margin-top: 4px;
+            padding: 5px 16px;
+            text-decoration: none;
+            cursor: pointer;
+}
+
+.authStatus input[type=submit]:hover {
+            color: black;
+background-color: orange;
+
+}
+
+
+
