@@ -68,4 +68,9 @@ public class UserService {
         return practitionerRoleRequestRepository.findById(userModel.getId()).orElse(null);
 
     }
+    public List<PractitionerRoleRequest> getPractitionerRoleRequests(){
+        return StreamSupport.stream(practitionerRoleRequestRepository.findAll().spliterator(), false)
+                .toList();
+
+    }
 }

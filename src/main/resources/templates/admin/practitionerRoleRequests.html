@@ -7,11 +7,27 @@
 </head>
 <body>
 <div th:insert="~{headerAndFooter :: header}"></div>
-<h3>All Role Requests</h3>
-<!--<form th:action="@{/registration}" method="post" th:object="${user}">-->
-<!--    <input name="username" type="text" placeholder="Username">-->
-<!--    <input name="password" type="password" placeholder="Password">-->
-<!--    <input type="submit" value="Register">-->
-<!--</form>-->
+
+<div class="centeredLayout">
+    <h3>Role Requests</h3>
+    <table>
+        <thead>
+        <tr>
+            <th> User Name </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${requests.empty}">
+            <td colspan="2"> No Requests Available </td>
+        </tr>
+        <tr th:each="request : ${requests}">
+            <td><span th:text="${request.userModel.username}"> User Name </span></td>
+            <td><label><input type="checkbox" name="approved" th:checked="${request.approved}"> Approved </label></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
