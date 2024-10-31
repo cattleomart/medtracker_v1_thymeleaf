@@ -17,4 +17,9 @@ create table if not exists evaluationEntry (
     foreign key (userModel_id) references userModel(id)
 );
 
-
+create table if not exists PRACTITIONERROLEREQUEST (
+    approved bit,
+    userModel_id int,
+    constraint PK_PRACTITIONERROLEREQUEST primary key (userModel_id),
+    foreign key (userModel_id) references userModel(id)
+);

@@ -2,10 +2,14 @@ package com.cathalob.medtracker.controller;
 
 import com.cathalob.medtracker.dto.UserModelDTO;
 
+import com.cathalob.medtracker.model.PractitionerRoleRequest;
+import com.cathalob.medtracker.model.UserModel;
+import com.cathalob.medtracker.model.UserRole;
 import com.cathalob.medtracker.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,16 +32,35 @@ public class UserController {
         model.addAttribute("user", new UserModelDTO());
         return "registration_page";
     }
-@PostMapping("/registration")
+    @PostMapping("/registration")
     public String registerUser(@ModelAttribute @Valid UserModelDTO user ){
         log.info("registration post");
 
         userService.register(user);
         return "redirect:/login_page?success";
-}
+    }
     @GetMapping("/user/practitionerRoleRequest")
-    public String practitionerRoleRequest(){
+    public String practitionerRoleRequest(Model model, Authentication authentication){
+
+        PractitionerRoleRequest practitionerRoleRequest = userService.getPractitionerRoleRequest(authentication.getName());
+        if (practitionerRoleRequest != null) {
+        model.addAttribute("pending", practitionerRoleRequest.isPending());
+        model.addAttribute("approved", practitionerRoleRequest.isApproved());
+        model.addAttribute("notSubmitted", (false));
+        } else {
+            model.addAttribute("pending", false);
+            model.addAttribute("approved", false);
+            model.addAttribute("notSubmitted", (true));
+        }
         return "user/practitionerRoleRequest";
+    }
+
+    @PostMapping("/user/practitionerRoleRequest")
+    public String practitionerRoleRequest(Authentication authentication){
+        userService.submitPractitionerRoleRequest(authentication.getName());
+
+
+        return "redirect:/user/practitionerRoleRequest?success";
     }
 
 }
