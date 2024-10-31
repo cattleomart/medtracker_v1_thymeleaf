@@ -28,6 +28,9 @@
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
             <a th:href="@{/user/practitionerRoleRequest}">Request Role</a>
         </div>
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_PRACT'')')}">
+            <a th:href="@{/practitioner/patients}">Patients</a>
+        </div>
         <div>
             <a th:href="@{/about}">About</a>
         </div>

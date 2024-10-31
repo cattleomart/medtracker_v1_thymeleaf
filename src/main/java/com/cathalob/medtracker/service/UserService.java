@@ -38,12 +38,15 @@ public class UserService {
     }
 
     public UserModel findByLogin(String login) {
-
-        List<UserModel> dbUsers =
-                StreamSupport.stream(userModelRepository.findAll().spliterator(), false)
-                        .toList();
+        List<UserModel> dbUsers = findAll();
         return dbUsers.stream().filter(user -> user.getUsername().equals(login))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<UserModel> findAll(){
+        return StreamSupport.stream(userModelRepository.findAll().spliterator(), false)
+                        .toList();
+
     }
 }

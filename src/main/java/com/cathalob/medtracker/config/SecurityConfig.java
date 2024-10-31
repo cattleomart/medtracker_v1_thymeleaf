@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/css/*", "/registration", "/login", "/about").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER")
+                        .requestMatchers("/practitioner/**").hasAnyRole("PRACT")
                 .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
                         .defaultSuccessUrl("/graphs", true).permitAll()).
