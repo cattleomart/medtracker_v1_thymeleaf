@@ -4,6 +4,11 @@ body {
     font: normal 14px Verdana, Arial, sans-serif;
 }
 
+.centeredLayout{
+    width: 50%;
+    margin: auto;
+}
+
 .topnav {
   background-color: #808080;
   overflow: hidden;
