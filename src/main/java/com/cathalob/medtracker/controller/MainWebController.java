@@ -62,14 +62,20 @@ public class MainWebController {
     model.addAttribute("col0", "Date");
 
     model.addAttribute("systoleGraphTitle", "Systole");
-    model.addAttribute("col1", "Reading");
-    model.addAttribute("col2", "Upper Bound");
-    model.addAttribute("col3", "Lower Bound");
+
+    model.addAttribute("col1", "Morning");
+     model.addAttribute("col2", "Lunch");
+     model.addAttribute("col3", "Second Dose Peak");
+
+    model.addAttribute("col4", "Danger High");
+     model.addAttribute("col5", "High Stage 1");
+     model.addAttribute("col6", "Elevated");
+
 
     model.addAttribute("diastoleGraphTitle", "Diastole");
-    model.addAttribute("col4", "Reading");
-    model.addAttribute("col5", "Upper Bound");
-    model.addAttribute("col6", "Lower Bound");
+    model.addAttribute("dcol1", "Reading");
+    model.addAttribute("dcol2", "Upper Bound");
+    model.addAttribute("dcol3", "Lower Bound");
 
     model.addAttribute("systoleChartData",evaluationDataService.getSystoleEvaluationData(evaluationEntries));
     model.addAttribute("diastoleChartData",evaluationDataService.getDiastoleEvaluationData(evaluationEntries));

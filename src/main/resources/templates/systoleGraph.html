@@ -18,6 +18,11 @@
         data.addColumn('number', /*[[${col2}]]*/'col2');
         data.addColumn('number', /*[[${col3}]]*/'col3');
 
+        data.addColumn('number', /*[[${col4}]]*/'col4');
+        data.addColumn('number', /*[[${col5}]]*/'col5');
+        data.addColumn('number', /*[[${col6}]]*/'col6');
+
+
        data.addRows([
        /*[# th:each="row : ${systoleChartData}"]*/
         [[${row}]],
@@ -28,10 +33,12 @@
           var options = {
             title: /*[[${systoleGraphTitle}]]*/ "",
              series: {
-            0: { color: 'red' },
-            1: { color: 'red', lineDashStyle: [2, 2] },
-            2: { color: 'red', lineDashStyle: [2, 2] }
-
+            0: { color: '#3366cc' },
+            1: { color: '#22aa99' },
+            2: { color: 'black' },
+            3: { color: 'red', lineDashStyle: [2, 2] },
+            4: { color: '#dc3912', lineDashStyle: [2, 2] },
+            5: { color: 'yellow', lineDashStyle: [2, 2] },
           }
 
           };

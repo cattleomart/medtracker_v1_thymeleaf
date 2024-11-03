@@ -33,8 +33,15 @@ public class EvaluationDataService {
         log.info("getSysEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluationEntries) {
-            listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureSystole(), EvaluationEntry.BpSystoleUpperBound,
-                    EvaluationEntry.BpSystoleLowerBound));
+            listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureSystole(),
+                    entry.getLunchBloodPressureSystole(),
+                    entry.getSDPBloodPressureSystole(),
+                    EvaluationEntry.BpSystoleUpperBound,
+//                    EvaluationEntry.BpSystoleLowerBound,
+                    130,
+
+                    120
+                    ));
         }
 
         log.info("getSysEvaluationData completed ");
@@ -77,6 +84,34 @@ public class EvaluationDataService {
             XSSFCell bpHeartRateCell = row.getCell(5);
             if (bpHeartRateCell != null){
                 entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
+            }
+
+//            Lunch reading
+            XSSFCell lunchBpSystoleCell = row.getCell(10);
+            if (lunchBpSystoleCell != null){
+                entry.setLunchBloodPressureSystole((((int) lunchBpSystoleCell.getNumericCellValue())));
+            }
+            XSSFCell lunchBpDiastoleCell = row.getCell(11);
+            if (lunchBpDiastoleCell != null){
+                entry.setLunchBloodPressureDiastole((((int) lunchBpDiastoleCell.getNumericCellValue())));
+            }
+            XSSFCell lunchBpHeartRateCell = row.getCell(12);
+            if (lunchBpHeartRateCell != null){
+                entry.setLunchHeartRate((((int) lunchBpHeartRateCell.getNumericCellValue())));
+            }
+
+//            Second Dose peak reading
+            XSSFCell sdpBpSystoleCell = row.getCell(16);
+            if (sdpBpSystoleCell != null){
+                entry.setSDPBloodPressureSystole((((int) sdpBpSystoleCell.getNumericCellValue())));
+            }
+            XSSFCell sdpBpDiastoleCell = row.getCell(17);
+            if (sdpBpDiastoleCell != null){
+                entry.setSDPBloodPressureDiastole((((int) sdpBpDiastoleCell.getNumericCellValue())));
+            }
+            XSSFCell sdpBpHeartRateCell = row.getCell(18);
+            if (sdpBpHeartRateCell != null){
+                entry.setSDPHeartRate((((int) sdpBpHeartRateCell.getNumericCellValue())));
             }
 
             if (entry.hasData()) {
