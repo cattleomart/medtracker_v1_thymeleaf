@@ -39,7 +39,6 @@ public class EvaluationDataService {
                     EvaluationEntry.BpSystoleUpperBound,
 //                    EvaluationEntry.BpSystoleLowerBound,
                     130,
-
                     120
                     ));
         }
@@ -50,8 +49,14 @@ public class EvaluationDataService {
         log.info("getDiaEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluationEntries) {
-            listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureDiastole(), EvaluationEntry.BpDiastoleUpperBound,
-                    EvaluationEntry.BpDiastoleLowerBound));
+            listData.add(Arrays.asList(entry.getRecordDate(),
+                    entry.getBloodPressureDiastole(),
+                    entry.getLunchBloodPressureDiastole(),
+                    entry.getSDPBloodPressureDiastole(),
+                    EvaluationEntry.BpDiastoleUpperBound,
+                    80
+
+                    ));
         }
         log.info("getDiaEvaluationData completed ");
         return listData;

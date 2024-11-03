@@ -17,6 +17,10 @@
         data.addColumn('number', /*[[${dcol1}]]*/'dcol1');
         data.addColumn('number', /*[[${dcol2}]]*/'dcol2');
         data.addColumn('number', /*[[${dcol3}]]*/'dcol3');
+
+        data.addColumn('number', /*[[${dcol4}]]*/'dcol4');
+        data.addColumn('number', /*[[${dcol5}]]*/'dcol5');
+
        data.addRows([
        /*[# th:each="row : ${diastoleChartData}"]*/
         [[${row}]],
@@ -25,9 +29,11 @@
           var options = {
             title: /*[[${diastoleGraphTitle}]]*/ "",
              series: {
-            0: { color: 'blue' },
-            1: { color: 'blue', lineDashStyle: [2, 2] },
-            2: { color: 'blue', lineDashStyle: [2, 2] }
+           0: { color: '#3366cc' },
+            1: { color: '#22aa99' },
+            2: { color: 'black' },
+            3: { color: 'red', lineDashStyle: [2, 2] },
+            4: { color: '#dc3912', lineDashStyle: [2, 2] },
           }
           };
 

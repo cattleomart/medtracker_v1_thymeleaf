@@ -43,7 +43,7 @@ public class EvaluationEntry {
 
     public static Integer BpSystoleUpperBound = 140;
     public static Integer BpSystoleLowerBound = 50;
-    public static Integer BpDiastoleUpperBound = 80;
+    public static Integer BpDiastoleUpperBound = 90;
     public  static Integer BpDiastoleLowerBound = 60;
 
 
