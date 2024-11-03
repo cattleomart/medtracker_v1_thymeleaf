@@ -13,6 +13,12 @@ create table if not exists evaluationEntry (
     blood_pressure_systole int,
     blood_pressure_diastole int,
     heart_rate int,
+    lunch_blood_pressure_systole int,
+    lunch_blood_pressure_diastole int,
+    lunch_heart_rate int,
+    sdpblood_pressure_systole int,
+    sdpblood_pressure_diastole int,
+    sdpheart_rate int,
     userModel_id int,
     foreign key (userModel_id) references userModel(id)
 );

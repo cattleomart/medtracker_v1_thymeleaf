@@ -2,6 +2,7 @@ package com.cathalob.medtracker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,14 +11,13 @@ import java.util.Date;
 //,
 //    foreign key (userModel_id) references userModel(userModel_id)
 @Entity(name ="EVALUATIONENTRY")
+@Data
 public class EvaluationEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    public void setUserModel(UserModel userModel) {
-        this.userModel = userModel;
-    }
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usermodel_id", nullable = false)
@@ -25,44 +25,28 @@ public class EvaluationEntry {
     @JsonIgnore
     private UserModel userModel;
     private Date recordDate;
-    public Date getRecordDate() {
-        return recordDate;
-    }
-    public void setRecordDate(Date recordDate) {
-        this.recordDate = recordDate;
-    }
 
     private  Integer bloodPressureSystole;
-    public void setBloodPressureSystole(Integer bloodPressureSystole) {
-        this.bloodPressureSystole = bloodPressureSystole;
-    }
-    public Integer getBloodPressureSystole() {
-        return bloodPressureSystole;
-    }
-
     private Integer bloodPressureDiastole;
     private Integer heartRate;
 
-    public Integer getBloodPressureDiastole() {
-        return bloodPressureDiastole;
-    }
+    private Integer lunchBloodPressureSystole;
+    private Integer lunchBloodPressureDiastole;
+    private Integer lunchHeartRate;
 
-    public void setBloodPressureDiastole(Integer bloodPressureDiastole) {
-        this.bloodPressureDiastole = bloodPressureDiastole;
-    }
 
-    public Integer getHeartRate() {
-        return heartRate;
-    }
+//    SDP prefix means Second Dose Peak, the mid-point of the second daily dose.
+    private Integer SDPBloodPressureSystole;
+    private Integer SDPBloodPressureDiastole;
+    private Integer SDPHeartRate;
 
-    public void setHeartRate(Integer heartRate) {
-        this.heartRate = heartRate;
-    }
 
     public static Integer BpSystoleUpperBound = 140;
     public static Integer BpSystoleLowerBound = 90;
     public static Integer BpDiastoleUpperBound = 80;
     public  static Integer BpDiastoleLowerBound = 60;
+
+
     public EvaluationEntry(String newDatePrefix, Integer index) {
         recordDate = new Date();
         bloodPressureSystole = 105 + (index * 2);
