@@ -66,15 +66,15 @@ public class EvaluationDataService {
 
             Date dateCellValue = row.getCell(0).getDateCellValue();
             entry.setRecordDate(dateCellValue);
-            XSSFCell bpSystoleCell = row.getCell(9);
+            XSSFCell bpSystoleCell = row.getCell(3);
             if (bpSystoleCell != null){
                 entry.setBloodPressureSystole((((int) bpSystoleCell.getNumericCellValue())));
             }
-            XSSFCell bpDiastoleCell = row.getCell(10);
+            XSSFCell bpDiastoleCell = row.getCell(4);
             if (bpDiastoleCell != null){
                 entry.setBloodPressureDiastole((((int) bpDiastoleCell.getNumericCellValue())));
             }
-            XSSFCell bpHeartRateCell = row.getCell(11);
+            XSSFCell bpHeartRateCell = row.getCell(5);
             if (bpHeartRateCell != null){
                 entry.setHeartRate((((int) bpHeartRateCell.getNumericCellValue())));
             }
