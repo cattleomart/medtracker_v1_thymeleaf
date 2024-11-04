@@ -10,6 +10,7 @@ import com.cathalob.medtracker.model.UserRole;
 import com.cathalob.medtracker.repository.PractitionerRoleRequestRepository;
 import com.cathalob.medtracker.repository.UserModelRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class UserService {
 
@@ -89,20 +91,24 @@ public class UserService {
     }
 
     public void approvePractitionerRoleRequests(String username, List<PractitionerRoleRequest> requests) {
-        UserModel userModel = findByLogin(username);
-        validatePractitionerRoleRequests(requests);
-
         requests.forEach(request -> {
-            userModel.setRole(UserRole.PRACT);
-            request.setApproved(true);
-            practitionerRoleRequestRepository.save(request);
-            saveUser(userModel);
+        request.setUserModel(findByLogin(request.getUserModel().getUsername()));
+        log.info("assembled req for: " + request.getUserModel().getUsername() + request.getUserModel().getId());
         });
 
+        validatePractitionerRoleRequests(requests);
+        requests.forEach(request -> {
+            request.getUserModel().setRole(UserRole.PRACT);
+            request.setApproved(true);
+            request.setId(request.getUserModel().getId());
+            practitionerRoleRequestRepository.save(request);
+            saveUser(request.getUserModel());
+        });
 
     }
 
     private void validatePractitionerRoleRequests  (List<PractitionerRoleRequest> requests) throws PractitionerRoleRequestValidationFailed {
+//        check user exists
         requests.forEach(request -> {
             if (!(request.getUserModel().getRole().equals(UserRole.USER))){
                 throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to upgrade");

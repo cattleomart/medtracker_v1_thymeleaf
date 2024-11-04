@@ -23,9 +23,9 @@ public class AdminController {
     }
 
     @PostMapping("/admin/approvePractitionerRoleRequests")
-    public String approvePractitionerRoleRequests(Authentication authentication, @ModelAttribute PractitionerRoleRequestsDTO requestsDTO, Model model) {
+    public String approvePractitionerRoleRequests(@ModelAttribute PractitionerRoleRequestsDTO requestsDTO, Authentication authentication, Model model) {
         userService.approvePractitionerRoleRequests(authentication.getName(), requestsDTO.requests);
-        return "admin/practitionerRoleRequests?success";
+        return "redirect:/admin/practitionerRoleRequests?success";
     }
 
 }

@@ -10,11 +10,13 @@
 
 <div class="centeredLayout">
     <h3>Role Requests</h3>
+    <div th:if="${param.success}">
+        Role request updates submitted
+    </div>
     <form action="#" th:action="@{/admin/approvePractitionerRoleRequests}" th:object="${requestsDTO}"
           method="post">
         <fieldset>
-            <input type="submit" id="submitButton" th:value="Save">
-            <input type="reset" id="resetButton" name="reset" th:value="Reset"/>
+
             <table>
                 <thead>
                 <tr>
@@ -24,33 +26,21 @@
                 </thead>
                 <tbody>
                 <tr th:each="request, itemStat : *{requests}">
-                    <td><input hidden th:name="|requests[${itemStat.index}].id|" th:value="${request.userModel.getId}"/></td>
-                    <td><input th:name="|requests[${itemStat.index}].name|" th:value="${request.userModel.getUsername}" /></td>
-                    <td><input th:name="|requests[${itemStat.index}].approved|" th:value="${request.isApproved}" /></td>
+<!--                    <td><input hidden th:name="|requests[${itemStat.index}].id|" th:value="${request.userModel.id}" /></td>-->
+                    <td><input th:field="*{requests[__${itemStat.index}__].userModel.username}"  /></td>
+                    <td><input type="checkbox" th:field="*{requests[__${itemStat.index}__].approved}"/></td>
                 </tr>
+<!--                <tr th:each="request, itemStat : ${requestsDTO.requests}">-->
+<!--                    <td><input hidden th:name="|requests[${itemStat.index}].id|" th:value="${request.userModel.id}" /></td>-->
+<!--                    <td><input th:name="|requests[${itemStat.index}].username|" th:value="${request.userModel.username}" /></td>-->
+<!--                    <td><input type="checkbox" th:name="|requests[${itemStat.index}].approved|" th:value="${request.approved}"/></td>-->
+<!--                </tr>-->
                 </tbody>
             </table>
+            <input type="submit" id="submitButton" th:value="Save">
+            <input type="reset" id="resetButton" name="reset" th:value="Reset"/>
         </fieldset>
     </form>
-
-<!--    <table>-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th> User Name </th>-->
-
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:if="${requests.empty}">-->
-<!--            <td colspan="2"> No Requests Available </td>-->
-<!--        </tr>-->
-<!--        <tr th:each="request : ${requests}">-->
-<!--            <td><span th:text="${request.userModel.username}"> User Name </span></td>-->
-<!--            <td><label><input type="checkbox" name="approved" th:checked="${request.approved}"> Approved </label></td>-->
-
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
 </div>
 </body>
 </html>
