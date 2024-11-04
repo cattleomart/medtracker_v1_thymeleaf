@@ -1,6 +1,8 @@
 package com.cathalob.medtracker.service;
 
+import com.cathalob.medtracker.dto.PractitionerRoleRequestsDTO;
 import com.cathalob.medtracker.dto.UserModelDTO;
+import com.cathalob.medtracker.err.PractitionerRoleRequestValidationFailed;
 import com.cathalob.medtracker.err.UserAlreadyExistsException;
 import com.cathalob.medtracker.model.PractitionerRoleRequest;
 import com.cathalob.medtracker.model.UserModel;
@@ -9,7 +11,6 @@ import com.cathalob.medtracker.repository.PractitionerRoleRequestRepository;
 import com.cathalob.medtracker.repository.UserModelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,12 @@ public class UserService {
 //    Updating
     public void saveUser(UserModel userModel){
         userModelRepository.save(userModel);
-
     }
+
+
+
+
+//    USER Role functions
     public void submitPractitionerRoleRequest(String username) {
         UserModel userModel = findByLogin(username);
         PractitionerRoleRequest practitionerRoleRequest = new PractitionerRoleRequest();
@@ -68,9 +73,44 @@ public class UserService {
         return practitionerRoleRequestRepository.findById(userModel.getId()).orElse(null);
 
     }
-    public List<PractitionerRoleRequest> getPractitionerRoleRequests(){
-        return StreamSupport.stream(practitionerRoleRequestRepository.findAll().spliterator(), false)
-                .toList();
+
+
+
+
+//ADMIN user functions
+    public List<PractitionerRoleRequest> getPractitionerRoleRequests() {
+    return StreamSupport.stream(practitionerRoleRequestRepository.findAll().spliterator(), false)
+            .toList();
+
+}
+
+    public PractitionerRoleRequestsDTO getPractitionerRoleRequestsDTO() {
+        return new PractitionerRoleRequestsDTO(getPractitionerRoleRequests());
+    }
+
+    public void approvePractitionerRoleRequests(String username, List<PractitionerRoleRequest> requests) {
+        UserModel userModel = findByLogin(username);
+        validatePractitionerRoleRequests(requests);
+
+        requests.forEach(request -> {
+            userModel.setRole(UserRole.PRACT);
+            request.setApproved(true);
+            practitionerRoleRequestRepository.save(request);
+            saveUser(userModel);
+        });
+
 
     }
+
+    private void validatePractitionerRoleRequests  (List<PractitionerRoleRequest> requests) throws PractitionerRoleRequestValidationFailed {
+        requests.forEach(request -> {
+            if (!(request.getUserModel().getRole().equals(UserRole.USER))){
+                throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to upgrade");
+            }
+        });
+
+    }
+
+
+
 }
