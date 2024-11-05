@@ -13,6 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 
 @Slf4j
@@ -33,7 +38,8 @@ public class EvaluationDataService {
         log.info("getSysEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluationEntries) {
-            listData.add(Arrays.asList(entry.getRecordDate(), entry.getBloodPressureSystole(),
+            listData.add(Arrays.asList(formattedDateOfEntry(entry),
+                    entry.getBloodPressureSystole(),
                     entry.getLunchBloodPressureSystole(),
                     entry.getSDPBloodPressureSystole(),
                     EvaluationEntry.BpSystoleUpperBound,
@@ -50,7 +56,7 @@ public class EvaluationDataService {
         log.info("getDiaEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluationEntries) {
-            listData.add(Arrays.asList(entry.getRecordDate(),
+            listData.add(Arrays.asList(formattedDateOfEntry(entry),
                     entry.getBloodPressureDiastole(),
                     entry.getLunchBloodPressureDiastole(),
                     entry.getSDPBloodPressureDiastole(),
@@ -66,7 +72,7 @@ public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evalua
         log.info("getDoseEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluationEntries) {
-            listData.add(Arrays.asList(entry.getRecordDate(),
+            listData.add(Arrays.asList(formattedDateOfEntry(entry),
                     entry.getDose1(),
                     entry.getDose2()
                     ));
@@ -154,5 +160,11 @@ public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evalua
             }
         }
         evaluationEntryRepository.saveAll(entries);
+    }
+
+    private String formattedDateOfEntry(EvaluationEntry evaluationEntry) {
+        LocalDate localDate = Instant.ofEpochMilli(evaluationEntry.getRecordDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(localDate);
+
     }
     }
