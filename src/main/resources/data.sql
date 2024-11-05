@@ -13,10 +13,10 @@ NOT EXISTS (
 );
 
 INSERT INTO USERMODEL (username, password, role)
-SELECT 'patient@pat.com', '$2a$10$WSU4n.NhUE7g1lwMAeTT9OXAaGJG2s.4UkhYIYuIcT0qn0AxNV8NO', 'USER'
+SELECT 'patient1@pat.com', '$2a$10$WSU4n.NhUE7g1lwMAeTT9OXAaGJG2s.4UkhYIYuIcT0qn0AxNV8NO', 'USER'
 WHERE
 NOT EXISTS (
-    SELECT username FROM USERMODEL WHERE username = 'patient@pat.com'
+    SELECT username FROM USERMODEL WHERE username = 'patient1@pat.com'
 );
 INSERT INTO USERMODEL (username, password, role)
 SELECT 'patient2@pat.com', '$2a$10$WSU4n.NhUE7g1lwMAeTT9OXAaGJG2s.4UkhYIYuIcT0qn0AxNV8NO', 'USER'
@@ -25,5 +25,11 @@ NOT EXISTS (
     SELECT username FROM USERMODEL WHERE username = 'patient2@pat.com'
 );
 
+INSERT INTO PRACTITIONERROLEREQUEST (USERMODEL_ID, APPROVED)
+SELECT '2', 'TRUE'
+WHERE
+NOT EXISTS (
+    SELECT USERMODEL_ID FROM PRACTITIONERROLEREQUEST WHERE USERMODEL_ID = '2'
+);
 
 -- all password in plaintext are 'abc'
