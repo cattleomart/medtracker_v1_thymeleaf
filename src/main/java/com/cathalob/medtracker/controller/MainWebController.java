@@ -62,11 +62,9 @@ public class MainWebController {
     model.addAttribute("col0", "Date");
 
     model.addAttribute("systoleGraphTitle", "Systole");
-
     model.addAttribute("col1", "Morning");
      model.addAttribute("col2", "Lunch");
      model.addAttribute("col3", "Second Dose Peak");
-
     model.addAttribute("col4", "Danger High");
      model.addAttribute("col5", "High Stage 1");
      model.addAttribute("col6", "Elevated");
@@ -76,14 +74,18 @@ public class MainWebController {
     model.addAttribute("dcol1", "Morning");
     model.addAttribute("dcol2", "Lunch");
     model.addAttribute("dcol3", "Second Dose Peak");
-
      model.addAttribute("dcol4", "Danger High");
      model.addAttribute("dcol5", "High Stage 1");
+
+     model.addAttribute("doseGraphTitle", "Dose (mg)");
+     model.addAttribute("dosecol1M", "Morning (Methylphenidate)");
+     model.addAttribute("dosecol2M", "Lunch (Methylphenidate)");
 
 
 
     model.addAttribute("systoleChartData",evaluationDataService.getSystoleEvaluationData(evaluationEntries));
     model.addAttribute("diastoleChartData",evaluationDataService.getDiastoleEvaluationData(evaluationEntries));
+    model.addAttribute("doseChartData",evaluationDataService.getDoseEvaluationData(evaluationEntries));
     log.info("graphs complete");
     return "graphs";
     }

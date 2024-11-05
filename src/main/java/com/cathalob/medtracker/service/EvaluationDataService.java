@@ -45,7 +45,8 @@ public class EvaluationDataService {
 
         log.info("getSysEvaluationData completed ");
         return listData;
-    }public List<List<Object>> getDiastoleEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
+    }
+    public List<List<Object>> getDiastoleEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
         log.info("getDiaEvaluationData started ");
         List<List<Object>> listData = new ArrayList<>();
         for (EvaluationEntry entry : evaluationEntries) {
@@ -59,6 +60,18 @@ public class EvaluationDataService {
                     ));
         }
         log.info("getDiaEvaluationData completed ");
+        return listData;
+    }
+public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
+        log.info("getDoseEvaluationData started ");
+        List<List<Object>> listData = new ArrayList<>();
+        for (EvaluationEntry entry : evaluationEntries) {
+            listData.add(Arrays.asList(entry.getRecordDate(),
+                    entry.getDose1(),
+                    entry.getDose2()
+                    ));
+        }
+        log.info("getDoseEvaluationData completed ");
         return listData;
     }
 
