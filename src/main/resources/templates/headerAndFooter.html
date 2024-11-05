@@ -23,7 +23,7 @@
             <a th:href="@{/upload}">Upload</a>
         </div>
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
-            <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: Role requests</a>
+            <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: User Management</a>
         </div>
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
             <a th:href="@{/user/practitionerRoleRequest}">Request Role</a>

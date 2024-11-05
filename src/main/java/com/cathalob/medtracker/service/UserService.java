@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -90,28 +91,63 @@ public class UserService {
         return new PractitionerRoleRequestsDTO(getPractitionerRoleRequests());
     }
 
-    public void approvePractitionerRoleRequests(String username, List<PractitionerRoleRequest> requests) {
-        requests.forEach(request -> {
-        request.setUserModel(findByLogin(request.getUserModel().getUsername()));
-        log.info("assembled req for: " + request.getUserModel().getUsername() + request.getUserModel().getId());
-        });
+    public void approvePractitionerRoleRequests( List<PractitionerRoleRequest> requests) {
 
-        validatePractitionerRoleRequests(requests);
-        requests.forEach(request -> {
-            request.getUserModel().setRole(UserRole.PRACT);
-            request.setApproved(true);
+        List<PractitionerRoleRequest> toProcess = assembledRoleRequestsToProcess(requests);
+
+        validatePractitionerRoleRequests(toProcess);
+        toProcess.forEach(request -> {
+            log.info("processing req for: " + request.getUserModel().getUsername() + request.getUserModel().getId());
+            if (request.isApproved()) {
+                request.getUserModel().setRole(UserRole.PRACT);
+            }
+            else {
+                request.getUserModel().setRole(UserRole.USER);
+            }
             request.setId(request.getUserModel().getId());
-            practitionerRoleRequestRepository.save(request);
+            if (request.isApproved()){
+                practitionerRoleRequestRepository.save(request);
+            } else {
+                practitionerRoleRequestRepository.delete(request);
+            }
             saveUser(request.getUserModel());
         });
 
     }
 
-    private void validatePractitionerRoleRequests  (List<PractitionerRoleRequest> requests) throws PractitionerRoleRequestValidationFailed {
-//        check user exists
+
+    private List<PractitionerRoleRequest> assembledRoleRequestsToProcess(List<PractitionerRoleRequest> requests) throws PractitionerRoleRequestValidationFailed {
+        List<PractitionerRoleRequest> toProcess = new ArrayList<>();
         requests.forEach(request -> {
-            if (!(request.getUserModel().getRole().equals(UserRole.USER))){
-                throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to upgrade");
+            String username = request.getUserModel().getUsername();
+            log.info("assembling req for: " + username);
+            UserModel existingUser = findByLogin(username);
+            if ((existingUser == null)) {
+                throw new PractitionerRoleRequestValidationFailed("Non existent user detected: " + username);
+            }
+
+            request.setUserModel(existingUser);
+            if ((request.isApproved() && request.getUserModel().getRole().equals(UserRole.USER)) || (!request.isApproved() && request.getUserModel().getRole().equals(UserRole.PRACT))) {
+                toProcess.add(request);
+            }
+        });
+        return toProcess;
+    }
+
+    private void validatePractitionerRoleRequests  (List<PractitionerRoleRequest> requests) throws PractitionerRoleRequestValidationFailed {
+        if (requests.isEmpty()) {
+            throw new PractitionerRoleRequestValidationFailed("No valid changes detected");
+        }
+        requests.forEach(request -> {
+            log.info("validating req for: " + request.getUserModel().getUsername() + request.getUserModel().getId());
+            if ((request.getUserModel().getId() == null)){
+                throw new PractitionerRoleRequestValidationFailed("User not found: " + request.getUserModel().getUsername());
+            }
+            if (!(request.getUserModel().getRole().equals(UserRole.USER)) && request.isApproved()){
+                throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to upgrade: "+ request.getUserModel().getUsername());
+            }
+            if (!(request.getUserModel().getRole().equals(UserRole.PRACT)) && !(request.isApproved())){
+                throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to downgrade: " + request.getUserModel().getUsername() );
             }
         });
 

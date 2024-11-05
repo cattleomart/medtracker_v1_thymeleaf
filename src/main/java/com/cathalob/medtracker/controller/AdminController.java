@@ -19,13 +19,15 @@ public class AdminController {
     @GetMapping("/admin/practitionerRoleRequests")
     public String getPractitionerRoleRequests(Model model){
         model.addAttribute("requestsDTO", userService.getPractitionerRoleRequestsDTO());
+        model.addAttribute("users", userService.findAll());
         return "admin/practitionerRoleRequests";
     }
 
     @PostMapping("/admin/approvePractitionerRoleRequests")
-    public String approvePractitionerRoleRequests(@ModelAttribute PractitionerRoleRequestsDTO requestsDTO, Authentication authentication, Model model) {
-        userService.approvePractitionerRoleRequests(authentication.getName(), requestsDTO.requests);
+    public String approvePractitionerRoleRequests(@ModelAttribute PractitionerRoleRequestsDTO requestsDTO) {
+        userService.approvePractitionerRoleRequests( requestsDTO.requests);
         return "redirect:/admin/practitionerRoleRequests?success";
     }
+
 
 }
