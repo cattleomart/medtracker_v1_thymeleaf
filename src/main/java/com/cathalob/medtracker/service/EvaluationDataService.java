@@ -78,6 +78,23 @@ public class EvaluationDataService {
 
             Date dateCellValue = row.getCell(0).getDateCellValue();
             entry.setRecordDate(dateCellValue);
+
+            XSSFCell medicationCell = row.getCell(20);
+            if (medicationCell != null){
+                entry.setMedication(medicationCell.getStringCellValue());
+            }
+
+            XSSFCell dose1Cell = row.getCell(6);
+            if (dose1Cell != null){
+                entry.setDose1((((int) dose1Cell.getNumericCellValue())));
+            }
+
+            XSSFCell dose2Cell = row.getCell(13);
+            if (dose2Cell != null){
+                entry.setDose2((((int) dose2Cell.getNumericCellValue())));
+            }
+
+
             XSSFCell bpSystoleCell = row.getCell(3);
             if (bpSystoleCell != null){
                 entry.setBloodPressureSystole((((int) bpSystoleCell.getNumericCellValue())));
@@ -125,6 +142,4 @@ public class EvaluationDataService {
         }
         evaluationEntryRepository.saveAll(entries);
     }
-
-
     }

@@ -25,6 +25,9 @@ public class EvaluationEntry {
     @JsonIgnore
     private UserModel userModel;
     private Date recordDate;
+    private String medication;
+    private int dose1;
+    private int dose2;
 
     private  Integer bloodPressureSystole;
     private Integer bloodPressureDiastole;
