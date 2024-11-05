@@ -64,8 +64,14 @@ public class EvaluationEntry {
 
         boolean morningReading = bloodPressureDiastole != null && bloodPressureSystole != null && heartRate != null;
         boolean lunchReading = lunchBloodPressureDiastole != null && lunchBloodPressureSystole != null && lunchHeartRate != null;
-        return morningReading || lunchReading;
+        boolean secondPeak = SDPBloodPressureDiastole != null && SDPBloodPressureSystole != null && SDPHeartRate != null;
+        return morningReading || lunchReading || secondPeak;
 
     }
+//    public boolean isComplete(){
+//
+//        return hasData() && true
+//
+//    }
 
 }

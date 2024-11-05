@@ -19,6 +19,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -33,6 +36,31 @@ public class EvaluationDataService {
     public Iterable<EvaluationEntry> getEvaluationEntries(UserModel userModel){
         return evaluationEntryRepository.findEvaluationEntriesForUserId(userModel.getId());
     }
+
+
+    private void processEvaluationEntries(List<EvaluationEntry> entries, UserModel userModel){
+        List<EvaluationEntry> existingEntries = StreamSupport.stream(getEvaluationEntries(userModel).spliterator(), false)
+                .toList();
+        Map<Date, EvaluationEntry> existingMap = existingEntries.stream().collect(Collectors.toMap(EvaluationEntry::getRecordDate, Function.identity()));
+
+        List<EvaluationEntry> validEntries = new ArrayList<>();
+        entries.forEach(entry -> {
+            if (entry.hasData()) {
+
+                EvaluationEntry existing = existingMap.get(entry.getRecordDate());
+                if (existing != null){
+                    log.info("Found existing entry: " + existing.getRecordDate());
+                    entry.setId(existing.getId());
+                }else {
+                    log.info("New entry: " + entry.getRecordDate());
+                }
+                validEntries.add(entry);
+            }
+        });
+
+        evaluationEntryRepository.saveAll(validEntries);
+    }
+
 
     public List<List<Object>> getSystoleEvaluationData(Iterable<EvaluationEntry> evaluationEntries){
         log.info("getSysEvaluationData started ");
@@ -154,12 +182,10 @@ public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evalua
             if (sdpBpHeartRateCell != null){
                 entry.setSDPHeartRate((((int) sdpBpHeartRateCell.getNumericCellValue())));
             }
-
-            if (entry.hasData()) {
             entries.add(entry);
-            }
         }
-        evaluationEntryRepository.saveAll(entries);
+
+       processEvaluationEntries(entries, userModel);
     }
 
     private String formattedDateOfEntry(EvaluationEntry evaluationEntry) {
