@@ -39,9 +39,9 @@ public class EvaluationEntry {
 
 
 //    SDP prefix means Second Dose Peak, the mid-point of the second daily dose.
-    private Integer SDPBloodPressureSystole;
-    private Integer SDPBloodPressureDiastole;
-    private Integer SDPHeartRate;
+    private Integer sdpBloodPressureSystole;
+    private Integer sdpBloodPressureDiastole;
+    private Integer sdpHeartRate;
 
 
     public static Integer BpSystoleUpperBound = 140;
@@ -64,7 +64,7 @@ public class EvaluationEntry {
 
         boolean morningReading = bloodPressureDiastole != null && bloodPressureSystole != null && heartRate != null;
         boolean lunchReading = lunchBloodPressureDiastole != null && lunchBloodPressureSystole != null && lunchHeartRate != null;
-        boolean secondPeak = SDPBloodPressureDiastole != null && SDPBloodPressureSystole != null && SDPHeartRate != null;
+        boolean secondPeak = sdpBloodPressureDiastole != null && sdpBloodPressureSystole != null && sdpHeartRate != null;
         return morningReading || lunchReading || secondPeak;
 
     }

@@ -69,7 +69,7 @@ public class EvaluationDataService {
             listData.add(Arrays.asList(formattedDateOfEntry(entry),
                     entry.getBloodPressureSystole(),
                     entry.getLunchBloodPressureSystole(),
-                    entry.getSDPBloodPressureSystole(),
+                    entry.getSdpBloodPressureSystole(),
                     EvaluationEntry.BpSystoleUpperBound,
 //                    EvaluationEntry.BpSystoleLowerBound,
                     130,
@@ -87,7 +87,7 @@ public class EvaluationDataService {
             listData.add(Arrays.asList(formattedDateOfEntry(entry),
                     entry.getBloodPressureDiastole(),
                     entry.getLunchBloodPressureDiastole(),
-                    entry.getSDPBloodPressureDiastole(),
+                    entry.getSdpBloodPressureDiastole(),
                     EvaluationEntry.BpDiastoleUpperBound,
                     80
 
@@ -172,15 +172,15 @@ public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evalua
 //            Second Dose peak reading
             XSSFCell sdpBpSystoleCell = row.getCell(16);
             if (sdpBpSystoleCell != null){
-                entry.setSDPBloodPressureSystole((((int) sdpBpSystoleCell.getNumericCellValue())));
+                entry.setSdpBloodPressureSystole((((int) sdpBpSystoleCell.getNumericCellValue())));
             }
             XSSFCell sdpBpDiastoleCell = row.getCell(17);
             if (sdpBpDiastoleCell != null){
-                entry.setSDPBloodPressureDiastole((((int) sdpBpDiastoleCell.getNumericCellValue())));
+                entry.setSdpBloodPressureDiastole((((int) sdpBpDiastoleCell.getNumericCellValue())));
             }
             XSSFCell sdpBpHeartRateCell = row.getCell(18);
             if (sdpBpHeartRateCell != null){
-                entry.setSDPHeartRate((((int) sdpBpHeartRateCell.getNumericCellValue())));
+                entry.setSdpHeartRate((((int) sdpBpHeartRateCell.getNumericCellValue())));
             }
             entries.add(entry);
         }
