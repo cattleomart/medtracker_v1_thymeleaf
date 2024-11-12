@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.sql.Time;
+
 @Data
 @Entity(name = "PRESCRIPTION")
 public class Prescription {
@@ -27,7 +30,9 @@ public class Prescription {
     private UserModel practitioner;
 
 
-//        private Time begin;
-//        private Time end;
+    @Temporal(TemporalType.TIME)
+    private Time beginTime;
+    @Temporal(TemporalType.TIME)
+    private Time endTime;
 
 }

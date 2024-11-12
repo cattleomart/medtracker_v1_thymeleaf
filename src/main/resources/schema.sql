@@ -40,5 +40,7 @@ create table if not exists PRESCRIPTION (
     patient_id int,
     foreign key (patient_id) references userModel(id),
     practitioner_id int,
-    foreign key (practitioner_id) references userModel(id)
+    foreign key (practitioner_id) references userModel(id),
+    begin_time timestamp,
+    end_time timestamp
 );
