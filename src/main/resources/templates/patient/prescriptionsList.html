@@ -53,12 +53,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${users.empty}">
-            <td colspan="2"> No Users Available </td>
+        <tr th:if="${prescriptionsDTO.prescriptions.empty}">
+            <td colspan="2"> No Prescriptions Available </td>
         </tr>
-        <tr th:each="user : ${users}">
-            <td><span th:text="${user.username}"> username </span></td>
-            <td><span th:text="${user.role}"> role </span></td>
+        <tr th:each="prescription : ${prescriptionsDTO.prescriptions}">
+            <td><span th:text="${prescription.drug}"> drug </span></td>
+            <td><span th:text="${prescription.doseMg}"> dose </span></td>
 
         </tr>
         </tbody>

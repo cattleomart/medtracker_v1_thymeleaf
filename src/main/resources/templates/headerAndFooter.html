@@ -22,6 +22,9 @@
         <div sec:authorize="isAuthenticated()">
             <a th:href="@{/upload}">Upload</a>
         </div>
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
+            <a th:href="@{/patient/prescriptions}">Prescriptions</a>
+        </div>
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
             <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: User Management</a>
         </div>
