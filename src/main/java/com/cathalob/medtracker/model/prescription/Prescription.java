@@ -19,12 +19,12 @@ public class Prescription {
     @Enumerated(EnumType.STRING)
     private Drug drug;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "patient_id", nullable = false)
+    @JoinColumn(name = "PATIENT_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private UserModel patient;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "practitioner_id", nullable = false)
+    @JoinColumn(name = "PRACTITIONER_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private UserModel practitioner;
