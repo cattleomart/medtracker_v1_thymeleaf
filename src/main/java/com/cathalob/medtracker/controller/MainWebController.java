@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Controller
 @Slf4j
@@ -78,12 +79,15 @@ public class MainWebController {
      model.addAttribute("dcol5", "High Stage 1");
 
      model.addAttribute("doseGraphTitle", "Dose (mg)");
-     model.addAttribute("dosecol1M", "Morning (Methylphenidate)");
-     model.addAttribute("dosecol2M", "Lunch (Methylphenidate)");
-     model.addAttribute("dosecol1N", "Morning (No Meds)");
-     model.addAttribute("dosecol2N", "Lunch (No Meds)");
-     model.addAttribute("dosecol1D", "Morning (Dexamphetamine)");
-     model.addAttribute("dosecol2D", "Lunch (Dexamphetamine)");
+     model.addAttribute("colls",
+             Arrays.asList(Arrays.asList(
+                     "Morning (Methylphenidate)",
+                     "Morning (Methylphenidate)",
+                     "Morning (No Meds )",
+                     "Morning (No Meds)",
+                     "Morning (Dexamphetamine)",
+                     "Morning (Dexamphetamine)")));
+
 
 
 

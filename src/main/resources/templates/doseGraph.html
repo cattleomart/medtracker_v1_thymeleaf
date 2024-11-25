@@ -14,12 +14,20 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', /*[[${col0}]]*/'col0');
 
-        data.addColumn('number', /*[[${dosecol1M}]]*/'dosecol1M');
-        data.addColumn('number', /*[[${dosecol2M}]]*/'dosecol2M');
-        data.addColumn('number', /*[[${dosecol1N}]]*/'dosecol1N');
-        data.addColumn('number', /*[[${dosecol2N}]]*/'dosecol2N');
-        data.addColumn('number', /*[[${dosecol1D}]]*/'dosecol1D');
-        data.addColumn('number', /*[[${dosecol2D}]]*/'dosecol2D');
+
+
+collData = ([
+       /*[# th:each="row : ${colls}"]*/
+        [[${row}]],
+        /*[/]*/
+       ])[0];
+
+        var numColls = collData.length;
+
+        for (var i = 0; i < numColls; i++)
+            data.addColumn('number', collData[i]);
+
+
 
 
        data.addRows([
