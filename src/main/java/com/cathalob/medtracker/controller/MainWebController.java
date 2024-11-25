@@ -80,6 +80,10 @@ public class MainWebController {
      model.addAttribute("doseGraphTitle", "Dose (mg)");
      model.addAttribute("dosecol1M", "Morning (Methylphenidate)");
      model.addAttribute("dosecol2M", "Lunch (Methylphenidate)");
+     model.addAttribute("dosecol1N", "Morning (No Meds)");
+     model.addAttribute("dosecol2N", "Lunch (No Meds)");
+     model.addAttribute("dosecol1D", "Morning (Dexamphetamine)");
+     model.addAttribute("dosecol2D", "Lunch (Dexamphetamine)");
 
 
 

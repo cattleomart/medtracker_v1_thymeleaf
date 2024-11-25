@@ -16,6 +16,10 @@
 
         data.addColumn('number', /*[[${dosecol1M}]]*/'dosecol1M');
         data.addColumn('number', /*[[${dosecol2M}]]*/'dosecol2M');
+        data.addColumn('number', /*[[${dosecol1N}]]*/'dosecol1N');
+        data.addColumn('number', /*[[${dosecol2N}]]*/'dosecol2N');
+        data.addColumn('number', /*[[${dosecol1D}]]*/'dosecol1D');
+        data.addColumn('number', /*[[${dosecol2D}]]*/'dosecol2D');
 
 
        data.addRows([
@@ -24,11 +28,14 @@
         /*[/]*/
        ]);
           var options = {
-            interpolateNulls: true,
             title: /*[[${doseGraphTitle}]]*/ "",
              series: {
             0: { color: '#3366cc' },
             1: { color: '#3366cc',lineDashStyle: [2, 2] },
+            2: { color: 'black' },
+            3: { color: 'black',lineDashStyle: [2, 2] },
+            4: { color: '#ff9900' },
+            5: { color: '#ff9900',lineDashStyle: [2, 2] },
 
           }
           };
