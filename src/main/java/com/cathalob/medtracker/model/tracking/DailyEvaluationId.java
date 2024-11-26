@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.Objects;
 
 public class DailyEvaluationId implements Serializable {
-    private int dailyEvaluationId;
+    private int dailyEvaluationUserModelId;
     private Date dailyEvaluationDate;
 
     public DailyEvaluationId(int dailyEvaluationId, Date dailyEvaluationDate) {
-        this.dailyEvaluationId = dailyEvaluationId;
+        this.dailyEvaluationUserModelId = dailyEvaluationId;
         this.dailyEvaluationDate = dailyEvaluationDate;
     }
 
@@ -18,11 +18,11 @@ public class DailyEvaluationId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DailyEvaluationId that = (DailyEvaluationId) o;
-        return dailyEvaluationId == that.dailyEvaluationId && Objects.equals(dailyEvaluationDate, that.dailyEvaluationDate);
+        return dailyEvaluationUserModelId == that.dailyEvaluationUserModelId && Objects.equals(dailyEvaluationDate, that.dailyEvaluationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dailyEvaluationId, dailyEvaluationDate);
+        return Objects.hash(dailyEvaluationUserModelId, dailyEvaluationDate);
     }
 }
