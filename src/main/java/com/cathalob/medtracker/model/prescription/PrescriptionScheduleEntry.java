@@ -13,7 +13,7 @@ public class PrescriptionScheduleEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRESCRIPTION_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
