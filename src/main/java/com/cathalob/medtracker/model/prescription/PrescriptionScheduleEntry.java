@@ -1,5 +1,6 @@
 package com.cathalob.medtracker.model.prescription;
 
+import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;

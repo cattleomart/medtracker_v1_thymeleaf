@@ -18,6 +18,13 @@ public class Prescription {
     private int doseMg;
     @Enumerated(EnumType.STRING)
     private Drug drug;
+
+    @OneToOne
+    @JoinColumn
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private Medication medication;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PATIENT_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

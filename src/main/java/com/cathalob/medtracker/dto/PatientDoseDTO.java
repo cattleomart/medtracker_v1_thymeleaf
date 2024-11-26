@@ -1,6 +1,6 @@
 package com.cathalob.medtracker.dto;
 
-import com.cathalob.medtracker.model.prescription.DAYSTAGE;
+import com.cathalob.medtracker.model.enums.DAYSTAGE;
 
 public class PatientDoseDTO {
 private boolean taken = false;
