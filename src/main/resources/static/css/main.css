@@ -2,6 +2,12 @@
 
 body {
     font: normal 14px Verdana, Arial, sans-serif;
+    margin: 0;
+}
+
+.mainContent{
+    margin-top: 150px;
+    margin-left: 8px;
 }
 
 .centeredLayout{
@@ -35,19 +41,26 @@ body {
   background-color: #04AA6D;
   color: white;
 }
-
+.headerFragment {
+    z-index: 999;
+    top: 0;
+    position: fixed;
+    width: 100%;
+}
 
 .headerAndNav {
     display: grid;
     background-color: orange;
     margin-bottom: 20px;
 }
-.headerContainer {
+.headerTitle {
     margin-left: 20px;
 
 }
+
 .authStatus {
     float: right;
+    margin-right: 10;
 }
 
 .authStatusName {

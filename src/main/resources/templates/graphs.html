@@ -6,11 +6,13 @@
 </head>
 <body>
     <div th:insert="~{headerAndFooter :: header}"></div>
-    <h1 th:text="${graphPageTitle}"></h1>
-    <h3>Medication Dose</h3>
-    <div th:insert="~{doseGraph :: doseGraph}"></div>
-    <h3 th:text="${bpSectionTitle}"></h3>
-    <div th:insert="~{systoleGraph :: systoleGraph}"></div>
-    <div th:insert="~{diastoleGraph :: diastoleGraph}"></div>
+   <div class="mainContent">
+        <h1 th:text="${graphPageTitle}"></h1>
+        <h3>Medication Dose</h3>
+        <div th:insert="~{doseGraph :: doseGraph}"></div>
+        <h3 th:text="${bpSectionTitle}"></h3>
+        <div th:insert="~{systoleGraph :: systoleGraph}"></div>
+        <div th:insert="~{diastoleGraph :: diastoleGraph}"></div>
+   </div>
 </body>
 </html>

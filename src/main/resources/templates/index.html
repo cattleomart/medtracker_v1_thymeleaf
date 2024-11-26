@@ -7,16 +7,18 @@
 </head>
 <body>
 <div th:insert="~{headerAndFooter :: header}"></div>
-<div class="centeredLayout">
-    <div sec:authorize="isAuthenticated()">
-        <h2>Welcome to Med Tracker</h2>
-    </div>
-    <div sec:authorize="isAnonymous()">
-        <h2>Welcome to Med Tracker</h2>
-        <H3>To proceed please authorize</H3>
-        <a href="/login">Login</a>
-        <p>No account yet? Please register</p>
-        <a href="/registration">Register Account</a>
+<div class="mainContent">
+    <div class="centeredLayout">
+        <div sec:authorize="isAuthenticated()">
+            <h2>Welcome to Med Tracker</h2>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <h2>Welcome to Med Tracker</h2>
+            <H3>To proceed please authorize</H3>
+            <a href="/login">Login</a>
+            <p>No account yet? Please register</p>
+            <a href="/registration">Register Account</a>
+        </div>
     </div>
 </div>
 
