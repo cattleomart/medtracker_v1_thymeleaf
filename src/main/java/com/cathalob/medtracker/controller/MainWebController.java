@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Controller
@@ -78,15 +79,16 @@ public class MainWebController {
      model.addAttribute("dcol4", "Danger High");
      model.addAttribute("dcol5", "High Stage 1");
 
+     ArrayList<String> strings = new ArrayList<>();
+     evaluationDataService.drugNames(evaluationEntries).stream().forEach((name)->{
+         strings.add("(Morning) " + name);
+         strings.add("(Lunch) " + name);
+     });
+     System.out.println(strings);
+
      model.addAttribute("doseGraphTitle", "Dose (mg)");
-     model.addAttribute("colls",
-             Arrays.asList(Arrays.asList(
-                     "Morning (Methylphenidate)",
-                     "Morning (Methylphenidate)",
-                     "Morning (No Meds )",
-                     "Morning (No Meds)",
-                     "Morning (Dexamphetamine)",
-                     "Morning (Dexamphetamine)")));
+     model.addAttribute("colls",Arrays.asList(strings));
+
 
 
 

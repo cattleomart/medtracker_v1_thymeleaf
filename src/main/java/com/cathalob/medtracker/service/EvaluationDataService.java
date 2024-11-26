@@ -87,6 +87,11 @@ public class EvaluationDataService {
         return listData;
     }
 
+    public List<String> drugNames(Iterable<EvaluationEntry> evaluationEntries){
+        List<String> names = new ArrayList<>();
+        evaluationEntries.forEach((e)->names.add(e.getMedication()));
+        return (names.stream().distinct().toList());
+    }
     public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evaluationEntries) {
         log.info("getDoseEvaluationData started ");
 //        separate data by drug
