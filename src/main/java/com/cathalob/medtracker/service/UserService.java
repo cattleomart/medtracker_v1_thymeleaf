@@ -6,7 +6,7 @@ import com.cathalob.medtracker.err.PractitionerRoleRequestValidationFailed;
 import com.cathalob.medtracker.err.UserAlreadyExistsException;
 import com.cathalob.medtracker.model.PractitionerRoleRequest;
 import com.cathalob.medtracker.model.UserModel;
-import com.cathalob.medtracker.model.UserRole;
+import com.cathalob.medtracker.model.enums.USERROLE;
 import com.cathalob.medtracker.repository.PractitionerRoleRequestRepository;
 import com.cathalob.medtracker.repository.UserModelRepository;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class UserService {
 
         UserModel user = new UserModel();
         user.setUsername(userModelDTO.getUsername());
-        user.setRole(UserRole.USER);
+        user.setRole(USERROLE.USER);
         user.setPassword(passwordEncoder.encode(userModelDTO.getPassword()));
         userModelRepository.save(user);
     }
@@ -99,10 +99,10 @@ public class UserService {
         toProcess.forEach(request -> {
             log.info("processing req for: " + request.getUserModel().getUsername() + request.getUserModel().getId());
             if (request.isApproved()) {
-                request.getUserModel().setRole(UserRole.PRACT);
+                request.getUserModel().setRole(USERROLE.PRACT);
             }
             else {
-                request.getUserModel().setRole(UserRole.USER);
+                request.getUserModel().setRole(USERROLE.USER);
             }
             request.setId(request.getUserModel().getId());
             if (request.isApproved()){
@@ -127,7 +127,7 @@ public class UserService {
             }
 
             request.setUserModel(existingUser);
-            if ((request.isApproved() && request.getUserModel().getRole().equals(UserRole.USER)) || (!request.isApproved() && request.getUserModel().getRole().equals(UserRole.PRACT))) {
+            if ((request.isApproved() && request.getUserModel().getRole().equals(USERROLE.USER)) || (!request.isApproved() && request.getUserModel().getRole().equals(USERROLE.PRACT))) {
                 toProcess.add(request);
             }
         });
@@ -143,10 +143,10 @@ public class UserService {
             if ((request.getUserModel().getId() == null)){
                 throw new PractitionerRoleRequestValidationFailed("User not found: " + request.getUserModel().getUsername());
             }
-            if (!(request.getUserModel().getRole().equals(UserRole.USER)) && request.isApproved()){
+            if (!(request.getUserModel().getRole().equals(USERROLE.USER)) && request.isApproved()){
                 throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to upgrade: "+ request.getUserModel().getUsername());
             }
-            if (!(request.getUserModel().getRole().equals(UserRole.PRACT)) && !(request.isApproved())){
+            if (!(request.getUserModel().getRole().equals(USERROLE.PRACT)) && !(request.isApproved())){
                 throw new PractitionerRoleRequestValidationFailed("User does not have the correct role to downgrade: " + request.getUserModel().getUsername() );
             }
         });

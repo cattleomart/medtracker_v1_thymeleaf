@@ -48,7 +48,6 @@ public class MedicationDataLoader implements ApplicationRunner {
                     if (row.getCell(0) != null) {
                         medication.setName(dataFormatter.formatCellValue(row.getCell(0)));
                     }
-
                     medications.add(medication);
                 }
             });

@@ -1,5 +1,6 @@
 package com.cathalob.medtracker.model;
 
+import com.cathalob.medtracker.model.enums.USERROLE;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +13,6 @@ public class UserModel {
     private String username;
     private String password;
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private USERROLE role;
 
 }

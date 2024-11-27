@@ -16,8 +16,6 @@ public class Prescription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int doseMg;
-    @Enumerated(EnumType.STRING)
-    private Drug drug;
 
     @OneToOne
     @JoinColumn

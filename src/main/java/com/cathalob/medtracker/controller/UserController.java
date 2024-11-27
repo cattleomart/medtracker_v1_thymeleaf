@@ -3,8 +3,6 @@ package com.cathalob.medtracker.controller;
 import com.cathalob.medtracker.dto.UserModelDTO;
 
 import com.cathalob.medtracker.model.PractitionerRoleRequest;
-import com.cathalob.medtracker.model.UserModel;
-import com.cathalob.medtracker.model.UserRole;
 import com.cathalob.medtracker.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

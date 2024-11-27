@@ -63,7 +63,7 @@
                 <td colspan="2"> No Prescriptions Available</td>
             </tr>
             <tr th:each="prescription : ${prescriptionsDTO.prescriptions}">
-                <td><span th:text="${prescription.drug}"> drug </span></td>
+                <td><span th:text="${prescription.medication.name}"> drug </span></td>
                 <td><span th:text="${prescription.doseMg}"> dose </span></td>
 
             </tr>
