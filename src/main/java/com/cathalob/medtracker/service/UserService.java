@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -44,17 +47,19 @@ public class UserService {
     }
 
     public UserModel findByLogin(String login) {
-        List<UserModel> dbUsers = findAll();
+        List<UserModel> dbUsers = getUserModels();
         return dbUsers.stream().filter(user -> user.getUsername().equals(login))
                 .findFirst()
                 .orElse(null);
     }
 
-    public List<UserModel> findAll(){
-        return StreamSupport.stream(userModelRepository.findAll().spliterator(), false)
-                        .toList();
+    public List<UserModel> getUserModels(){
+        return userModelRepository.findAll();
     }
-
+    public Map<Integer, UserModel> getUserModelsById(){
+        return getUserModels()
+                .stream().collect(Collectors.toMap(UserModel::getId, Function.identity()));
+    }
 
 //    Updating
     public void saveUser(UserModel userModel){

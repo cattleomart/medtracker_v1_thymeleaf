@@ -3,7 +3,6 @@ package com.cathalob.medtracker.controller;
 import com.cathalob.medtracker.dto.PractitionerRoleRequestsDTO;
 import com.cathalob.medtracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ public class AdminController {
     @GetMapping("/admin/practitionerRoleRequests")
     public String getPractitionerRoleRequests(Model model){
         model.addAttribute("requestsDTO", userService.getPractitionerRoleRequestsDTO());
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userService.getUserModels());
         return "admin/practitionerRoleRequests";
     }
 

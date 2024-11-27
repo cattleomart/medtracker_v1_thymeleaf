@@ -1,8 +1,10 @@
 package com.cathalob.medtracker.initialdata;
 
+import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.service.PrescriptionsService;
+import com.cathalob.medtracker.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
@@ -13,6 +15,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,16 +23,19 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class InitialDataLoader implements ApplicationRunner {
+    private Map<Integer, UserModel> userModels;
     private Map<Integer, Medication> medications;
     private Map<Integer, Prescription> prescriptions;
 
     public InitialDataLoader() {
         this.medications = new HashMap<>();
         this.prescriptions = new HashMap<>();
+        this.userModels = new HashMap<>();
     }
     @Autowired
     PrescriptionsService prescriptionsService;
-
+    @Autowired
+    UserService userService;
     @Override
     public void run(ApplicationArguments args) throws Exception {
         preLoadDbData();
@@ -42,7 +48,9 @@ public class InitialDataLoader implements ApplicationRunner {
     }
 
     private void loadDbData() {
-        prescriptions = prescriptionsService.getPrescriptions().stream().collect(Collectors.toMap(Prescription::getId, Function.identity()));
+        prescriptions = prescriptionsService.getPrescriptionsById();
+        userModels = userService.getUserModelsById();
+
     }
     private void preLoadDbData() {
 //        load data to check if we have loaded data from file already after a fresh db creation.
@@ -112,6 +120,28 @@ public class InitialDataLoader implements ApplicationRunner {
 //                        log.info("Medication for prescription: " + index + " + " + medication);
                         prescription.setMedication(medication);
                     }
+                    if (row.getCell(2) != null) {
+                        int numericCellValue = (int) row.getCell(2).getNumericCellValue();
+                        UserModel userModel = userModels.get(numericCellValue);
+                        prescription.setPatient(userModel);
+                    }
+                    if (row.getCell(3) != null) {
+                        int numericCellValue = (int) row.getCell(3).getNumericCellValue();
+                        UserModel userModel = userModels.get(numericCellValue);
+                        prescription.setPractitioner(userModel);
+                    }
+
+//                    if (row.getCell(4) != null) {
+//                        LocalDateTime localDateTimeCellValue = row.getCell(4).getLocalDateTimeCellValue();
+//
+//
+//                        log.info(localDateTimeCellValue.toString());
+//                        prescription.setBeginTime(localDateTimeCellValue.toLocalDate().query());
+//                    }
+
+
+
+
                     newPrescriptions.add(prescription);
                 }
             });

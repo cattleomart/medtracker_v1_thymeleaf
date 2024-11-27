@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +41,18 @@ public class PrescriptionsService {
         return prescriptionsRepository.findAll();
     }
 
+    private List<PrescriptionScheduleEntry> getPrescriptionScheduleEntries() {
+        return prescriptionScheduleEntryRepository.findAll();
+    }
+
     public Map<Integer, List<PrescriptionScheduleEntry>> getPrescriptionScheduleEntriesByPrescriptionId(){
-        return prescriptionScheduleEntryRepository.findAll()
+        return getPrescriptionScheduleEntries()
                 .stream().collect(Collectors.groupingBy(prescriptionScheduleEntry -> prescriptionScheduleEntry.getPrescription().getId()));
+    }
+
+    public Map<Integer, Prescription> getPrescriptionsById(){
+        return getPrescriptions()
+                .stream().collect(Collectors.toMap(Prescription::getId, Function.identity()));
     }
 
     public Map<Integer, List<Medication>> getMedicationById(){
