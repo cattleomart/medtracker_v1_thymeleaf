@@ -6,16 +6,21 @@
     <link rel="stylesheet" th:href="@{css/main.css}">
 </head>
 <body>
-<div th:insert="~{headerAndFooter :: header}"></div>
-    <h1>Upload</h1>
-<div style="margin-left: 100px">
-    <h2>Import file (.xlxs)</h2>
+    <div th:insert="~{headerAndFooter :: header}"></div>
+    <div class="mainContent">
+        <h1>Upload</h1>
+        <div  style="margin-left: 100px">
+            <h2>Import file (.xlxs)</h2>
 
-    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
-        <input type="file" th:name="file">
+            <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+                <input type="file" th:name="file">
 
-        <input th:type="submit" value="Import" />
-    </form>
-</div>
+                <input th:type="submit" value="Import"/>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
+
+
+
