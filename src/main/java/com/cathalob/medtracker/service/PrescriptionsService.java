@@ -51,4 +51,7 @@ public class PrescriptionsService {
     }
 
 
+    public void savePrescriptions(List<Prescription> newPrescriptions) {
+        prescriptionsRepository.saveAll(newPrescriptions);
+    }
 }
