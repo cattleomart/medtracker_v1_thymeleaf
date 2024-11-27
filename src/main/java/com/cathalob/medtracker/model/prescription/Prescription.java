@@ -1,13 +1,11 @@
 package com.cathalob.medtracker.model.prescription;
-
 import com.cathalob.medtracker.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.sql.Time;
+import java.time.LocalDateTime;
 
 @Data
 @Entity(name = "PRESCRIPTION")
@@ -35,9 +33,9 @@ public class Prescription {
     private UserModel practitioner;
 
 
-    @Temporal(TemporalType.TIME)
-    private Time beginTime;
-    @Temporal(TemporalType.TIME)
-    private Time endTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime beginTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime endTime;
 
 }

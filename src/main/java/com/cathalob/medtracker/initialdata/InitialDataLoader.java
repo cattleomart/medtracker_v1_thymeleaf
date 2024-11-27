@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     if (row.getCell(0) != null) {
                         medication.setName(dataFormatter.formatCellValue(row.getCell(0)));
                     }
-                    log.info(medication.toString());
+//                    log.info(medication.toString());
                     newMedications.add(medication);
                 }
             });
@@ -131,13 +132,15 @@ public class InitialDataLoader implements ApplicationRunner {
                         prescription.setPractitioner(userModel);
                     }
 
-//                    if (row.getCell(4) != null) {
-//                        LocalDateTime localDateTimeCellValue = row.getCell(4).getLocalDateTimeCellValue();
-//
-//
-//                        log.info(localDateTimeCellValue.toString());
-//                        prescription.setBeginTime(localDateTimeCellValue.toLocalDate().query());
-//                    }
+                    if (row.getCell(4) != null) {
+                        LocalDateTime localDateTimeCellValue = row.getCell(4).getLocalDateTimeCellValue();
+                        prescription.setBeginTime(localDateTimeCellValue);
+                    }
+                    if (row.getCell(5) != null) {
+                        LocalDateTime localDateTimeCellValue = row.getCell(4).getLocalDateTimeCellValue();
+
+                        prescription.setEndTime(localDateTimeCellValue);
+                    }
 
 
 
