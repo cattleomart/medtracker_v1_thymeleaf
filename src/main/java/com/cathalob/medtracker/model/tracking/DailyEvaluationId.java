@@ -1,15 +1,16 @@
 package com.cathalob.medtracker.model.tracking;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
 public class DailyEvaluationId implements Serializable {
     private int dailyEvaluationUserModelId;
-    private Date dailyEvaluationDate;
+    private LocalDate dailyEvaluationDate;
 
-    public DailyEvaluationId(int dailyEvaluationId, Date dailyEvaluationDate) {
-        this.dailyEvaluationUserModelId = dailyEvaluationId;
+    public DailyEvaluationId(int dailyEvaluationUserModelId, LocalDate dailyEvaluationDate) {
+        this.dailyEvaluationUserModelId = dailyEvaluationUserModelId;
         this.dailyEvaluationDate = dailyEvaluationDate;
     }
 

@@ -73,6 +73,6 @@ create table if not exists DOSE (
     dailyevaluation_record_Date date,
     dailyevaluation_userModel_id int,
     foreign key (dailyevaluation_record_Date, dailyevaluation_userModel_id) references dailyevaluation(record_Date,userModel_id),
-    prescription_schedule_entry_id int,
-    foreign key (prescription_schedule_entry_id) references prescriptionscheduleentry(id)
+    PRESCRIPTION_SCHEDULE_ENTRY_ID int,
+    foreign key (PRESCRIPTION_SCHEDULE_ENTRY_ID) references prescriptionscheduleentry(id)
 );

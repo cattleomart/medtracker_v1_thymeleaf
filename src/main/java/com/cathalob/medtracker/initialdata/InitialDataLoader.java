@@ -5,6 +5,11 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
+import com.cathalob.medtracker.model.tracking.DailyEvaluation;
+import com.cathalob.medtracker.model.tracking.DailyEvaluationId;
+import com.cathalob.medtracker.model.tracking.Dose;
+import com.cathalob.medtracker.service.EvaluationDataService;
+import com.cathalob.medtracker.service.PatientsService;
 import com.cathalob.medtracker.service.PrescriptionsService;
 import com.cathalob.medtracker.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -30,13 +36,21 @@ public class InitialDataLoader implements ApplicationRunner {
     private Map<Integer, Medication> medications;
     private Map<Integer, Prescription> prescriptions;
     private Map<Integer, PrescriptionScheduleEntry> prescriptionScheduleEntries;
+    private Map<Integer, Dose> doses;
+    private Map<DailyEvaluationId, DailyEvaluation> dailyEvaluations;
 
     public InitialDataLoader() {
         this.medications = new HashMap<>();
         this.prescriptions = new HashMap<>();
         this.userModels = new HashMap<>();
         this.prescriptionScheduleEntries = new HashMap<>();
+        this.doses = new HashMap<>();
+        this.dailyEvaluations = new HashMap<>();
     }
+    @Autowired
+    EvaluationDataService evaluationDataService;
+    @Autowired
+    PatientsService patientsService;
     @Autowired
     PrescriptionsService prescriptionsService;
     @Autowired
@@ -50,7 +64,7 @@ public class InitialDataLoader implements ApplicationRunner {
         processMedicationExcelFile();
         processPrescriptionExcelFile();
         processPrescriptionScheduleEntriesExcelFile();
-
+        processDoseExcelFile();
     }
 
     private void loadDbData() {
@@ -209,5 +223,84 @@ public class InitialDataLoader implements ApplicationRunner {
         }
         prescriptionsService.savePrescriptionScheduleEntries(newPrescriptionScheduleEntries);
         newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry-> prescriptionScheduleEntries.put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
+    }
+
+    public void processDoseExcelFile() {
+        List<Dose> newDoses = new ArrayList<>();
+
+        XSSFWorkbook workbook = null;
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream("./src/main/resources/initialDataFiles/doses.xlsx");
+            workbook = new XSSFWorkbook(fileInputStream);
+//            log.info("Number of sheets: " + workbook.getNumberOfSheets());
+
+            workbook.forEach(sheet -> {
+//                log.info("Title of sheet => " + sheet.getSheetName());
+
+                DataFormatter dataFormatter = new DataFormatter();
+                int index = 0;
+                for (Row row : sheet) {
+                    if (index++ == 0) continue;
+                    Dose dose = new Dose();
+                    if (row.getCell(0) != null) {
+                        LocalDateTime localDateTimeCellValue = row.getCell(0).getLocalDateTimeCellValue();
+                        dose.setDoseTime(localDateTimeCellValue);
+                    }
+                    if (row.getCell(1) != null) {
+                        int numericCellValue = (int) row.getCell(1).getNumericCellValue();
+                        PrescriptionScheduleEntry prescriptionScheduleEntry = prescriptionScheduleEntries.get(numericCellValue);
+//                        log.info(String.valueOf(numericCellValue));
+//                        log.info(medications.toString());
+//                        log.info("Medication for prescription: " + index + " + " + medication);
+                        dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
+                    }
+
+                    if (row.getCell(2) != null) {
+                        boolean booleanCellValue = row.getCell(2).getBooleanCellValue();
+                        dose.setTaken(booleanCellValue);
+                    }
+                    newDoses.add(dose);
+                }
+            });
+        } catch (EncryptedDocumentException | IOException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (workbook != null) workbook.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        List<LocalDate> dates = newDoses.stream().map(Dose::getDoseTime).map(LocalDateTime::toLocalDate).distinct().toList();
+        List<UserModel> userModelList = Arrays.asList(userModels.get(3));
+        ensureDailyEvaluations(dates,userModelList);
+
+        newDoses.forEach(dose-> {
+            dose.setEvaluation(dailyEvaluations.get(this.getDailyEvaluationKey(dose.getDoseTime().toLocalDate(), userModels.get(3))));
+        });
+
+        prescriptionsService.saveDoses(newDoses);
+
+        newDoses.forEach(dose-> {
+            doses.put(dose.getId(), dose);
+        });
+    }
+
+    private void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels){
+        dates.forEach(localDate -> {
+            userModels.forEach(userModel -> {
+                DailyEvaluation dailyEvaluation = new DailyEvaluation();
+                dailyEvaluation.setRecordDate(localDate);
+                dailyEvaluation.setUserModel(userModel);
+                evaluationDataService.addDailyEvaluation(dailyEvaluation);
+                dailyEvaluations.put(this.getDailyEvaluationKey(localDate, userModel), dailyEvaluation);
+            });
+        });
+
+    }
+
+    private DailyEvaluationId getDailyEvaluationKey(LocalDate localDate, UserModel userModel) {
+        return new DailyEvaluationId(userModel.getId(), localDate);
     }
 }

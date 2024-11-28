@@ -4,12 +4,15 @@ package com.cathalob.medtracker.service;
 import com.cathalob.medtracker.err.ExcelImportException;
 import com.cathalob.medtracker.model.EvaluationEntry;
 import com.cathalob.medtracker.model.UserModel;
+import com.cathalob.medtracker.model.tracking.DailyEvaluation;
+import com.cathalob.medtracker.repository.DailyEvaluationRepository;
 import com.cathalob.medtracker.repository.EvaluationEntryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +36,10 @@ public class EvaluationDataService {
     public EvaluationDataService(EvaluationEntryRepository medTrackerRepository) {
         this.evaluationEntryRepository = medTrackerRepository;
     }
+
+
+    @Autowired
+    DailyEvaluationRepository dailyEvaluationRepository;
 
     public Iterable<EvaluationEntry> getEvaluationEntries(UserModel userModel) {
         return evaluationEntryRepository.findEvaluationEntriesForUserId(userModel.getId());
@@ -228,5 +235,11 @@ public class EvaluationDataService {
         LocalDate localDate = Instant.ofEpochMilli(evaluationEntry.getRecordDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(localDate);
 
+    }
+
+
+
+    public void addDailyEvaluation(DailyEvaluation dailyEvaluation){
+        dailyEvaluationRepository.save(dailyEvaluation);
     }
 }

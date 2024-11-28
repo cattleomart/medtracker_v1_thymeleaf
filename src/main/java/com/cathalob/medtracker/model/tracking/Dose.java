@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 @Entity(name = "DOSE")
 
@@ -16,17 +17,17 @@ public class Dose {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "EVALUATION_ID")
-    @JoinColumn(name = "RECORD_DATE")
+    @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE")
+    @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID")
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private DailyEvaluation evaluation;
 
-    @Temporal(TemporalType.TIME)
-    private Time doseTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime doseTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "PRESCRIPTIONSCHEDULEENTRY_ID", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "PRESCRIPTION_SCHEDULE_ENTRY_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private PrescriptionScheduleEntry prescriptionScheduleEntry;

@@ -3,6 +3,8 @@ package com.cathalob.medtracker.service;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
+import com.cathalob.medtracker.model.tracking.Dose;
+import com.cathalob.medtracker.repository.DoseRepository;
 import com.cathalob.medtracker.repository.MedicationRepository;
 import com.cathalob.medtracker.repository.PrescriptionScheduleEntryRepository;
 import com.cathalob.medtracker.repository.PrescriptionsRepository;
@@ -28,6 +30,7 @@ public class PrescriptionsService {
     private final PrescriptionScheduleEntryRepository prescriptionScheduleEntryRepository;
     @Autowired
     private final PrescriptionsRepository prescriptionsRepository;
+    private final DoseRepository doseRepository;
 
     public void saveMedications(List<Medication> medicationList){
         medicationRepository.saveAll(medicationList);
@@ -67,5 +70,9 @@ public class PrescriptionsService {
 
     public void savePrescriptionScheduleEntries(List<PrescriptionScheduleEntry> newPrescriptionScheduleEntries) {
         prescriptionScheduleEntryRepository.saveAll(newPrescriptionScheduleEntries);
+    }
+
+    public void saveDoses(List<Dose> newDoses) {
+        doseRepository.saveAll(newDoses);
     }
 }
