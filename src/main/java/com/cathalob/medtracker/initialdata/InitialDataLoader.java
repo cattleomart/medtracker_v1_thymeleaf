@@ -27,6 +27,8 @@ import java.io.IOException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -305,9 +307,12 @@ public class InitialDataLoader implements ApplicationRunner {
                 for (Row row : sheet) {
                     if (index++ == 0) continue;
                     BloodPressureReading bloodPressureReading = new BloodPressureReading();
+                    LocalDate localDate = LocalDate.now();
+                    LocalTime localTime = LocalTime.now();
+
                     if (row.getCell(0) != null) {
-                        LocalDateTime localDateTimeCellValue = row.getCell(0).getLocalDateTimeCellValue();
-                        bloodPressureReading.setReadingTime(localDateTimeCellValue);
+                        localDate = LocalDate.ofInstant(
+                                row.getCell(0).getDateCellValue().toInstant(), ZoneId.systemDefault());
                     }
                     if (row.getCell(1) != null) {
                         int numericCellValue = (int) row.getCell(1).getNumericCellValue();
@@ -327,8 +332,10 @@ public class InitialDataLoader implements ApplicationRunner {
                         int numericCellValue = (int) (row.getCell(4).getNumericCellValue());
                         bloodPressureReading.setHeartRate(numericCellValue);
                     }
-
-
+                    if (row.getCell(5) != null) {
+                        localTime = (row.getCell(5).getLocalDateTimeCellValue().toLocalTime());
+                    }
+                    bloodPressureReading.setReadingTime(LocalDateTime.of(localDate,localTime));
                     newBloodPressureReadings.add(bloodPressureReading);
                 }
             });
