@@ -40,7 +40,7 @@ NOT EXISTS (
 );
 
 INSERT INTO PRESCRIPTION ( MEDICATION_ID, PATIENT_ID, PRACTITIONER_ID, BEGIN_TIME, END_TIME, DOSE_MG)
-SELECT '1','3', '2', {ts '2022-04-22 10:34:53'}, {ts '2022-04-22 10:34:53'}, '15'
+SELECT '1','3', '2', {ts '2024-12-01 10:34:53'}, {ts '2024-12-01 10:34:53'}, '15'
 WHERE
 NOT EXISTS (
     SELECT PATIENT_ID FROM PRESCRIPTION WHERE PATIENT_ID = '3'
@@ -55,20 +55,20 @@ NOT EXISTS (
 
 
 INSERT INTO DAILYEVALUATION (USERMODEL_ID, RECORD_DATE)
-SELECT '1', {ts '2024-04-22'}
+SELECT '1', {ts '2024-12-01'}
 WHERE
 NOT EXISTS (
     SELECT USERMODEL_ID FROM DAILYEVALUATION WHERE USERMODEL_ID = '1'
 );
 
 INSERT INTO DOSE (DOSE_TIME, TAKEN, dailyevaluation_record_Date,dailyevaluation_userModel_id,prescription_schedule_entry_id)
-SELECT {ts '2022-04-22 10:34:53'},'TRUE', {ts '2024-04-22'},'1','1'
+SELECT {ts '2024-12-01 10:34:53'},'TRUE', {ts '2024-12-01'},'1','1'
 WHERE
 NOT EXISTS (
     SELECT ID FROM DOSE WHERE ID = '1'
 );
-INSERT INTO BLOODPRESSUREREADING (dailyevaluation_record_Date,dailyevaluation_userModel_id,prescription_schedule_entry_id, systole, diastole, heart_rate)
-SELECT  {ts '2024-04-22'},'1','1','111','77','66'
+INSERT INTO BLOODPRESSUREREADING (dailyevaluation_record_Date,dailyevaluation_userModel_id,prescription_schedule_entry_id, systole, diastole, heart_rate, reading_time)
+SELECT  {ts '2024-12-01'},'1','1','111','77','66', {ts '2024-12-01 10:34:53'}
 WHERE
 NOT EXISTS (
     SELECT ID FROM BLOODPRESSUREREADING WHERE ID = '1'

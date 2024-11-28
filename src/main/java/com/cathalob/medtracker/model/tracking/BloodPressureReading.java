@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 
 
 @Entity(name = "BLOODPRESSUREREADING")
@@ -23,6 +24,9 @@ public class BloodPressureReading {
     @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID")
     @JsonIgnore
     private DailyEvaluation dailyEvaluation;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime readingTime;
 
     private Integer systole;
     private Integer diastole;

@@ -82,6 +82,7 @@ create table if not exists BLOODPRESSUREREADING (
     systole int,
     diastole int,
     heart_rate int,
+    reading_time timestamp,
     dailyevaluation_record_Date date,
     dailyevaluation_userModel_id int,
     foreign key (dailyevaluation_record_Date, dailyevaluation_userModel_id) references dailyevaluation(record_Date,userModel_id),
