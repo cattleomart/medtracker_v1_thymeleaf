@@ -249,9 +249,12 @@ public class InitialDataLoader implements ApplicationRunner {
                 for (Row row : sheet) {
                     if (index++ == 0) continue;
                     Dose dose = new Dose();
+                    LocalDate localDate = LocalDate.now();
+                    LocalTime localTime = LocalTime.now();
+
                     if (row.getCell(0) != null) {
-                        LocalDateTime localDateTimeCellValue = row.getCell(0).getLocalDateTimeCellValue();
-                        dose.setDoseTime(localDateTimeCellValue);
+                        localDate = LocalDate.ofInstant(
+                                row.getCell(0).getDateCellValue().toInstant(), ZoneId.systemDefault());
                     }
                     if (row.getCell(1) != null) {
                         int numericCellValue = (int) row.getCell(1).getNumericCellValue();
@@ -263,6 +266,10 @@ public class InitialDataLoader implements ApplicationRunner {
                         boolean booleanCellValue = row.getCell(2).getBooleanCellValue();
                         dose.setTaken(booleanCellValue);
                     }
+                    if (row.getCell(3) != null) {
+                        localTime = (row.getCell(3).getLocalDateTimeCellValue().toLocalTime());
+                    }
+                    dose.setDoseTime(LocalDateTime.of(localDate,localTime));
                     newDoses.add(dose);
                 }
             });
