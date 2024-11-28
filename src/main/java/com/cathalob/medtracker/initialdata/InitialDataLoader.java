@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -47,6 +48,7 @@ public class InitialDataLoader implements ApplicationRunner {
         this.doses = new HashMap<>();
         this.dailyEvaluations = new HashMap<>();
     }
+
     @Autowired
     EvaluationDataService evaluationDataService;
     @Autowired
@@ -55,6 +57,7 @@ public class InitialDataLoader implements ApplicationRunner {
     PrescriptionsService prescriptionsService;
     @Autowired
     UserService userService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         preLoadDbData();
@@ -70,8 +73,10 @@ public class InitialDataLoader implements ApplicationRunner {
     private void loadDbData() {
         prescriptions = prescriptionsService.getPrescriptionsById();
         userModels = userService.getUserModelsById();
+        dailyEvaluations = evaluationDataService.getDailyEvaluationsById();
 
     }
+
     private void preLoadDbData() {
 //        load data to check if we have loaded data from file already after a fresh db creation.
         medications = prescriptionsService.getMedications().stream().collect(Collectors.toMap(Medication::getId, Function.identity()));
@@ -113,8 +118,9 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.saveMedications(newMedications);
-        newMedications.forEach(newMedication-> medications.put(newMedication.getId(),newMedication));
+        newMedications.forEach(newMedication -> medications.put(newMedication.getId(), newMedication));
     }
+
     public void processPrescriptionExcelFile() {
         List<Prescription> newPrescriptions = new ArrayList<>();
         XSSFWorkbook workbook = null;
@@ -162,8 +168,6 @@ public class InitialDataLoader implements ApplicationRunner {
                     }
 
 
-
-
                     newPrescriptions.add(prescription);
                 }
             });
@@ -177,8 +181,9 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.savePrescriptions(newPrescriptions);
-        newPrescriptions.forEach(prescription-> prescriptions.put(prescription.getId(), prescription));
+        newPrescriptions.forEach(prescription -> prescriptions.put(prescription.getId(), prescription));
     }
+
     public void processPrescriptionScheduleEntriesExcelFile() {
         List<PrescriptionScheduleEntry> newPrescriptionScheduleEntries = new ArrayList<>();
 
@@ -222,7 +227,7 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.savePrescriptionScheduleEntries(newPrescriptionScheduleEntries);
-        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry-> prescriptionScheduleEntries.put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
+        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry -> prescriptionScheduleEntries.put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
     }
 
     public void processDoseExcelFile() {
@@ -274,27 +279,30 @@ public class InitialDataLoader implements ApplicationRunner {
         }
         List<LocalDate> dates = newDoses.stream().map(Dose::getDoseTime).map(LocalDateTime::toLocalDate).distinct().toList();
         List<UserModel> userModelList = Arrays.asList(userModels.get(3));
-        ensureDailyEvaluations(dates,userModelList);
+        ensureDailyEvaluations(dates, userModelList);
 
-        newDoses.forEach(dose-> {
+        newDoses.forEach(dose -> {
             dose.setEvaluation(dailyEvaluations.get(this.getDailyEvaluationKey(dose.getDoseTime().toLocalDate(), userModels.get(3))));
         });
 
         prescriptionsService.saveDoses(newDoses);
 
-        newDoses.forEach(dose-> {
+        newDoses.forEach(dose -> {
             doses.put(dose.getId(), dose);
         });
     }
 
-    private void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels){
+    private void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels) {
         dates.forEach(localDate -> {
             userModels.forEach(userModel -> {
-                DailyEvaluation dailyEvaluation = new DailyEvaluation();
-                dailyEvaluation.setRecordDate(localDate);
-                dailyEvaluation.setUserModel(userModel);
-                evaluationDataService.addDailyEvaluation(dailyEvaluation);
-                dailyEvaluations.put(this.getDailyEvaluationKey(localDate, userModel), dailyEvaluation);
+                DailyEvaluationId dailyEvaluationKey = this.getDailyEvaluationKey(localDate, userModel);
+                if (!dailyEvaluations.containsKey(dailyEvaluationKey)) {
+                    DailyEvaluation dailyEvaluation = new DailyEvaluation();
+                    dailyEvaluation.setRecordDate(localDate);
+                    dailyEvaluation.setUserModel(userModel);
+                    evaluationDataService.addDailyEvaluation(dailyEvaluation);
+                    dailyEvaluations.put(dailyEvaluationKey, dailyEvaluation);
+                }
             });
         });
 

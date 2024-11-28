@@ -1,17 +1,18 @@
 package com.cathalob.medtracker.model.tracking;
 
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
-
+@NoArgsConstructor
 public class DailyEvaluationId implements Serializable {
-    private int dailyEvaluationUserModelId;
-    private LocalDate dailyEvaluationDate;
+    private int userModel;
+    private LocalDate recordDate;
 
     public DailyEvaluationId(int dailyEvaluationUserModelId, LocalDate dailyEvaluationDate) {
-        this.dailyEvaluationUserModelId = dailyEvaluationUserModelId;
-        this.dailyEvaluationDate = dailyEvaluationDate;
+        this.userModel = dailyEvaluationUserModelId;
+        this.recordDate = dailyEvaluationDate;
     }
 
     @Override
@@ -19,11 +20,11 @@ public class DailyEvaluationId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DailyEvaluationId that = (DailyEvaluationId) o;
-        return dailyEvaluationUserModelId == that.dailyEvaluationUserModelId && Objects.equals(dailyEvaluationDate, that.dailyEvaluationDate);
+        return userModel == that.userModel && Objects.equals(recordDate, that.recordDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dailyEvaluationUserModelId, dailyEvaluationDate);
+        return Objects.hash(userModel, recordDate);
     }
 }

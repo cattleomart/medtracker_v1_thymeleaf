@@ -5,6 +5,7 @@ import com.cathalob.medtracker.err.ExcelImportException;
 import com.cathalob.medtracker.model.EvaluationEntry;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
+import com.cathalob.medtracker.model.tracking.DailyEvaluationId;
 import com.cathalob.medtracker.repository.DailyEvaluationRepository;
 import com.cathalob.medtracker.repository.EvaluationEntryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -94,11 +95,12 @@ public class EvaluationDataService {
         return listData;
     }
 
-    public List<String> drugNames(Iterable<EvaluationEntry> evaluationEntries){
+    public List<String> drugNames(Iterable<EvaluationEntry> evaluationEntries) {
         List<String> names = new ArrayList<>();
-        evaluationEntries.forEach((e)->names.add(e.getMedication()));
+        evaluationEntries.forEach((e) -> names.add(e.getMedication()));
         return (names.stream().distinct().toList());
     }
+
     public List<List<Object>> getDoseEvaluationData(Iterable<EvaluationEntry> evaluationEntries) {
         log.info("getDoseEvaluationData started ");
 //        separate data by drug
@@ -238,8 +240,11 @@ public class EvaluationDataService {
     }
 
 
-
-    public void addDailyEvaluation(DailyEvaluation dailyEvaluation){
+    public void addDailyEvaluation(DailyEvaluation dailyEvaluation) {
         dailyEvaluationRepository.save(dailyEvaluation);
+    }
+
+    public Map<DailyEvaluationId, DailyEvaluation> getDailyEvaluationsById() {
+       return dailyEvaluationRepository.findAll().stream().collect(Collectors.toMap(DailyEvaluation::getDailyEvaluationIdClass, Function.identity()));
     }
 }

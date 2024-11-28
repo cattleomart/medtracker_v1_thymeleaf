@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Entity(name = "DAILYEVALUATION")
 @Data
-@IdClass(DailyEvaluation.class)
+@IdClass(DailyEvaluationId.class)
 public class DailyEvaluation {
 
     @Id
@@ -23,4 +23,10 @@ public class DailyEvaluation {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private UserModel userModel;
+
+
+
+    public DailyEvaluationId getDailyEvaluationIdClass() {
+        return new DailyEvaluationId(userModel.getId(), recordDate);
+    }
 }
