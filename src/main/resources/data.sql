@@ -67,6 +67,12 @@ WHERE
 NOT EXISTS (
     SELECT ID FROM DOSE WHERE ID = '1'
 );
+INSERT INTO BLOODPRESSUREREADING (dailyevaluation_record_Date,dailyevaluation_userModel_id,prescription_schedule_entry_id, systole, diastole, heart_rate)
+SELECT  {ts '2024-04-22'},'1','1','111','77','66'
+WHERE
+NOT EXISTS (
+    SELECT ID FROM BLOODPRESSUREREADING WHERE ID = '1'
+);
 
 
 
