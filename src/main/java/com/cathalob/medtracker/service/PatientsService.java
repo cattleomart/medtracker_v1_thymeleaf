@@ -3,6 +3,8 @@ package com.cathalob.medtracker.service;
 import com.cathalob.medtracker.dto.PrescriptionDTO;
 import com.cathalob.medtracker.dto.PrescriptionsDTO;
 import com.cathalob.medtracker.model.prescription.Medication;
+import com.cathalob.medtracker.model.tracking.BloodPressureReading;
+import com.cathalob.medtracker.repository.BloodPressureReadingRepository;
 import com.cathalob.medtracker.repository.PrescriptionScheduleEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +16,11 @@ import java.util.Map;
 @Service
 public class PatientsService {
 
-
+    @Autowired
+    BloodPressureReadingRepository bloodPressureReadingRepository;
 
     @Autowired
     PrescriptionsService prescriptionsService;
-
-
-    @Autowired
-    PrescriptionScheduleEntryRepository prescriptionScheduleEntryRepository;
 
     public PrescriptionsDTO getPrescriptionsDTO(){
 
@@ -42,4 +41,7 @@ public class PatientsService {
     }
 
 
+    public void saveBloodPressureReadings(List<BloodPressureReading> bloodPressureReadings) {
+        bloodPressureReadingRepository.saveAll(bloodPressureReadings);
+    }
 }

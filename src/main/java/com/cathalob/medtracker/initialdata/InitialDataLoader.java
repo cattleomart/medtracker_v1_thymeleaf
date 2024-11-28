@@ -5,6 +5,7 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
+import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import com.cathalob.medtracker.model.tracking.DailyEvaluationId;
 import com.cathalob.medtracker.model.tracking.Dose;
@@ -68,6 +69,7 @@ public class InitialDataLoader implements ApplicationRunner {
         processPrescriptionExcelFile();
         processPrescriptionScheduleEntriesExcelFile();
         processDoseExcelFile();
+        processBloodPressureReadingsExcelFile();
     }
 
     private void loadDbData() {
@@ -132,8 +134,6 @@ public class InitialDataLoader implements ApplicationRunner {
 
             workbook.forEach(sheet -> {
 //                log.info("Title of sheet => " + sheet.getSheetName());
-
-                DataFormatter dataFormatter = new DataFormatter();
                 int index = 0;
                 for (Row row : sheet) {
                     if (index++ == 0) continue;
@@ -197,7 +197,6 @@ public class InitialDataLoader implements ApplicationRunner {
             workbook.forEach(sheet -> {
 //                log.info("Title of sheet => " + sheet.getSheetName());
 
-                DataFormatter dataFormatter = new DataFormatter();
                 int index = 0;
                 for (Row row : sheet) {
                     if (index++ == 0) continue;
@@ -243,7 +242,7 @@ public class InitialDataLoader implements ApplicationRunner {
             workbook.forEach(sheet -> {
 //                log.info("Title of sheet => " + sheet.getSheetName());
 
-                DataFormatter dataFormatter = new DataFormatter();
+
                 int index = 0;
                 for (Row row : sheet) {
                     if (index++ == 0) continue;
@@ -255,9 +254,6 @@ public class InitialDataLoader implements ApplicationRunner {
                     if (row.getCell(1) != null) {
                         int numericCellValue = (int) row.getCell(1).getNumericCellValue();
                         PrescriptionScheduleEntry prescriptionScheduleEntry = prescriptionScheduleEntries.get(numericCellValue);
-//                        log.info(String.valueOf(numericCellValue));
-//                        log.info(medications.toString());
-//                        log.info("Medication for prescription: " + index + " + " + medication);
                         dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
                     }
 
@@ -290,6 +286,70 @@ public class InitialDataLoader implements ApplicationRunner {
         newDoses.forEach(dose -> {
             doses.put(dose.getId(), dose);
         });
+    }
+
+    public void processBloodPressureReadingsExcelFile() {
+        List<BloodPressureReading> newBloodPressureReadings = new ArrayList<>();
+
+        XSSFWorkbook workbook = null;
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream("./src/main/resources/initialDataFiles/bloodPressureReadings.xlsx");
+            workbook = new XSSFWorkbook(fileInputStream);
+//            log.info("Number of sheets: " + workbook.getNumberOfSheets());
+
+            workbook.forEach(sheet -> {
+//                log.info("Title of sheet => " + sheet.getSheetName());
+
+                int index = 0;
+                for (Row row : sheet) {
+                    if (index++ == 0) continue;
+                    BloodPressureReading bloodPressureReading = new BloodPressureReading();
+                    if (row.getCell(0) != null) {
+                        LocalDateTime localDateTimeCellValue = row.getCell(0).getLocalDateTimeCellValue();
+                        bloodPressureReading.setReadingTime(localDateTimeCellValue);
+                    }
+                    if (row.getCell(1) != null) {
+                        int numericCellValue = (int) row.getCell(1).getNumericCellValue();
+                        PrescriptionScheduleEntry prescriptionScheduleEntry = prescriptionScheduleEntries.get(numericCellValue);
+                        bloodPressureReading.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
+                    }
+
+                    if (row.getCell(2) != null) {
+                        int numericCellValue = (int) (row.getCell(2).getNumericCellValue());
+                        bloodPressureReading.setSystole(numericCellValue);
+                    }
+                    if (row.getCell(3) != null) {
+                        int numericCellValue = (int) (row.getCell(3).getNumericCellValue());
+                        bloodPressureReading.setDiastole(numericCellValue);
+                    }
+                    if (row.getCell(4) != null) {
+                        int numericCellValue = (int) (row.getCell(4).getNumericCellValue());
+                        bloodPressureReading.setHeartRate(numericCellValue);
+                    }
+
+
+                    newBloodPressureReadings.add(bloodPressureReading);
+                }
+            });
+        } catch (EncryptedDocumentException | IOException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (workbook != null) workbook.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        List<LocalDate> dates = newBloodPressureReadings.stream().map(BloodPressureReading::getReadingTime).map(LocalDateTime::toLocalDate).distinct().toList();
+        List<UserModel> userModelList = Arrays.asList(userModels.get(3));
+        ensureDailyEvaluations(dates, userModelList);
+
+        newBloodPressureReadings.forEach(dose -> {
+            dose.setDailyEvaluation(dailyEvaluations.get(this.getDailyEvaluationKey(dose.getReadingTime().toLocalDate(), userModels.get(3))));
+        });
+
+        patientsService.saveBloodPressureReadings(newBloodPressureReadings);
     }
 
     private void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels) {

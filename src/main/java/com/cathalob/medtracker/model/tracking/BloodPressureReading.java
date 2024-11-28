@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class BloodPressureReading {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
