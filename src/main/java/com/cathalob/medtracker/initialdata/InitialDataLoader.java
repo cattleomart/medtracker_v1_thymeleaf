@@ -1,8 +1,10 @@
 package com.cathalob.medtracker.initialdata;
 
 import com.cathalob.medtracker.model.UserModel;
+import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
+import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.service.PrescriptionsService;
 import com.cathalob.medtracker.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +29,13 @@ public class InitialDataLoader implements ApplicationRunner {
     private Map<Integer, UserModel> userModels;
     private Map<Integer, Medication> medications;
     private Map<Integer, Prescription> prescriptions;
+    private Map<Integer, PrescriptionScheduleEntry> prescriptionScheduleEntries;
 
     public InitialDataLoader() {
         this.medications = new HashMap<>();
         this.prescriptions = new HashMap<>();
         this.userModels = new HashMap<>();
+        this.prescriptionScheduleEntries = new HashMap<>();
     }
     @Autowired
     PrescriptionsService prescriptionsService;
@@ -45,6 +49,7 @@ public class InitialDataLoader implements ApplicationRunner {
         loadDbData();
         processMedicationExcelFile();
         processPrescriptionExcelFile();
+        processPrescriptionScheduleEntriesExcelFile();
 
     }
 
@@ -159,5 +164,50 @@ public class InitialDataLoader implements ApplicationRunner {
         }
         prescriptionsService.savePrescriptions(newPrescriptions);
         newPrescriptions.forEach(prescription-> prescriptions.put(prescription.getId(), prescription));
+    }
+    public void processPrescriptionScheduleEntriesExcelFile() {
+        List<PrescriptionScheduleEntry> newPrescriptionScheduleEntries = new ArrayList<>();
+
+        XSSFWorkbook workbook = null;
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream("./src/main/resources/initialDataFiles/prescriptionScheduleEntries.xlsx");
+            workbook = new XSSFWorkbook(fileInputStream);
+//            log.info("Number of sheets: " + workbook.getNumberOfSheets());
+
+            workbook.forEach(sheet -> {
+//                log.info("Title of sheet => " + sheet.getSheetName());
+
+                DataFormatter dataFormatter = new DataFormatter();
+                int index = 0;
+                for (Row row : sheet) {
+                    if (index++ == 0) continue;
+                    PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
+                    if (row.getCell(0) != null) {
+                        int numericCellValue = (int) row.getCell(0).getNumericCellValue();
+                        Prescription prescription = prescriptions.get(numericCellValue);
+//                        log.info(String.valueOf(numericCellValue));
+//                        log.info(medications.toString());
+//                        log.info("Medication for prescription: " + index + " + " + medication);
+                        prescriptionScheduleEntry.setPrescription(prescription);
+                    }
+                    if (row.getCell(1) != null) {
+                        String daystage = row.getCell(1).getStringCellValue();
+                        prescriptionScheduleEntry.setDayStage(DAYSTAGE.valueOf(daystage));
+                    }
+                    newPrescriptionScheduleEntries.add(prescriptionScheduleEntry);
+                }
+            });
+        } catch (EncryptedDocumentException | IOException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (workbook != null) workbook.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        prescriptionsService.savePrescriptionScheduleEntries(newPrescriptionScheduleEntries);
+        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry-> prescriptionScheduleEntries.put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
     }
 }

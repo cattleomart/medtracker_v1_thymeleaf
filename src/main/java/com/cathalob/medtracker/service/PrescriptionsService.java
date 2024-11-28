@@ -64,4 +64,8 @@ public class PrescriptionsService {
     public void savePrescriptions(List<Prescription> newPrescriptions) {
         prescriptionsRepository.saveAll(newPrescriptions);
     }
+
+    public void savePrescriptionScheduleEntries(List<PrescriptionScheduleEntry> newPrescriptionScheduleEntries) {
+        prescriptionScheduleEntryRepository.saveAll(newPrescriptionScheduleEntries);
+    }
 }
