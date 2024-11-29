@@ -1,8 +1,11 @@
 package com.cathalob.medtracker.model.enums;
 
 public enum DAYSTAGE {
-    BREAKFAST,
-    LUNCH,
-    DINNER,
+    WAKEUP,
+    MORNING,
+    MIDDAY,
+    AFTERNOON,
+    EVENING,
+    NIGHT,
     BEDTIME
 }

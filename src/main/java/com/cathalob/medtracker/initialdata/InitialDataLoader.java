@@ -321,10 +321,10 @@ public class InitialDataLoader implements ApplicationRunner {
                         localDate = LocalDate.ofInstant(
                                 row.getCell(0).getDateCellValue().toInstant(), ZoneId.systemDefault());
                     }
+
                     if (row.getCell(1) != null) {
-                        int numericCellValue = (int) row.getCell(1).getNumericCellValue();
-                        PrescriptionScheduleEntry prescriptionScheduleEntry = prescriptionScheduleEntries.get(numericCellValue);
-                        bloodPressureReading.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
+                        String dayStage = row.getCell(1).getStringCellValue();
+                        bloodPressureReading.setDayStage(DAYSTAGE.valueOf(dayStage));
                     }
 
                     if (row.getCell(2) != null) {

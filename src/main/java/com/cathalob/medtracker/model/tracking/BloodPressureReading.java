@@ -1,6 +1,6 @@
 package com.cathalob.medtracker.model.tracking;
 
-import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
+import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,10 +15,8 @@ public class BloodPressureReading {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "PRESCRIPTION_SCHEDULE_ENTRY_ID", nullable = false)
-    @JsonIgnore
-    private PrescriptionScheduleEntry prescriptionScheduleEntry;
+    @Enumerated(EnumType.STRING)
+    private DAYSTAGE dayStage;
 
     @ManyToOne
     @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE")

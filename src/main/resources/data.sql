@@ -52,23 +52,21 @@ NOT EXISTS (
     SELECT PRESCRIPTION_ID FROM PRESCRIPTIONSCHEDULEENTRY WHERE PRESCRIPTION_ID = '1' AND DAY_STAGE = 'BEDTIME'
 );
 
-
-
 INSERT INTO DAILYEVALUATION (USERMODEL_ID, RECORD_DATE)
-SELECT '1', {ts '2024-12-01'}
+SELECT '4', {ts '2024-12-01'}
 WHERE
 NOT EXISTS (
     SELECT USERMODEL_ID FROM DAILYEVALUATION WHERE USERMODEL_ID = '1'
 );
 
 INSERT INTO DOSE (DOSE_TIME, TAKEN, dailyevaluation_record_Date,dailyevaluation_userModel_id,prescription_schedule_entry_id)
-SELECT {ts '2024-12-01 10:34:53'},'TRUE', {ts '2024-12-01'},'1','1'
+SELECT {ts '2024-12-01 10:34:53'},'TRUE', {ts '2024-12-01'},'4','1'
 WHERE
 NOT EXISTS (
     SELECT ID FROM DOSE WHERE ID = '1'
 );
-INSERT INTO BLOODPRESSUREREADING (dailyevaluation_record_Date,dailyevaluation_userModel_id,prescription_schedule_entry_id, systole, diastole, heart_rate, reading_time)
-SELECT  {ts '2024-12-01'},'1','1','111','77','66', {ts '2024-12-01 10:34:53'}
+INSERT INTO BLOODPRESSUREREADING (dailyevaluation_record_Date,dailyevaluation_userModel_id, systole, diastole, heart_rate, reading_time, day_stage)
+SELECT  {ts '2024-12-01'},'4','111','77','66', {ts '2024-12-01 10:34:53'}, 'WAKEUP'
 WHERE
 NOT EXISTS (
     SELECT ID FROM BLOODPRESSUREREADING WHERE ID = '1'
