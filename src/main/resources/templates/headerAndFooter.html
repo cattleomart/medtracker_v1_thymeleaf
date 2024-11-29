@@ -16,10 +16,10 @@
             <a th:href="@{/}">Home</a>
         </div>
 
-        <div sec:authorize="isAuthenticated()">
-            <a th:href="@{/graphs}">Data Overview</a>
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
+            <a th:href="@{/patient/graphs}">Data Overview</a>
         </div>
-        <div sec:authorize="isAuthenticated()">
+        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
             <a th:href="@{/upload}">Upload</a>
         </div>
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">

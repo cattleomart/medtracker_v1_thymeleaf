@@ -48,6 +48,12 @@ public class PrescriptionsService {
         return prescriptionScheduleEntryRepository.findAll();
     }
 
+//    public List<PrescriptionScheduleEntry> getMedicationsForPrescriptionScheduleEntries( List<PrescriptionScheduleEntry> prescriptionScheduleEntryList) {
+//
+//        prescriptionsRepository.findAll();
+//        return medicationRepository.findAll().stream().filter(medication -> prescriptionScheduleEntryList.contains());
+//    }
+
     public Map<Integer, List<PrescriptionScheduleEntry>> getPrescriptionScheduleEntriesByPrescriptionId(){
         return getPrescriptionScheduleEntries()
                 .stream().collect(Collectors.groupingBy(prescriptionScheduleEntry -> prescriptionScheduleEntry.getPrescription().getId()));
