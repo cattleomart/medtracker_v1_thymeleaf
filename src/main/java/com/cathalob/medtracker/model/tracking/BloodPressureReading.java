@@ -31,4 +31,7 @@ public class BloodPressureReading {
     private Integer diastole;
     private Integer heartRate;
 
+    public boolean hasData(){
+        return systole != null && diastole != null && heartRate != null;
+    }
 }

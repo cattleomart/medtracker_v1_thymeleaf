@@ -339,11 +339,13 @@ public class InitialDataLoader implements ApplicationRunner {
                         int numericCellValue = (int) (row.getCell(4).getNumericCellValue());
                         bloodPressureReading.setHeartRate(numericCellValue);
                     }
-                    if (row.getCell(5) != null) {
+                    if (row.getCell(5) != null && (row.getCell(5).getLocalDateTimeCellValue() != null)) {
                         localTime = (row.getCell(5).getLocalDateTimeCellValue().toLocalTime());
                     }
-                    bloodPressureReading.setReadingTime(LocalDateTime.of(localDate,localTime));
-                    newBloodPressureReadings.add(bloodPressureReading);
+                    if (bloodPressureReading.hasData()) {
+                        bloodPressureReading.setReadingTime(LocalDateTime.of(localDate, localTime));
+                        newBloodPressureReadings.add(bloodPressureReading);
+                    }
                 }
             });
         } catch (EncryptedDocumentException | IOException e) {
