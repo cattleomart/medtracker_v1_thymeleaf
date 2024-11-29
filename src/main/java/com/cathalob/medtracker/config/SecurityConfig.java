@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/practitioner/**").hasAnyRole("PRACT")
                 .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/graphs", true).permitAll()).
+                        .defaultSuccessUrl("/", true).permitAll()).
                 logout(LogoutConfigurer::permitAll);
                 return httpSecurity.build();
     }

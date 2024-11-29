@@ -66,7 +66,7 @@ public class PatientController {
             model.addAttribute("doseChartData", doseGraphData);
 
 
-            return "patient/graphs";
+            return "graphs";
         }
     }
 }
