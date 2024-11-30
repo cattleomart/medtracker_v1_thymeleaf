@@ -51,14 +51,11 @@ public class PatientsService {
     }
 
     public List<List<Object>> getDoseGraphData(UserModel userModel) {
-
         List<List<Object>> listData = new ArrayList<>();
-
         List<Dose> doses = doseService.getDoses(userModel);
-        doses.stream().map(Dose::getPrescriptionScheduleEntry).distinct().toList();
-//        prescriptionsService.getPrescriptionScheduleEntries()
         HashMap<LocalDate, List<Dose>> byDate = new HashMap<>();
-        doses.stream().forEach(dose -> {
+
+        doses.forEach(dose -> {
             LocalDate localDate = dose.getDoseTime().toLocalDate();
             byDate.putIfAbsent(
                     localDate, new ArrayList<>());
@@ -67,23 +64,17 @@ public class PatientsService {
 
         List<Medication> medicationList = this.getSortedDistinctMedicationsForDoses(doses);
         List<DAYSTAGE> daystageList = this.getSortedDistinctDayStagesFromDoses(doses);
-
         List<LocalDate> sortedDates = doses.stream().map(dose -> dose.getDoseTime().toLocalDate()).sorted().toList();
-
 
         sortedDates.forEach(localDate -> {
             Map<Medication, List<Dose>> byMedication = byDate.get(localDate).stream().
                     sorted(Comparator.comparing(d -> d.getPrescriptionScheduleEntry().getPrescription().getMedication().getName()))
                     .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getPrescription().getMedication()));
 
-
             List<Object> dayDoseData = new ArrayList<>();
             dayDoseData.add(localDate);
             for (int medIndex = 0; medIndex < medicationList.size(); medIndex++) {
                 for (int dsIndex = 0; dsIndex < daystageList.size(); dsIndex++) {
-
-                    int finalMedIndex = medIndex;
-                    int finalDsIndex = dsIndex;
 
                     Medication medicationKey = medicationList.get(medIndex);
 
@@ -92,8 +83,8 @@ public class PatientsService {
                         Map<DAYSTAGE, List<Dose>> byDayStage = byMedication.get(medicationKey).stream()
                                 .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getDayStage()));
                         if (byDayStage.containsKey(dsKey)) {
-                            byDayStage
-                                    .get(dsKey).stream().forEach(dose -> dayDoseData.add(finalMedIndex + finalDsIndex + 1, dose.getPrescriptionScheduleEntry().getPrescription().getDoseMg()));
+                            dayDoseData.add(byDayStage
+                                    .get(dsKey).stream().mapToInt(value -> value.getPrescriptionScheduleEntry().getPrescription().getDoseMg()).sum());
                         } else {
 //                            System.out.println("Date: "  + localDate + " MedKey: "  + medicationKey + "DSKey: "  + dsKey);
                             dayDoseData.add(null);
