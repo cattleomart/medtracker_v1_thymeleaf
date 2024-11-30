@@ -164,11 +164,14 @@ public class InitialDataLoader implements ApplicationRunner {
                         prescription.setBeginTime(localDateTimeCellValue);
                     }
                     if (row.getCell(5) != null) {
-                        LocalDateTime localDateTimeCellValue = row.getCell(4).getLocalDateTimeCellValue();
+                        LocalDateTime localDateTimeCellValue = row.getCell(5).getLocalDateTimeCellValue();
 
                         prescription.setEndTime(localDateTimeCellValue);
                     }
-
+                    if (row.getCell(6) != null) {
+                        int localDateTimeCellValue = (int) row.getCell(6).getNumericCellValue();
+                        prescription.setDoseMg(localDateTimeCellValue);
+                    }
 
                     newPrescriptions.add(prescription);
                 }

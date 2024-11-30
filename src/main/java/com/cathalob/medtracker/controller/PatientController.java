@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,11 +59,11 @@ public class PatientController {
             List<List<Object>> doseGraphData = patientsService.getDoseGraphData(this.getUserModel(authentication));
 
             model.addAttribute("doseGraphTitle", "Dose (mg)");
-            model.addAttribute("colls", Arrays.asList('w'));
+            model.addAttribute("colls", (patientsService.getDoseGraphColumnNames(this.getUserModel(authentication))));
 
 
-            model.addAttribute("systoleChartData", Arrays.asList(1));
-            model.addAttribute("diastoleChartData", Arrays.asList(1));
+            model.addAttribute("systoleChartData", Arrays.asList(1,2,3,4,5,6));
+            model.addAttribute("diastoleChartData", Arrays.asList(1,2,3,4,5));
             model.addAttribute("doseChartData", doseGraphData);
 
 
