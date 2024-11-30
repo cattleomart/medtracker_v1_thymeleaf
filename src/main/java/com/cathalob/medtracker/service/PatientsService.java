@@ -53,9 +53,9 @@ public class PatientsService {
     public List<List<Object>> getDoseGraphData(UserModel userModel) {
         List<List<Object>> listData = new ArrayList<>();
         List<Dose> doses = doseService.getDoses(userModel);
-        HashMap<LocalDate, List<Dose>> byDate = new HashMap<>();
 
-        doses.forEach(dose -> {
+        TreeMap<LocalDate, List<Dose>> byDate = new TreeMap<>();
+        doses.stream().sorted(Comparator.comparing(dose -> dose.getDoseTime().toLocalDate())).forEach(dose -> {
             LocalDate localDate = dose.getDoseTime().toLocalDate();
             byDate.putIfAbsent(
                     localDate, new ArrayList<>());
@@ -64,11 +64,10 @@ public class PatientsService {
 
         List<Medication> medicationList = this.getSortedDistinctMedicationsForDoses(doses);
         List<DAYSTAGE> daystageList = this.getSortedDistinctDayStagesFromDoses(doses);
-        List<LocalDate> sortedDates = doses.stream().map(dose -> dose.getDoseTime().toLocalDate()).sorted().toList();
 
-        sortedDates.forEach(localDate -> {
+        byDate.forEach((localDate, doseByDate) -> {
             List<Object> dayDoseData = new ArrayList<>();
-            Map<Medication, List<Dose>> byMedication = byDate.get(localDate).stream()
+            Map<Medication, List<Dose>> byMedication = doseByDate.stream()
                     .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getPrescription().getMedication()));
 
             dayDoseData.add(localDate);
@@ -97,15 +96,16 @@ public class PatientsService {
         return doses.stream().map(dose -> dose.getPrescriptionScheduleEntry().getDayStage()).distinct().sorted(Comparator.comparing(DAYSTAGE::toString)).toList();
     }
 
-    public List<List<String>> getDoseGraphColumnNames(UserModel userModel){
+    public List<List<String>> getDoseGraphColumnNames(UserModel userModel) {
         List<Dose> doses = doseService.getDoses(userModel);
         List<String> names = new ArrayList<>();
         List<DAYSTAGE> daystagesFromDoses = this.getSortedDistinctDayStagesFromDoses(doses);
-        this.getSortedDistinctMedicationsForDoses(doses).stream().map(Medication::getName).forEach(m -> daystagesFromDoses.forEach(ds -> names.add( m  + " (" + ds.toString() + ')')));
+        this.getSortedDistinctMedicationsForDoses(doses).stream().map(Medication::getName).forEach(m -> daystagesFromDoses.forEach(ds -> names.add(m + " (" + ds.toString() + ')')));
         System.out.println(names);
         return Arrays.asList(names);
     }
-    private List<Medication> getSortedDistinctMedicationsForDoses(List<Dose> doses){
+
+    private List<Medication> getSortedDistinctMedicationsForDoses(List<Dose> doses) {
         return doses.stream().map(dose -> dose.getPrescriptionScheduleEntry().getPrescription().getMedication()).distinct().sorted(Comparator.comparing(Medication::getName)).toList();
     }
 
