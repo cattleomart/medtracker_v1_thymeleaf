@@ -67,47 +67,30 @@ public class PatientsService {
         List<LocalDate> sortedDates = doses.stream().map(dose -> dose.getDoseTime().toLocalDate()).sorted().toList();
 
         sortedDates.forEach(localDate -> {
-            Map<Medication, List<Dose>> byMedication = byDate.get(localDate).stream().
-                    sorted(Comparator.comparing(d -> d.getPrescriptionScheduleEntry().getPrescription().getMedication().getName()))
+            List<Object> dayDoseData = new ArrayList<>();
+            Map<Medication, List<Dose>> byMedication = byDate.get(localDate).stream()
                     .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getPrescription().getMedication()));
 
-            List<Object> dayDoseData = new ArrayList<>();
             dayDoseData.add(localDate);
-            for (int medIndex = 0; medIndex < medicationList.size(); medIndex++) {
-                for (int dsIndex = 0; dsIndex < daystageList.size(); dsIndex++) {
-
-                    Medication medicationKey = medicationList.get(medIndex);
-
-                    if (byMedication.containsKey(medicationKey)){
-                        DAYSTAGE dsKey = daystageList.get(dsIndex);
-                        Map<DAYSTAGE, List<Dose>> byDayStage = byMedication.get(medicationKey).stream()
+            for (Medication medication : medicationList) {
+                for (DAYSTAGE daystage : daystageList) {
+                    if (byMedication.containsKey(medication)) {
+                        Map<DAYSTAGE, List<Dose>> byDayStage = byMedication.get(medication).stream()
                                 .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getDayStage()));
-                        if (byDayStage.containsKey(dsKey)) {
+                        if (byDayStage.containsKey(daystage)) {
                             dayDoseData.add(byDayStage
-                                    .get(dsKey).stream().mapToInt(value -> value.getPrescriptionScheduleEntry().getPrescription().getDoseMg()).sum());
+                                    .get(daystage).stream().mapToInt(value -> value.getPrescriptionScheduleEntry().getPrescription().getDoseMg()).sum());
                         } else {
-//                            System.out.println("Date: "  + localDate + " MedKey: "  + medicationKey + "DSKey: "  + dsKey);
                             dayDoseData.add(null);
                         }
-
-                    }
-                    else {
-//                        System.out.println("Date: "  + localDate + " MedKey: "  + medicationKey);
+                    } else {
                         dayDoseData.add(null);
                     }
-
                 }
             }
-            System.out.println(dayDoseData);
             listData.add(dayDoseData);
-
         });
-
-
-
-            return listData;
-
-
+        return listData;
     }
 
     private List<DAYSTAGE> getSortedDistinctDayStagesFromDoses(List<Dose> doses) {
