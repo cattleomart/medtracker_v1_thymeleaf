@@ -41,12 +41,9 @@ public class PatientController {
             model.addAttribute("col0", "Date");
 
             model.addAttribute("systoleGraphTitle", "Systole");
-            model.addAttribute("col1", "Morning");
-            model.addAttribute("col2", "Lunch");
-            model.addAttribute("col3", "Second Dose Peak");
-            model.addAttribute("col4", "Danger High");
-            model.addAttribute("col5", "High Stage 1");
-            model.addAttribute("col6", "Elevated");
+            UserModel userModel = this.getUserModel(authentication);
+            model.addAttribute("systoleColls", patientsService.getSystoleGraphColumnNames(userModel));
+
 
 
             model.addAttribute("diastoleGraphTitle", "Diastole");
@@ -56,16 +53,15 @@ public class PatientController {
             model.addAttribute("dcol4", "Danger High");
             model.addAttribute("dcol5", "High Stage 1");
 
-            List<List<Object>> doseGraphData = patientsService.getDoseGraphData(this.getUserModel(authentication));
+            List<List<Object>> doseGraphData = patientsService.getDoseGraphData(userModel);
 
             model.addAttribute("doseGraphTitle", "Dose (mg)");
-            model.addAttribute("colls", (patientsService.getDoseGraphColumnNames(this.getUserModel(authentication))));
+            model.addAttribute("colls", (patientsService.getDoseGraphColumnNames(userModel)));
 
 
-            model.addAttribute("systoleChartData", Arrays.asList(1,2,3,4,5,6));
+            model.addAttribute("systoleChartData",  patientsService.getSystoleGraphData(userModel));
             model.addAttribute("diastoleChartData", Arrays.asList(1,2,3,4,5));
             model.addAttribute("doseChartData", doseGraphData);
-
 
             return "graphs";
         }

@@ -14,13 +14,16 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', /*[[${col0}]]*/'col0');
 
-        data.addColumn('number', /*[[${col1}]]*/'col1');
-        data.addColumn('number', /*[[${col2}]]*/'col2');
-        data.addColumn('number', /*[[${col3}]]*/'col3');
+     collData = ([
+       /*[# th:each="row : ${systoleColls}"]*/
+        [[${row}]],
+        /*[/]*/
+       ])[0];
 
-        data.addColumn('number', /*[[${col4}]]*/'col4');
-        data.addColumn('number', /*[[${col5}]]*/'col5');
-        data.addColumn('number', /*[[${col6}]]*/'col6');
+        var numColls = collData.length;
+
+        for (var i = 0; i < numColls; i++)
+            data.addColumn('number', collData[i]);
 
 
        data.addRows([
@@ -35,14 +38,10 @@
             title: /*[[${systoleGraphTitle}]]*/ "",
              series: {
 
-            0: { color: '#3366cc' },
-            1: { color: '#22aa99' },
-            2: { color: 'black' },
-            3: { color: 'red', lineDashStyle: [2, 2] },
-            4: { color: '#dc3912', lineDashStyle: [2, 2] },
-            5: { color: 'yellow', lineDashStyle: [2, 2] },
-          }
-
+            0: { color: 'red', lineDashStyle: [2, 2] },
+            1: { color: '#dc3912', lineDashStyle: [2, 2] },
+            2: { color: 'yellow', lineDashStyle: [2, 2] },
+            }
           };
 
           var chart = new google.visualization.LineChart(document.getElementById('systoleGraph'));

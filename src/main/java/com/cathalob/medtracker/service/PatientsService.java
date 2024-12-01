@@ -92,6 +92,50 @@ public class PatientsService {
         return doses.stream().map(dose -> dose.getPrescriptionScheduleEntry().getDayStage()).distinct().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
     }
 
+    public List<List<Object>> getSystoleGraphData(UserModel userModel){
+        List<List<Object>> listData = new ArrayList<>();
+        List<BloodPressureReading> bloodPressureReadings = bloodPressureDataService.getBloodPressureReadings(userModel);
+
+        Map<LocalDate, List<BloodPressureReading>> byDate = bloodPressureReadings.stream().sorted(Comparator.comparing(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate()))
+                .collect(Collectors.groupingBy(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate()));
+        List<DAYSTAGE> sortedDayStages = bloodPressureReadings.stream().map(BloodPressureReading::getDayStage).distinct().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
+
+        byDate.forEach((date, bloodPressureReadingsByDate) -> {
+            ArrayList<Object> dayList = new ArrayList<>();
+            dayList.add(date);
+            dayList.add(140);
+            dayList.add(130);
+            dayList.add(120);
+            Map<DAYSTAGE, List<BloodPressureReading>> bprMap = bloodPressureReadingsByDate.stream().collect(Collectors.groupingBy(BloodPressureReading::getDayStage));
+
+            for (DAYSTAGE dayStage : sortedDayStages)
+            {
+                if (bprMap.containsKey(dayStage)) {
+                    dayList.add(bprMap.get(dayStage).stream().mapToInt(BloodPressureReading::getSystole).sum());
+                }
+                else {
+                    dayList.add(null);
+                }
+            }
+            listData.add(dayList);
+        });
+
+        return listData;
+    }
+
+    public List<List<String>> getSystoleGraphColumnNames(UserModel userModel){
+        List<String> names = new ArrayList<>();
+        names.add("Danger High");
+        names.add("High Stage 1");
+        names.add("Elevated");
+        List<DAYSTAGE> bloodPressureReadings = bloodPressureDataService.getBloodPressureReadings(userModel).
+                stream().map(BloodPressureReading::getDayStage)
+                .distinct()
+                .toList();
+        names.addAll(bloodPressureReadings.stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).map(DAYSTAGE::toString).toList());
+        return List.of(names);
+    }
+
     public List<List<String>> getDoseGraphColumnNames(UserModel userModel) {
         List<Dose> doses = doseService.getDoses(userModel);
         List<String> names = new ArrayList<>();
