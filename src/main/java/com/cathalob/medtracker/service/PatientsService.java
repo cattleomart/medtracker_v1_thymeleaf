@@ -132,22 +132,26 @@ public class PatientsService {
                 stream().map(BloodPressureReading::getDayStage)
                 .distinct()
                 .toList();
-        names.addAll(bloodPressureReadings.stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).map(DAYSTAGE::toString).toList());
+        names.addAll(this.prettifiedDayStageNames(bloodPressureReadings.stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList()));
         return List.of(names);
     }
 
     public List<List<String>> getDoseGraphColumnNames(UserModel userModel) {
         List<Dose> doses = doseService.getDoses(userModel);
         List<String> names = new ArrayList<>();
-        List<String> dayStageNames = this.getSortedDistinctDayStagesFromDoses(doses).stream().map(ds -> (" (" +
-                ds.toString().charAt(0) + ds.toString().substring(1).toLowerCase() + ')')).toList();
+        List<String> dayStageNames = this.prettifiedDayStageNames(this.getSortedDistinctDayStagesFromDoses(doses));
 
         for (String medication : this.getSortedDistinctMedicationsForDoses(doses).stream().map(Medication::getName).toList()){
             for (String dayStage : dayStageNames){
-                names.add(medication + dayStage);
+                names.add(medication + " (" + dayStage + ')');
             }
         }
         return List.of(names);
+    }
+
+    private List<String> prettifiedDayStageNames(List<DAYSTAGE> dayStages) {
+        return dayStages.stream().map(ds -> (
+                ds.toString().charAt(0) + ds.toString().substring(1).toLowerCase())).toList();
     }
 
     private List<Medication> getSortedDistinctMedicationsForDoses(List<Dose> doses) {
