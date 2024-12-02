@@ -14,12 +14,17 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', /*[[${col0}]]*/'col0');
 
-        data.addColumn('number', /*[[${dcol1}]]*/'dcol1');
-        data.addColumn('number', /*[[${dcol2}]]*/'dcol2');
-        data.addColumn('number', /*[[${dcol3}]]*/'dcol3');
+          collData = ([
+       /*[# th:each="row : ${diastoleColls}"]*/
+        [[${row}]],
+        /*[/]*/
+       ])[0];
 
-        data.addColumn('number', /*[[${dcol4}]]*/'dcol4');
-        data.addColumn('number', /*[[${dcol5}]]*/'dcol5');
+        var numColls = collData.length;
+
+        for (var i = 0; i < numColls; i++)
+            data.addColumn('number', collData[i]);
+
 
        data.addRows([
        /*[# th:each="row : ${diastoleChartData}"]*/
@@ -30,11 +35,14 @@
             interpolateNulls: true,
             title: /*[[${diastoleGraphTitle}]]*/ "",
              series: {
-           0: { color: '#3366cc' },
-            1: { color: '#22aa99' },
-            2: { color: 'black' },
-            3: { color: 'red', lineDashStyle: [2, 2] },
-            4: { color: '#dc3912', lineDashStyle: [2, 2] },
+           0: { color: 'red', lineDashStyle: [2, 2] },
+           1: { color: '#dc3912', lineDashStyle: [2, 2] },
+           2: { color: '#3366cc' },
+           3: { color: '#109618' },
+           4: { color: '#990099' },
+           5: { color: '#22aa99' },
+           6: { color: '#743411' },
+
           }
           };
 

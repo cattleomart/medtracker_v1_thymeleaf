@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,9 +63,6 @@ public class PatientsService {
 
         List<Medication> medicationList = prescriptionsService.getPatientMedications(userModel).stream().sorted(Comparator.comparing(Medication::getName)).toList();
         List<DAYSTAGE> daystageList = prescriptionsService.getPatientDayStages(userModel).stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
-System.out.println(medicationList);
-System.out.println(daystageList);
-
 
         LocalDate end = LocalDate.now().plusDays(1);
         Optional<LocalDate> start = byDate.keySet().stream().distinct().min(LocalDate::compareTo);
@@ -74,7 +72,7 @@ System.out.println(daystageList);
             daysRange.addAll(Stream.iterate(start.get(), date -> date.plusDays(1)).limit(numDays).toList());
         }
 
-        for (LocalDate date : daysRange){
+        for (LocalDate date : daysRange) {
             List<Dose> dosesByDate = (byDate.get(date) == null) ? new ArrayList<>() : byDate.get(date);
 
             List<Object> dayDoseData = new ArrayList<>();
@@ -92,8 +90,7 @@ System.out.println(daystageList);
                         if (byDayStage.containsKey(daystage)) {
                             if (doseEntriesForDayStage.stream().filter(Dose::isTaken).toList().isEmpty()) {
                                 dayDoseData.add(0);
-                            }
-                            else {
+                            } else {
                                 dayDoseData.add(doseEntriesForDayStage.stream().filter(Dose::isTaken).mapToInt(value -> value.getPrescriptionScheduleEntry().getPrescription().getDoseMg()).sum());
                             }
                         } else {
@@ -109,9 +106,22 @@ System.out.println(daystageList);
         return listData;
     }
 
-    public List<List<Object>> getSystoleGraphData(UserModel userModel){
+    public List<List<Object>> getSystoleGraphData(List<BloodPressureReading> bloodPressureReadings) {
+        return this.getBloodPressureGraphData(BloodPressureReading::getSystole, List.of(140,130,120), bloodPressureReadings);
+
+    }
+
+    public List<List<Object>> getDiastoleGraphData (List<BloodPressureReading> bloodPressureReadings) {
+        return this.getBloodPressureGraphData(BloodPressureReading::getDiastole, List.of(90, 80), bloodPressureReadings);
+    }
+
+    public List<List<Object>> getHeartRateGraphData(List<BloodPressureReading> bloodPressureReadings) {
+        return this.getBloodPressureGraphData(BloodPressureReading::getHeartRate, List.of(100,90,80), bloodPressureReadings);
+
+    }
+
+    public List<List<Object>> getBloodPressureGraphData(ToIntFunction<BloodPressureReading> getBpValueFunction, List<Integer> warningLevels, List<BloodPressureReading> bloodPressureReadings) {
         List<List<Object>> listData = new ArrayList<>();
-        List<BloodPressureReading> bloodPressureReadings = bloodPressureDataService.getBloodPressureReadings(userModel);
 
         TreeMap<LocalDate, List<BloodPressureReading>> byDate = bloodPressureReadings.stream().sorted(Comparator.comparing(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate()))
                 .collect(Collectors.groupingBy(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate(), TreeMap::new, Collectors.toList()));
@@ -121,37 +131,26 @@ System.out.println(daystageList);
         byDate.forEach((date, bloodPressureReadingsByDate) -> {
             ArrayList<Object> dayList = new ArrayList<>();
             dayList.add(date);
-            dayList.add(140);
-            dayList.add(130);
-            dayList.add(120);
+            dayList.addAll(warningLevels);
             Map<DAYSTAGE, List<BloodPressureReading>> bprMap = bloodPressureReadingsByDate.stream().collect(Collectors.groupingBy(BloodPressureReading::getDayStage));
 
-            for (DAYSTAGE dayStage : sortedDayStages)
-            {
+            for (DAYSTAGE dayStage : sortedDayStages) {
                 if (bprMap.containsKey(dayStage)) {
-                    OptionalDouble average = bprMap.get(dayStage).stream().mapToInt(BloodPressureReading::getSystole).average();
+                    OptionalDouble average = bprMap.get(dayStage).stream().mapToInt(getBpValueFunction).average();
                     dayList.add(average.isEmpty() ? null : ((int) average.getAsDouble()));
-                }
-                else {
+                } else {
                     dayList.add(null);
                 }
             }
             listData.add(dayList);
         });
-
         return listData;
     }
 
-    public List<List<String>> getSystoleGraphColumnNames(UserModel userModel){
+    public List<List<String>> getBloodPressureGraphColumnNames(List<DAYSTAGE> daystageList, List<String> warningLabels) {
         List<String> names = new ArrayList<>();
-        names.add("Danger High");
-        names.add("High Stage 1");
-        names.add("Elevated");
-        List<DAYSTAGE> bloodPressureReadings = bloodPressureDataService.getBloodPressureReadings(userModel).
-                stream().map(BloodPressureReading::getDayStage)
-                .distinct()
-                .toList();
-        names.addAll(this.prettifiedDayStageNames(bloodPressureReadings.stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList()));
+        names.addAll(warningLabels);
+        names.addAll(this.prettifiedDayStageNames(daystageList.stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList()));
         return List.of(names);
     }
 
@@ -159,13 +158,14 @@ System.out.println(daystageList);
         List<String> names = new ArrayList<>();
         List<String> dayStageNames = this.prettifiedDayStageNames(prescriptionsService.getPatientDayStages(userModel));
 
-        for (String medication : prescriptionsService.getPatientMedications(userModel).stream().map(Medication::getName).toList()){
-            for (String dayStage : dayStageNames){
+        for (String medication : prescriptionsService.getPatientMedications(userModel).stream().map(Medication::getName).toList()) {
+            for (String dayStage : dayStageNames) {
                 names.add(medication + " (" + dayStage + ')');
             }
         }
         return List.of(names);
     }
+
     private List<String> prettifiedDayStageNames(List<DAYSTAGE> dayStages) {
         return dayStages.stream().map(ds -> (
                 ds.toString().charAt(0) + ds.toString().substring(1).toLowerCase())).toList();

@@ -1,7 +1,9 @@
 package com.cathalob.medtracker.controller;
 
 import com.cathalob.medtracker.model.UserModel;
-import com.cathalob.medtracker.model.tracking.Dose;
+import com.cathalob.medtracker.model.enums.DAYSTAGE;
+import com.cathalob.medtracker.model.tracking.BloodPressureReading;
+import com.cathalob.medtracker.service.BloodPressureDataService;
 import com.cathalob.medtracker.service.PatientsService;
 import com.cathalob.medtracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -19,6 +19,8 @@ public class PatientController {
     @Autowired
     PatientsService patientsService;
 
+    @Autowired
+    BloodPressureDataService bloodPressureDataService;
     @Autowired
     UserService userService;
     @GetMapping("/patient/prescriptions")
@@ -34,33 +36,25 @@ public class PatientController {
     @GetMapping("/patient/graphs")
     public String graphs(Model model, Authentication authentication) {
         {
-
-
             model.addAttribute("graphPageTitle", "Data Visualizations");
             model.addAttribute("bpSectionTitle", "Blood pressure");
             model.addAttribute("col0", "Date");
-
-            model.addAttribute("systoleGraphTitle", "Systole");
             UserModel userModel = this.getUserModel(authentication);
-            model.addAttribute("systoleColls", patientsService.getSystoleGraphColumnNames(userModel));
-
-
+            List<BloodPressureReading> bloodPressureReadings = bloodPressureDataService.getBloodPressureReadings(userModel);
+            List<DAYSTAGE> daystageList = bloodPressureReadings.stream().map(BloodPressureReading::getDayStage)
+                    .distinct()
+                    .toList();
+            model.addAttribute("systoleGraphTitle", "Systole");
+            model.addAttribute("systoleColls", patientsService.getBloodPressureGraphColumnNames(daystageList,List.of("Danger High","High Stage 1","Elevated")));
+            model.addAttribute("systoleChartData",  patientsService.getSystoleGraphData(bloodPressureReadings));
 
             model.addAttribute("diastoleGraphTitle", "Diastole");
-            model.addAttribute("dcol1", "Morning");
-            model.addAttribute("dcol2", "Lunch");
-            model.addAttribute("dcol3", "Second Dose Peak");
-            model.addAttribute("dcol4", "Danger High");
-            model.addAttribute("dcol5", "High Stage 1");
-
-            List<List<Object>> doseGraphData = patientsService.getDoseGraphData(userModel);
+            model.addAttribute("diastoleColls", patientsService.getBloodPressureGraphColumnNames(daystageList,List.of("Danger High","High Stage 1")));
+            model.addAttribute("diastoleChartData", patientsService.getDiastoleGraphData(bloodPressureReadings));
 
             model.addAttribute("doseGraphTitle", "Dose (mg)");
             model.addAttribute("colls", (patientsService.getDoseGraphColumnNames(userModel)));
-
-
-            model.addAttribute("systoleChartData",  patientsService.getSystoleGraphData(userModel));
-            model.addAttribute("diastoleChartData", Arrays.asList(1,2,3,4,5));
+            List<List<Object>> doseGraphData = patientsService.getDoseGraphData(userModel);
             model.addAttribute("doseChartData", doseGraphData);
 
             return "graphs";
