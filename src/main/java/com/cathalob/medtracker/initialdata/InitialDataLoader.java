@@ -329,22 +329,25 @@ public class InitialDataLoader implements ApplicationRunner {
                         String dayStage = row.getCell(1).getStringCellValue();
                         bloodPressureReading.setDayStage(DAYSTAGE.valueOf(dayStage));
                     }
-
-                    if (row.getCell(2) != null) {
-                        int numericCellValue = (int) (row.getCell(2).getNumericCellValue());
-                        bloodPressureReading.setSystole(numericCellValue);
+                    int timeCellIndex = 2;
+                    if (row.getCell(timeCellIndex) != null && (row.getCell(timeCellIndex).getLocalDateTimeCellValue() != null)) {
+                        localTime = (row.getCell(timeCellIndex).getLocalDateTimeCellValue().toLocalTime());
                     }
-                    if (row.getCell(3) != null) {
-                        int numericCellValue = (int) (row.getCell(3).getNumericCellValue());
-                        bloodPressureReading.setDiastole(numericCellValue);
+
+                    int systoleIndex = 3;
+                    if (row.getCell(systoleIndex) != null) {
+                        int numericCellValue = (int) (row.getCell(systoleIndex).getNumericCellValue());
+                        bloodPressureReading.setSystole(numericCellValue);
                     }
                     if (row.getCell(4) != null) {
                         int numericCellValue = (int) (row.getCell(4).getNumericCellValue());
+                        bloodPressureReading.setDiastole(numericCellValue);
+                    }
+                    if (row.getCell(5) != null) {
+                        int numericCellValue = (int) (row.getCell(5).getNumericCellValue());
                         bloodPressureReading.setHeartRate(numericCellValue);
                     }
-                    if (row.getCell(5) != null && (row.getCell(5).getLocalDateTimeCellValue() != null)) {
-                        localTime = (row.getCell(5).getLocalDateTimeCellValue().toLocalTime());
-                    }
+
                     if (bloodPressureReading.hasData()) {
                         bloodPressureReading.setReadingTime(LocalDateTime.of(localDate, localTime));
                         newBloodPressureReadings.add(bloodPressureReading);
