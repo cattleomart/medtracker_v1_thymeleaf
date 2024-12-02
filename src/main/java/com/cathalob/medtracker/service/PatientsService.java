@@ -62,7 +62,8 @@ public class PatientsService {
                 .collect(Collectors.groupingBy(dose -> dose.getDoseTime().toLocalDate(), TreeMap::new, Collectors.toList()));
 
         List<Medication> medicationList = prescriptionsService.getPatientMedications(userModel).stream().sorted(Comparator.comparing(Medication::getName)).toList();
-        List<DAYSTAGE> daystageList = prescriptionsService.getPatientDayStages(userModel).stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
+        List<DAYSTAGE> daystageList = prescriptionsService.getPatientPrescriptionDayStages(userModel).stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
+        HashMap<Medication, HashSet<LocalDate>> patientPrescriptionDatesByMedication = prescriptionsService.getPatientPrescriptionDatesByMedication(userModel);
 
         LocalDate end = LocalDate.now().plusDays(1);
         Optional<LocalDate> start = byDate.keySet().stream().distinct().min(LocalDate::compareTo);
@@ -82,6 +83,8 @@ public class PatientsService {
             dayDoseData.add(date);
             for (Medication medication : medicationList) {
                 for (DAYSTAGE daystage : daystageList) {
+                    boolean isPrescribedOnDate = patientPrescriptionDatesByMedication.containsKey(medication) && patientPrescriptionDatesByMedication.get(medication).contains(date);
+
                     if (byMedication.containsKey(medication)) {
                         Map<DAYSTAGE, List<Dose>> byDayStage = byMedication.get(medication).stream()
                                 .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getDayStage()));
@@ -94,10 +97,10 @@ public class PatientsService {
                                 dayDoseData.add(doseEntriesForDayStage.stream().filter(Dose::isTaken).mapToInt(value -> value.getPrescriptionScheduleEntry().getPrescription().getDoseMg()).sum());
                             }
                         } else {
-                            dayDoseData.add(null);
+                            dayDoseData.add(isPrescribedOnDate ? 0 : null);
                         }
                     } else {
-                        dayDoseData.add(null);
+                        dayDoseData.add(isPrescribedOnDate ? 0 : null);
                     }
                 }
             }
@@ -156,7 +159,7 @@ public class PatientsService {
 
     public List<List<String>> getDoseGraphColumnNames(UserModel userModel) {
         List<String> names = new ArrayList<>();
-        List<String> dayStageNames = this.prettifiedDayStageNames(prescriptionsService.getPatientDayStages(userModel));
+        List<String> dayStageNames = this.prettifiedDayStageNames(prescriptionsService.getPatientPrescriptionDayStages(userModel));
 
         for (String medication : prescriptionsService.getPatientMedications(userModel).stream().map(Medication::getName).toList()) {
             for (String dayStage : dayStageNames) {
