@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PatientsService {
@@ -61,12 +63,22 @@ public class PatientsService {
         List<Medication> medicationList = this.getSortedDistinctMedicationsForDoses(doses);
         List<DAYSTAGE> daystageList = this.getSortedDistinctDayStagesFromDoses(doses);
 
-        byDate.forEach((localDate, doseByDate) -> {
+        LocalDate end = LocalDate.now().plusDays(1);
+        Optional<LocalDate> start = byDate.keySet().stream().distinct().min(LocalDate::compareTo);
+        List<LocalDate> daysRange = new ArrayList<>();
+        if (start.isPresent()) {
+            long numDays = ChronoUnit.DAYS.between(start.get(), end);
+            daysRange.addAll(Stream.iterate(start.get(), date -> date.plusDays(1)).limit(numDays).toList());
+        }
+
+        for (LocalDate date : daysRange){
+            List<Dose> dosesByDate = (byDate.get(date) == null) ? new ArrayList<>() : byDate.get(date);
+
             List<Object> dayDoseData = new ArrayList<>();
-            Map<Medication, List<Dose>> byMedication = doseByDate.stream()
+            Map<Medication, List<Dose>> byMedication = dosesByDate.stream()
                     .collect(Collectors.groupingBy(dose -> dose.getPrescriptionScheduleEntry().getPrescription().getMedication()));
 
-            dayDoseData.add(localDate);
+            dayDoseData.add(date);
             for (Medication medication : medicationList) {
                 for (DAYSTAGE daystage : daystageList) {
                     if (byMedication.containsKey(medication)) {
@@ -84,7 +96,7 @@ public class PatientsService {
                 }
             }
             listData.add(dayDoseData);
-        });
+        }
         return listData;
     }
 
@@ -96,8 +108,9 @@ public class PatientsService {
         List<List<Object>> listData = new ArrayList<>();
         List<BloodPressureReading> bloodPressureReadings = bloodPressureDataService.getBloodPressureReadings(userModel);
 
-        Map<LocalDate, List<BloodPressureReading>> byDate = bloodPressureReadings.stream().sorted(Comparator.comparing(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate()))
-                .collect(Collectors.groupingBy(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate()));
+        TreeMap<LocalDate, List<BloodPressureReading>> byDate = bloodPressureReadings.stream().sorted(Comparator.comparing(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate()))
+                .collect(Collectors.groupingBy(bloodPressureReading -> bloodPressureReading.getReadingTime().toLocalDate(), TreeMap::new, Collectors.toList()));
+
         List<DAYSTAGE> sortedDayStages = bloodPressureReadings.stream().map(BloodPressureReading::getDayStage).distinct().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
 
         byDate.forEach((date, bloodPressureReadingsByDate) -> {
@@ -111,7 +124,8 @@ public class PatientsService {
             for (DAYSTAGE dayStage : sortedDayStages)
             {
                 if (bprMap.containsKey(dayStage)) {
-                    dayList.add(bprMap.get(dayStage).stream().mapToInt(BloodPressureReading::getSystole).sum());
+                    OptionalDouble average = bprMap.get(dayStage).stream().mapToInt(BloodPressureReading::getSystole).average();
+                    dayList.add(average.isEmpty() ? null : ((int) average.getAsDouble()));
                 }
                 else {
                     dayList.add(null);
