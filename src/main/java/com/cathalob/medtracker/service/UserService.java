@@ -71,6 +71,8 @@ public class UserService {
 
 //    USER Role functions
     public void submitPractitionerRoleRequest(String username) {
+        if (this.getPractitionerRoleRequest(username)== null) return;
+
         UserModel userModel = findByLogin(username);
         PractitionerRoleRequest practitionerRoleRequest = new PractitionerRoleRequest();
         practitionerRoleRequest.setUserModel(userModel);
@@ -84,12 +86,9 @@ public class UserService {
 
 
 
-
 //ADMIN user functions
     public List<PractitionerRoleRequest> getPractitionerRoleRequests() {
-    return StreamSupport.stream(practitionerRoleRequestRepository.findAll().spliterator(), false)
-            .toList();
-
+    return practitionerRoleRequestRepository.findAll();
 }
 
     public PractitionerRoleRequestsDTO getPractitionerRoleRequestsDTO() {
@@ -159,5 +158,7 @@ public class UserService {
     }
 
 
-
+    public boolean submitPasswordChangeRequest() {
+        return false;
+    }
 }

@@ -5,51 +5,50 @@
 </head>
 
 <body>
-<div th:fragment="header" class="headerFragment">
-    <div class="headerAndNav">
-        <div class="headerTitle">
-            <H1>Med Tracker</H1>
-        </div>
-    <div class="topnav">
+    <div th:fragment="header" class="headerFragment">
+        <div class="headerAndNav">
+            <div class="headerTitle">
+                <H1>Med Tracker</H1>
+            </div>
 
-        <div>
-            <a th:href="@{/}">Home</a>
-        </div>
+            <div class="topnavAndAuthStatus">
+                <div class="topnav">
 
-        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
-            <a th:href="@{/patient/graphs}">Data Overview</a>
-        </div>
-        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
-            <a th:href="@{/patient/upload}">Upload</a>
-        </div>
-        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
-            <a th:href="@{/patient/prescriptions}">Prescriptions</a>
-        </div>
-        <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
-            <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: User Management</a>
-        </div>
-        <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
-            <a th:href="@{/user/practitionerRoleRequest}">Request Role</a>
-        </div>
-        <div th:if="${#authorization.expression('hasAuthority(''ROLE_PRACT'')')}">
-            <a th:href="@{/practitioner/patients}">Patients</a>
-        </div>
-        <div>
-            <a th:href="@{/about}">About</a>
-        </div>
-        <div sec:authorize="isAuthenticated()" class="authStatus">
-            <div sec:authentication="name" class="authStatusName">Name of authenticated user</div>
-            <a th:href="@{/user/accountManagement}">X</a>
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Logout">
-            </form>
+                    <div>
+                        <a th:href="@{/}">Home</a>
+                    </div>
+                    <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
+                        <a th:href="@{/patient/graphs}">Data Overview</a>
+                    </div>
+                    <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
+                        <a th:href="@{/patient/upload}">Upload</a>
+                    </div>
+                    <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
+                        <a th:href="@{/patient/prescriptions}">Prescriptions</a>
+                    </div>
+                    <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                        <a th:href="@{/admin/practitionerRoleRequests}">ADMIN: User Management</a>
+                    </div>
+                    <div th:if="${#authorization.expression('hasAuthority(''ROLE_PRACT'')')}">
+                        <a th:href="@{/practitioner/patients}">Patients</a>
+                    </div>
+                    <div>
+                        <a th:href="@{/about}">About</a>
+                    </div>
+                </div>
+                <div sec:authorize="isAuthenticated()" class="authStatus">
+                    <a sec:authentication="name" class="authStatusName" th:href="@{/user/accountManagement}"
+                       title="Account Management">username</a>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Logout">
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+    <div th:fragment="footer">
+        <p>Footer</p>
     </div>
-</div>
-<div th:fragment="footer">
-    <p>Footer</p>
-</div>
 </body>
 
 </html>

@@ -62,5 +62,9 @@ public class UserController {
         userService.submitPractitionerRoleRequest(authentication.getName());
         return "redirect:/user/practitionerRoleRequest?success";
     }
+    @PostMapping("/user/accountManagement/change_password")
+    public String passwordChangeRequest(Authentication authentication){
+        return "redirect:/user/accountManagement?" + (userService.submitPasswordChangeRequest() ? "success" : "error");
+    }
 
 }

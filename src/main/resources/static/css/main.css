@@ -5,17 +5,26 @@ body {
     margin: 0;
 }
 
-.mainContent{
-    margin-top: 150px;
-    margin-left: 8px;
+.headerAndNav {
+    display: grid;
+    background-color: orange;
+    margin-bottom: 20px;
+}
+.headerTitle {
+    margin-left: 20px;
+
 }
 
-.centeredLayout{
-    width: 50%;
-    margin: auto;
+.topnavAndAuthStatus {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  background-color: #808080;
+  overflow: hidden;
 }
 
 .topnav {
+  grid-column-start: 1;
+  grid-column-end: 5;
   background-color: #808080;
   overflow: hidden;
 }
@@ -48,40 +57,34 @@ body {
     width: 100%;
 }
 
-.headerAndNav {
-    display: grid;
-    background-color: orange;
-    margin-bottom: 20px;
-}
-.headerTitle {
-    margin-left: 20px;
 
-}
 
 .authStatus {
-    float: right;
-    margin-right: 10;
-}
+    display:grid;
+    grid-template-columns: auto auto;
+    grid-column-start: 5;
+    justify-self: right;
+    align-self: center;
+    }
 
 .authStatusName {
-    display: inline;
+    justify-self: left;
+    margin-right: 10px;
     color: #f2f2f2;
     text-align: center;
     text-decoration: none;
-    display: inline;
-}
 
+}
 .authStatus form {
-    display: inline;
+    justify-self: right;
+    margin-right: 10px;
 }
 
-.authStatus input[type=submit] {
-            display: block;
-            float: right;
+input[type=submit] {
             background-color: orange;
             border: none;
             color: #fff;
-
+            height: 25px;
             text-decoration: none;
             cursor: pointer;
 }
@@ -89,6 +92,17 @@ body {
 input[type=submit]:hover {
     color: black;
     background-color: orange;
+}
+
+
+.mainContent{
+    margin-top: 150px;
+    margin-left: 8px;
+}
+
+.centeredLayout{
+    width: 50%;
+    margin: auto;
 }
 
 .upload_container {
