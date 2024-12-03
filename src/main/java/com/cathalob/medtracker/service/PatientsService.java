@@ -10,6 +10,7 @@ import com.cathalob.medtracker.model.tracking.Dose;
 import com.cathalob.medtracker.repository.BloodPressureReadingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -47,6 +48,7 @@ public class PatientsService {
         });
         return prescriptionsDTO;
     }
+
 
 
     public void saveBloodPressureReadings(List<BloodPressureReading> bloodPressureReadings) {
@@ -172,5 +174,12 @@ public class PatientsService {
     private List<String> prettifiedDayStageNames(List<DAYSTAGE> dayStages) {
         return dayStages.stream().map(ds -> (
                 ds.toString().charAt(0) + ds.toString().substring(1).toLowerCase())).toList();
+    }
+
+    public void importDoseFile(MultipartFile reapExcelDataFile, UserModel userModel) {
+        System.out.println("Upload Dose by: " + userModel.getUsername() + " FN: " + reapExcelDataFile.getOriginalFilename());
+    }
+    public void importBloodPressureFile(MultipartFile reapExcelDataFile, UserModel userModel) {
+        System.out.println("Upload Blood Pressure by: " + userModel.getUsername() + " FN: " + reapExcelDataFile.getOriginalFilename());
     }
 }

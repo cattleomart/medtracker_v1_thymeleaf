@@ -20,7 +20,7 @@
             <a th:href="@{/patient/graphs}">Data Overview</a>
         </div>
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
-            <a th:href="@{/upload}">Upload</a>
+            <a th:href="@{/patient/upload}">Upload</a>
         </div>
         <div th:if="${#authorization.expression('hasAuthority(''ROLE_USER'')')}">
             <a th:href="@{/patient/prescriptions}">Prescriptions</a>

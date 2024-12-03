@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+</head>
+<body>
+    <div th:insert="~{headerAndFooter :: header}"></div>
+    <div class="mainContent">
+        <h1>Upload</h1>
+        <div  style="margin-left: 100px">
+            <h2>(Deprecated) Import file (.xlxs)</h2>
+
+            <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+                <input type="file" th:name="file">
+
+                <input th:type="submit" value="Import"/>
+            </form>
+        </div>
+        <div  style="margin-left: 100px">
+            <h2>Import Dose File (.xlxs)</h2>
+
+            <form th:action="@{/patient/upload/doseUpload}" method="post" enctype="multipart/form-data">
+                <input type="file" th:name="dosesFile">
+
+                <input th:type="submit" value="Import Doses File"/>
+            </form>
+        </div>
+        <div  style="margin-left: 100px">
+            <h2>Import Blood Pressure File (.xlxs)</h2>
+
+            <form th:action="@{/patient/upload/bloodPressureUpload}" method="post" enctype="multipart/form-data">
+                <input type="file" th:name="bloodPressureFile">
+
+                <input th:type="submit" value="Import Blood Pressure Readings File"/>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

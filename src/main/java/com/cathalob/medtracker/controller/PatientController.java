@@ -11,7 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -27,6 +31,21 @@ public class PatientController {
     public String getPatients(Model model){
         model.addAttribute("prescriptionsDTO", patientsService.getPrescriptionsDTO()  );
         return "patient/prescriptionsList";
+    }
+
+    @GetMapping("/patient/upload")
+    public String upload(){
+        return "patient/upload";
+    }
+    @PostMapping("/patient/upload/doseUpload")
+    public String reapDoseDataFromExcelUpload(@RequestParam("dosesFile") MultipartFile reapExcelDataFile, Authentication authentication) throws IOException {
+        patientsService.importDoseFile(reapExcelDataFile, getUserModel(authentication));
+        return "redirect:/patient/upload";
+    }
+    @PostMapping("/patient/upload/bloodPressureUpload")
+    public String reapBloodPressureDataFromExcelUpload(@RequestParam("bloodPressureFile") MultipartFile reapExcelDataFile, Authentication authentication) throws IOException {
+        patientsService.importBloodPressureFile(reapExcelDataFile, getUserModel(authentication));
+        return "redirect:/patient/upload";
     }
 
     private UserModel getUserModel(Authentication authentication) {
