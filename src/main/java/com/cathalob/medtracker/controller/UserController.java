@@ -53,11 +53,13 @@ public class UserController {
         return "user/practitionerRoleRequest";
     }
 
-    @PostMapping("/user/practitionerRoleRequest")
+    @GetMapping("/user/accountManagement")
+    public String getAccountManagement(){
+        return "user/accountManagement";
+    }
+    @PostMapping("/user/accountManagement/practitionerRoleRequest")
     public String practitionerRoleRequest(Authentication authentication){
         userService.submitPractitionerRoleRequest(authentication.getName());
-
-
         return "redirect:/user/practitionerRoleRequest?success";
     }
 

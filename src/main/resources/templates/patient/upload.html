@@ -8,33 +8,48 @@
 <body>
     <div th:insert="~{headerAndFooter :: header}"></div>
     <div class="mainContent">
-        <h1>Upload</h1>
-        <div  style="margin-left: 100px">
-            <h2>(Deprecated) Import file (.xlxs)</h2>
+        <div class="centeredLayout"><h1>Upload</h1>
+            <div class="upload_container">
 
-            <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
-                <input type="file" th:name="file">
+                    <div class="upload_container_header">
+                       (Deprecated) Import file (.xlxs)
+                    </div>
 
-                <input th:type="submit" value="Import"/>
-            </form>
-        </div>
-        <div  style="margin-left: 100px">
-            <h2>Import Dose File (.xlxs)</h2>
 
-            <form th:action="@{/patient/upload/doseUpload}" method="post" enctype="multipart/form-data">
-                <input type="file" th:name="dosesFile">
+                    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+                        <div class="input_container">
+                            <input type="file" th:name="file">
+                        </div>
+                        <input th:type="submit" value="Import"/>
+                    </form>
+            </div>
 
-                <input th:type="submit" value="Import Doses File"/>
-            </form>
-        </div>
-        <div  style="margin-left: 100px">
-            <h2>Import Blood Pressure File (.xlxs)</h2>
+            <div class="upload_container">
+                <div class="upload_container_header">
+                    Import Dose File (.xlxs)
+                </div>
 
-            <form th:action="@{/patient/upload/bloodPressureUpload}" method="post" enctype="multipart/form-data">
-                <input type="file" th:name="bloodPressureFile">
+                <form th:action="@{/patient/upload/doseUpload}" method="post" enctype="multipart/form-data">
+                    <div class="input_container">
+                        <input type="file" th:name="dosesFile">
+                    </div>
+                    <input th:type="submit" value="Import"/>
+                </form>
+            </div>
+            <div class="upload_container">
+                <div class="upload_container_header">
+                    Import Blood Pressure File (.xlxs)
+                </div>
+                <form th:action="@{/patient/upload/bloodPressureUpload}" method="post"
+                      enctype="multipart/form-data">
 
-                <input th:type="submit" value="Import Blood Pressure Readings File"/>
-            </form>
+                        <div class="input_container">
+                            <input type="file" th:name="bloodPressureFile" id="fileUpload">
+                        </div>
+                        <input th:type="submit" value="Import"/>
+
+                </form>
+            </div>
         </div>
     </div>
 </body>

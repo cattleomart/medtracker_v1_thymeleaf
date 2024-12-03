@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>MedTracker</title>
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+</head>
+<body>
+<div th:insert="~{headerAndFooter :: header}"></div>
+<div class="mainContent">
+    <div class="centeredLayout">
+        <div sec:authorize="isAuthenticated()">
+            <h2>Account Management</h2>
+            <h4>Account Upgrade</h4>
+            <a th:href="@{/user/practitionerRoleRequest}">Open Account Upgrade Page</a>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>

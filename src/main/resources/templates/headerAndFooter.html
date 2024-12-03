@@ -39,6 +39,7 @@
         </div>
         <div sec:authorize="isAuthenticated()" class="authStatus">
             <div sec:authentication="name" class="authStatusName">Name of authenticated user</div>
+            <a th:href="@{/user/accountManagement}">X</a>
             <form th:action="@{/logout}" method="post">
                 <input type="submit" value="Logout">
             </form>
