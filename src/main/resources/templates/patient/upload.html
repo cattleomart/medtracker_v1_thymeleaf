@@ -8,11 +8,13 @@
 <body>
     <div th:insert="~{headerAndFooter :: header}"></div>
     <div class="mainContent">
-        <div class="centeredLayout"><h1>Upload</h1>
+        <div class="centeredLayout"><h1>Upload Data Files</h1>
             <div class="upload_container">
 
                     <div class="upload_container_header">
-                       (Deprecated) Import file (.xlxs)
+                        <div class="upload_header">
+                            (Deprecated) Import file (.xlxs)
+                        </div>
                     </div>
 
 
@@ -26,7 +28,9 @@
 
             <div class="upload_container">
                 <div class="upload_container_header">
-                    Import Dose File (.xlxs)
+                    <div class="upload_header">
+                        Dose (.xlxs)
+                    </div>
                 </div>
 
                 <form th:action="@{/patient/upload/doseUpload}" method="post" enctype="multipart/form-data">
@@ -38,7 +42,9 @@
             </div>
             <div class="upload_container">
                 <div class="upload_container_header">
-                    Import Blood Pressure File (.xlxs)
+                    <div class="upload_header">
+                        Blood Pressure (.xlxs)
+                    </div>
                 </div>
                 <form th:action="@{/patient/upload/bloodPressureUpload}" method="post"
                       enctype="multipart/form-data">

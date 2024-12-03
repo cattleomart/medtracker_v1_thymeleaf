@@ -94,20 +94,23 @@ input[type=submit]:hover {
 .upload_container {
     height: 100px;
     width: 100%;
-    background-color: pink;
     margin-bottom: 30px;
-
 }
+
 .upload_container_header {
     height: 40%;
     width: 100%;
-    background-color: yellow;
+    background-color: #ddd;
 }
+.upload_header {
+    padding:5px;
+    font-weight: bold;
+}
+
 .upload_container form {
     height: 60%;
     width: 100%;
 }
-
 
 .upload_container input[type=submit] {
             display: block;
@@ -117,10 +120,14 @@ input[type=submit]:hover {
             color: #fff;
             height: 25px;
             width: 50px;
-            margin: 10px;
-
+            margin-top: 10px;
             text-decoration: none;
             cursor: pointer;
+}
+
+.upload_container input[type=submit]:hover {
+    color: black;
+    background-color: orange;
 }
 
 .input_container {
@@ -128,17 +135,17 @@ input[type=submit]:hover {
     float: left;
     height: 100%;
     width: 80%;
-
 }
 
 input[type=file] {
-margin: 10px;
+    margin-top: 10px;
     height: 25px;
-   width: 100%;
+    width: 100%;
     background: #fff;
     cursor: pointer;
 
 }
+
 input[type=file]:hover {
     cursor: pointer;
 }
