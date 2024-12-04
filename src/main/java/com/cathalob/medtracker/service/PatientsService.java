@@ -2,16 +2,17 @@ package com.cathalob.medtracker.service;
 
 import com.cathalob.medtracker.dto.PrescriptionDTO;
 import com.cathalob.medtracker.dto.PrescriptionsDTO;
+import com.cathalob.medtracker.fileupload.DoseFileImporter;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.model.tracking.Dose;
-import com.cathalob.medtracker.repository.BloodPressureReadingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -21,10 +22,6 @@ import java.util.stream.Stream;
 
 @Service
 public class PatientsService {
-
-    @Autowired
-    BloodPressureReadingRepository bloodPressureReadingRepository;
-
     @Autowired
     PrescriptionsService prescriptionsService;
     @Autowired
@@ -32,9 +29,12 @@ public class PatientsService {
     @Autowired
     DoseService doseService;
 
+    @Autowired
+    EvaluationDataService evaluationDataService;
+
 
     public PrescriptionsDTO getPrescriptionsDTO() {
-        Map<Integer, List<Medication>> medicationById = prescriptionsService.getMedicationById();
+        Map<Integer, List<Medication>> medicationById = prescriptionsService.getMedicationsById();
 
         PrescriptionsDTO prescriptionsDTO = new PrescriptionsDTO(new ArrayList<>());
         prescriptionsService.getPrescriptions().forEach(prescription -> {
@@ -67,8 +67,12 @@ public class PatientsService {
         List<DAYSTAGE> daystageList = prescriptionsService.getPatientPrescriptionDayStages(userModel).stream().sorted(Comparator.comparing(DAYSTAGE::ordinal)).toList();
         HashMap<Medication, HashSet<LocalDate>> patientPrescriptionDatesByMedication = prescriptionsService.getPatientPrescriptionDatesByMedication(userModel);
 
-        LocalDate end = LocalDate.now().plusDays(1);
         Optional<LocalDate> start = byDate.keySet().stream().distinct().min(LocalDate::compareTo);
+
+        Optional<LocalDate> endDose = byDate.keySet().stream().distinct().max(LocalDate::compareTo);
+        LocalDate now = LocalDate.now().plusDays(1);
+        LocalDate end = endDose.isPresent() && endDose.get().isAfter(now) ? endDose.get() : now;
+
         List<LocalDate> daysRange = new ArrayList<>();
         if (start.isPresent()) {
             long numDays = ChronoUnit.DAYS.between(start.get(), end);
@@ -163,7 +167,7 @@ public class PatientsService {
         List<String> names = new ArrayList<>();
         List<String> dayStageNames = this.prettifiedDayStageNames(prescriptionsService.getPatientPrescriptionDayStages(userModel));
 
-        for (String medication : prescriptionsService.getPatientMedications(userModel).stream().map(Medication::getName).toList()) {
+        for (String medication : prescriptionsService.getPatientMedications(userModel).stream().map(Medication::getName).sorted().toList()) {
             for (String dayStage : dayStageNames) {
                 names.add(medication + " (" + dayStage + ')');
             }
@@ -176,8 +180,9 @@ public class PatientsService {
                 ds.toString().charAt(0) + ds.toString().substring(1).toLowerCase())).toList();
     }
 
-    public void importDoseFile(MultipartFile reapExcelDataFile, UserModel userModel) {
-        System.out.println("Upload Dose by: " + userModel.getUsername() + " FN: " + reapExcelDataFile.getOriginalFilename());
+    public void importDoseFile(MultipartFile file, UserModel userModel) throws IOException {
+        System.out.println("Upload Dose by: " + userModel.getUsername() + " FN: " + file.getOriginalFilename());
+        new DoseFileImporter(userModel, evaluationDataService, prescriptionsService).processFile(file);
     }
     public void importBloodPressureFile(MultipartFile reapExcelDataFile, UserModel userModel) {
         System.out.println("Upload Blood Pressure by: " + userModel.getUsername() + " FN: " + reapExcelDataFile.getOriginalFilename());

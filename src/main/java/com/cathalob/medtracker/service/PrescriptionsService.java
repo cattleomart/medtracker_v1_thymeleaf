@@ -105,7 +105,7 @@ public class PrescriptionsService {
         return medDates;
     }
 
-    public Map<Integer, List<Medication>> getMedicationById() {
+    public Map<Integer, List<Medication>> getMedicationsById() {
         return medicationRepository.findAll()
                 .stream().collect(Collectors.groupingBy(Medication::getId));
     }
@@ -121,5 +121,9 @@ public class PrescriptionsService {
 
     public void saveDoses(List<Dose> newDoses) {
         doseRepository.saveAll(newDoses);
+    }
+
+    public Map<Integer, PrescriptionScheduleEntry> getPrescriptionScheduleEntriesById() {
+        return prescriptionScheduleEntryRepository.findAll().stream().collect(Collectors.toMap(PrescriptionScheduleEntry::getId, Function.identity()));
     }
 }
