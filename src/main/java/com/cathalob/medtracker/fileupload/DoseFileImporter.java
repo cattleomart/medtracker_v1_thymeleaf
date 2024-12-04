@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class DoseFileImporter extends FileImporter{
     @Setter
-    private ImportContext importContext;
+    private ImportCache importCache;
     private final EvaluationDataService evaluationDataService;
     private final PrescriptionsService prescriptionsService;
 
@@ -28,13 +28,13 @@ public class DoseFileImporter extends FileImporter{
     public DoseFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
         this.evaluationDataService = evaluationDataService;
         this.prescriptionsService = prescriptionsService;
-        importContext = new ImportContext();
-        importContext.setUserModel(userModel);
+        importCache = new ImportCache();
+        importCache.setUserModel(userModel);
 
-        importContext.loadPrescriptions(prescriptionsService);
-        importContext.loadPrescriptionScheduleEntries(prescriptionsService);
-        importContext.loadDailyEvaluations(evaluationDataService);
-        importContext.loadDoses(prescriptionsService);
+        importCache.loadPrescriptions(prescriptionsService);
+        importCache.loadPrescriptionScheduleEntries(prescriptionsService);
+        importCache.loadDailyEvaluations(evaluationDataService);
+        importCache.loadDoses(prescriptionsService);
 
     }
 
@@ -65,7 +65,7 @@ public class DoseFileImporter extends FileImporter{
                 }
                 if (row.getCell(1) != null) {
                     int numericCellValue = (int) row.getCell(1).getNumericCellValue();
-                    PrescriptionScheduleEntry prescriptionScheduleEntry = importContext.getPrescriptionScheduleEntry(numericCellValue);
+                    PrescriptionScheduleEntry prescriptionScheduleEntry = importCache.getPrescriptionScheduleEntry(numericCellValue);
                     dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
                 }
 
@@ -83,20 +83,20 @@ public class DoseFileImporter extends FileImporter{
 
         List<LocalDate> dates = newDoses.stream().map(Dose::getDoseTime).map(LocalDateTime::toLocalDate).distinct().toList();
 
-        importContext.ensureDailyEvaluations(dates,  evaluationDataService);
+        importCache.ensureDailyEvaluations(dates,  evaluationDataService);
 
         newDoses.forEach(dose -> {
-            dose.setEvaluation(importContext.getDailyEvaluation(dose.getDoseTime().toLocalDate()));
+            dose.setEvaluation(importCache.getDailyEvaluation(dose.getDoseTime().toLocalDate()));
         });
 
         prescriptionsService.saveDoses(newDoses);
         newDoses.forEach(dose -> {
-            importContext.getDoses().put(dose.getId(), dose);
+            importCache.getDoses().put(dose.getId(), dose);
         });
     }
 
     @Override
     public void logProcessing(String filename) {
-        log.info(this.getClass() + " User: " + importContext.getUserModel().getUsername() + " FN: " + filename);
+        log.info(this.getClass() + " User: " + importCache.getUserModel().getUsername() + " FN: " + filename);
     }
 }

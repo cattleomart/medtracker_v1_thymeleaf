@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ImportContext {
+public class ImportCache {
     @Getter
     private Map<Integer, UserModel> userModels;
 
@@ -44,7 +44,7 @@ public class ImportContext {
     private UserModel userModel;
 
 
-    public ImportContext() {
+    public ImportCache() {
         this.dailyEvaluations = new HashMap<>();
         this.prescriptionScheduleEntries = new HashMap<>();
         this.doses = new HashMap<>();

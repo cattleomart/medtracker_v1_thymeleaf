@@ -21,15 +21,15 @@ import java.util.List;
 @Slf4j
 public class BloodPressureFileImporter extends FileImporter{
     @Setter
-    private ImportContext importContext;
+    private ImportCache importCache;
     private final PatientsService patientsService;
     private final EvaluationDataService evaluationDataService;
 
 
     public BloodPressureFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PatientsService patientsService) {
-        importContext = new ImportContext();
-        importContext.setUserModel(userModel);
-        importContext.loadDailyEvaluations(evaluationDataService);
+        importCache = new ImportCache();
+        importCache.setUserModel(userModel);
+        importCache.loadDailyEvaluations(evaluationDataService);
         this.evaluationDataService = evaluationDataService;
         this.patientsService = patientsService;
 
@@ -92,10 +92,10 @@ public class BloodPressureFileImporter extends FileImporter{
 
             List<LocalDate> dates = newBloodPressureReadings.stream().map(BloodPressureReading::getReadingTime).map(LocalDateTime::toLocalDate).distinct().toList();
 
-            importContext.ensureDailyEvaluations(dates, evaluationDataService);
+            importCache.ensureDailyEvaluations(dates, evaluationDataService);
 
             newBloodPressureReadings.forEach(dose -> {
-                dose.setDailyEvaluation(importContext.getDailyEvaluation(dose.getReadingTime().toLocalDate()));
+                dose.setDailyEvaluation(importCache.getDailyEvaluation(dose.getReadingTime().toLocalDate()));
             });
 
             patientsService.saveBloodPressureReadings(newBloodPressureReadings);
@@ -103,6 +103,6 @@ public class BloodPressureFileImporter extends FileImporter{
 
     @Override
     public void logProcessing(String filename) {
-        log.info(this.getClass() + " User: " + importContext.getUserModel().getUsername() + " FN: " + filename);
+        log.info(this.getClass() + " User: " + importCache.getUserModel().getUsername() + " FN: " + filename);
     }
 }

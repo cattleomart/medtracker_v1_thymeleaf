@@ -2,7 +2,7 @@ package com.cathalob.medtracker.initialdata;
 
 import com.cathalob.medtracker.fileupload.BloodPressureFileImporter;
 import com.cathalob.medtracker.fileupload.DoseFileImporter;
-import com.cathalob.medtracker.fileupload.ImportContext;
+import com.cathalob.medtracker.fileupload.ImportCache;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
@@ -31,10 +31,10 @@ import java.util.*;
 @Slf4j
 @Component
 public class InitialDataLoader implements ApplicationRunner {
-    private final ImportContext importContext;
+    private final ImportCache importCache;
 
     public InitialDataLoader() {
-        this.importContext = new ImportContext();
+        this.importCache = new ImportCache();
     }
 
     @Autowired
@@ -48,12 +48,12 @@ public class InitialDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        importContext.loadMedications(prescriptionsService);
+        importCache.loadMedications(prescriptionsService);
 //        basic data from data.sql only contains one medication, if more than one is present then we should not load from file again
-        if (importContext.getMedications().containsKey(2)) return;
+        if (importCache.getMedications().containsKey(2)) return;
         loadDbData();
 
-        importContext.setUserModel(importContext.getUserModels().get(3));
+        importCache.setUserModel(importCache.getUserModels().get(3));
         processMedicationExcelFile();
         processPrescriptionExcelFile();
         processPrescriptionScheduleEntriesExcelFile();
@@ -62,9 +62,9 @@ public class InitialDataLoader implements ApplicationRunner {
     }
 
     private void loadDbData() {
-        importContext.loadUserModels(userService);
-        importContext.loadPrescriptions(prescriptionsService);
-        importContext.loadPrescriptionScheduleEntries(prescriptionsService);
+        importCache.loadUserModels(userService);
+        importCache.loadPrescriptions(prescriptionsService);
+        importCache.loadPrescriptionScheduleEntries(prescriptionsService);
     }
 
     public void processMedicationExcelFile() {
@@ -102,7 +102,7 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.saveMedications(newMedications);
-        newMedications.forEach(newMedication -> importContext.getMedications().put(newMedication.getId(), newMedication));
+        newMedications.forEach(newMedication -> importCache.getMedications().put(newMedication.getId(), newMedication));
     }
 
     public void processPrescriptionExcelFile() {
@@ -122,7 +122,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     Prescription prescription = new Prescription();
                     if (row.getCell(1) != null) {
                         int numericCellValue = (int) row.getCell(1).getNumericCellValue();
-                        Medication medication = importContext.getMedications().get(numericCellValue);
+                        Medication medication = importCache.getMedications().get(numericCellValue);
 //                        log.info(String.valueOf(numericCellValue));
 //                        log.info(medications.toString());
 //                        log.info("Medication for prescription: " + index + " + " + medication);
@@ -130,12 +130,12 @@ public class InitialDataLoader implements ApplicationRunner {
                     }
                     if (row.getCell(2) != null) {
                         int numericCellValue = (int) row.getCell(2).getNumericCellValue();
-                        UserModel userModel = importContext.getUserModels().get(numericCellValue);
+                        UserModel userModel = importCache.getUserModels().get(numericCellValue);
                         prescription.setPatient(userModel);
                     }
                     if (row.getCell(3) != null) {
                         int numericCellValue = (int) row.getCell(3).getNumericCellValue();
-                        UserModel userModel = importContext.getUserModels().get(numericCellValue);
+                        UserModel userModel = importCache.getUserModels().get(numericCellValue);
                         prescription.setPractitioner(userModel);
                     }
 
@@ -166,7 +166,7 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.savePrescriptions(newPrescriptions);
-        newPrescriptions.forEach(prescription -> importContext.getPrescriptions().put(prescription.getId(), prescription));
+        newPrescriptions.forEach(prescription -> importCache.getPrescriptions().put(prescription.getId(), prescription));
     }
 
     public void processPrescriptionScheduleEntriesExcelFile() {
@@ -188,7 +188,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
                     if (row.getCell(0) != null) {
                         int numericCellValue = (int) row.getCell(0).getNumericCellValue();
-                        Prescription prescription = importContext.getPrescriptions().get(numericCellValue);
+                        Prescription prescription = importCache.getPrescriptions().get(numericCellValue);
                         prescriptionScheduleEntry.setPrescription(prescription);
                     }
                     if (row.getCell(1) != null) {
@@ -208,19 +208,19 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.savePrescriptionScheduleEntries(newPrescriptionScheduleEntries);
-        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry -> importContext.getPrescriptionScheduleEntries().put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
+        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry -> importCache.getPrescriptionScheduleEntries().put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
     }
 
     public void processDoseExcelFile() {
         DoseFileImporter doseFileImporter = new DoseFileImporter(evaluationDataService, prescriptionsService);
-        doseFileImporter.setImportContext(importContext);
+        doseFileImporter.setImportCache(importCache);
         doseFileImporter
                 .processFileNamed("./src/main/resources/initialDataFiles/doses.xlsx");
     }
 
     public void processBloodPressureReadingsExcelFile() {
         BloodPressureFileImporter bloodPressureFileImporter = new BloodPressureFileImporter(evaluationDataService, patientsService);
-        bloodPressureFileImporter.setImportContext(importContext);
+        bloodPressureFileImporter.setImportCache(importCache);
         bloodPressureFileImporter
                 .processFileNamed("./src/main/resources/initialDataFiles/bloodPressureReadings.xlsx");
     }
