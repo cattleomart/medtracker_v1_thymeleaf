@@ -1,14 +1,14 @@
 package com.cathalob.medtracker.initialdata;
 
+import com.cathalob.medtracker.fileupload.BloodPressureFileImporter;
+import com.cathalob.medtracker.fileupload.DoseFileImporter;
+import com.cathalob.medtracker.fileupload.ImportContext;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
-import com.cathalob.medtracker.model.tracking.BloodPressureReading;
-import com.cathalob.medtracker.model.tracking.DailyEvaluation;
-import com.cathalob.medtracker.model.tracking.DailyEvaluationId;
-import com.cathalob.medtracker.model.tracking.Dose;
+
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.PatientsService;
 import com.cathalob.medtracker.service.PrescriptionsService;
@@ -21,37 +21,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Component
 public class InitialDataLoader implements ApplicationRunner {
-    private Map<Integer, UserModel> userModels;
-    private Map<Integer, Medication> medications;
-    private Map<Integer, Prescription> prescriptions;
-    private Map<Integer, PrescriptionScheduleEntry> prescriptionScheduleEntries;
-    private Map<Integer, Dose> doses;
-    private Map<DailyEvaluationId, DailyEvaluation> dailyEvaluations;
+    private final ImportContext importContext;
 
     public InitialDataLoader() {
-        this.medications = new HashMap<>();
-        this.prescriptions = new HashMap<>();
-        this.userModels = new HashMap<>();
-        this.prescriptionScheduleEntries = new HashMap<>();
-        this.doses = new HashMap<>();
-        this.dailyEvaluations = new HashMap<>();
+        this.importContext = new ImportContext();
     }
-
     @Autowired
     EvaluationDataService evaluationDataService;
     @Autowired
@@ -63,10 +46,12 @@ public class InitialDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        preLoadDbData();
+        importContext.loadMedications(prescriptionsService);
 //        basic data from data.sql only contains one medication, if more than one is present then we should not load from file again
-        if (medications.containsKey(2)) return;
+        if (importContext.getMedications().containsKey(2)) return;
         loadDbData();
+
+        importContext.setUserModel(importContext.getUserModels().get(3));
         processMedicationExcelFile();
         processPrescriptionExcelFile();
         processPrescriptionScheduleEntriesExcelFile();
@@ -75,16 +60,9 @@ public class InitialDataLoader implements ApplicationRunner {
     }
 
     private void loadDbData() {
-        prescriptions = prescriptionsService.getPrescriptionsById();
-        userModels = userService.getUserModelsById();
-        dailyEvaluations = evaluationDataService.getDailyEvaluationsById();
-
-    }
-
-    private void preLoadDbData() {
-//        load data to check if we have loaded data from file already after a fresh db creation.
-        medications = prescriptionsService.getMedications().stream().collect(Collectors.toMap(Medication::getId, Function.identity()));
-
+        importContext.loadUserModels(userService);
+        importContext.loadPrescriptions(prescriptionsService);
+        importContext.loadPrescriptionScheduleEntries(prescriptionsService);
     }
 
     public void processMedicationExcelFile() {
@@ -122,7 +100,7 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.saveMedications(newMedications);
-        newMedications.forEach(newMedication -> medications.put(newMedication.getId(), newMedication));
+        newMedications.forEach(newMedication -> importContext.getMedications().put(newMedication.getId(), newMedication));
     }
 
     public void processPrescriptionExcelFile() {
@@ -142,7 +120,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     Prescription prescription = new Prescription();
                     if (row.getCell(1) != null) {
                         int numericCellValue = (int) row.getCell(1).getNumericCellValue();
-                        Medication medication = medications.get(numericCellValue);
+                        Medication medication = importContext.getMedications().get(numericCellValue);
 //                        log.info(String.valueOf(numericCellValue));
 //                        log.info(medications.toString());
 //                        log.info("Medication for prescription: " + index + " + " + medication);
@@ -150,12 +128,12 @@ public class InitialDataLoader implements ApplicationRunner {
                     }
                     if (row.getCell(2) != null) {
                         int numericCellValue = (int) row.getCell(2).getNumericCellValue();
-                        UserModel userModel = userModels.get(numericCellValue);
+                        UserModel userModel = importContext.getUserModels().get(numericCellValue);
                         prescription.setPatient(userModel);
                     }
                     if (row.getCell(3) != null) {
                         int numericCellValue = (int) row.getCell(3).getNumericCellValue();
-                        UserModel userModel = userModels.get(numericCellValue);
+                        UserModel userModel = importContext.getUserModels().get(numericCellValue);
                         prescription.setPractitioner(userModel);
                     }
 
@@ -186,7 +164,7 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.savePrescriptions(newPrescriptions);
-        newPrescriptions.forEach(prescription -> prescriptions.put(prescription.getId(), prescription));
+        newPrescriptions.forEach(prescription -> importContext.getPrescriptions().put(prescription.getId(), prescription));
     }
 
     public void processPrescriptionScheduleEntriesExcelFile() {
@@ -208,15 +186,12 @@ public class InitialDataLoader implements ApplicationRunner {
                     PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
                     if (row.getCell(0) != null) {
                         int numericCellValue = (int) row.getCell(0).getNumericCellValue();
-                        Prescription prescription = prescriptions.get(numericCellValue);
-//                        log.info(String.valueOf(numericCellValue));
-//                        log.info(medications.toString());
-//                        log.info("Medication for prescription: " + index + " + " + medication);
+                        Prescription prescription = importContext.getPrescriptions().get(numericCellValue);
                         prescriptionScheduleEntry.setPrescription(prescription);
                     }
                     if (row.getCell(1) != null) {
-                        String daystage = row.getCell(1).getStringCellValue();
-                        prescriptionScheduleEntry.setDayStage(DAYSTAGE.valueOf(daystage));
+                        String dayStage = row.getCell(1).getStringCellValue();
+                        prescriptionScheduleEntry.setDayStage(DAYSTAGE.valueOf(dayStage));
                     }
                     newPrescriptionScheduleEntries.add(prescriptionScheduleEntry);
                 }
@@ -231,166 +206,16 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.savePrescriptionScheduleEntries(newPrescriptionScheduleEntries);
-        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry -> prescriptionScheduleEntries.put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
+        newPrescriptionScheduleEntries.forEach(prescriptionScheduleEntry -> importContext.getPrescriptionScheduleEntries().put(prescriptionScheduleEntry.getId(), prescriptionScheduleEntry));
     }
 
     public void processDoseExcelFile() {
-        List<Dose> newDoses = new ArrayList<>();
-
-        XSSFWorkbook workbook = null;
-
-        try {
-            FileInputStream fileInputStream = new FileInputStream("./src/main/resources/initialDataFiles/doses.xlsx");
-            workbook = new XSSFWorkbook(fileInputStream);
-//            log.info("Number of sheets: " + workbook.getNumberOfSheets());
-
-            workbook.forEach(sheet -> {
-//                log.info("Title of sheet => " + sheet.getSheetName());
-
-
-                int index = 0;
-                for (Row row : sheet) {
-                    if (index++ == 0) continue;
-                    Dose dose = new Dose();
-                    LocalDate localDate = LocalDate.now();
-                    LocalTime localTime = LocalTime.now();
-
-                    if (row.getCell(0) != null) {
-                        localDate = LocalDate.ofInstant(
-                                row.getCell(0).getDateCellValue().toInstant(), ZoneId.systemDefault());
-                    }
-                    if (row.getCell(1) != null) {
-                        int numericCellValue = (int) row.getCell(1).getNumericCellValue();
-                        PrescriptionScheduleEntry prescriptionScheduleEntry = prescriptionScheduleEntries.get(numericCellValue);
-                        dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
-                    }
-
-                    if (row.getCell(2) != null) {
-                        boolean booleanCellValue = row.getCell(2).getBooleanCellValue();
-                        dose.setTaken(booleanCellValue);
-                    }
-                    if (row.getCell(3) != null) {
-                        localTime = (row.getCell(3).getLocalDateTimeCellValue().toLocalTime());
-                    }
-                    dose.setDoseTime(LocalDateTime.of(localDate,localTime));
-                    newDoses.add(dose);
-                }
-            });
-        } catch (EncryptedDocumentException | IOException e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            try {
-                if (workbook != null) workbook.close();
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        List<LocalDate> dates = newDoses.stream().map(Dose::getDoseTime).map(LocalDateTime::toLocalDate).distinct().toList();
-        List<UserModel> userModelList = Arrays.asList(userModels.get(3));
-        ensureDailyEvaluations(dates, userModelList);
-
-        newDoses.forEach(dose -> {
-            dose.setEvaluation(dailyEvaluations.get(this.getDailyEvaluationKey(dose.getDoseTime().toLocalDate(), userModels.get(3))));
-        });
-
-        prescriptionsService.saveDoses(newDoses);
-
-        newDoses.forEach(dose -> {
-            doses.put(dose.getId(), dose);
-        });
+        new DoseFileImporter(importContext.getUserModel(), evaluationDataService, prescriptionsService)
+                .processFileNamed("./src/main/resources/initialDataFiles/doses.xlsx");
     }
 
     public void processBloodPressureReadingsExcelFile() {
-        List<BloodPressureReading> newBloodPressureReadings = new ArrayList<>();
-
-        XSSFWorkbook workbook = null;
-
-        try {
-            FileInputStream fileInputStream = new FileInputStream("./src/main/resources/initialDataFiles/bloodPressureReadings.xlsx");
-            workbook = new XSSFWorkbook(fileInputStream);
-//            log.info("Number of sheets: " + workbook.getNumberOfSheets());
-
-            workbook.forEach(sheet -> {
-//                log.info("Title of sheet => " + sheet.getSheetName());
-
-                int index = 0;
-                for (Row row : sheet) {
-                    if (index++ == 0) continue;
-                    BloodPressureReading bloodPressureReading = new BloodPressureReading();
-                    LocalDate localDate = LocalDate.now();
-                    LocalTime localTime = LocalTime.now();
-
-                    if (row.getCell(0) != null) {
-                        localDate = LocalDate.ofInstant(
-                                row.getCell(0).getDateCellValue().toInstant(), ZoneId.systemDefault());
-                    }
-
-                    if (row.getCell(1) != null) {
-                        String dayStage = row.getCell(1).getStringCellValue();
-                        bloodPressureReading.setDayStage(DAYSTAGE.valueOf(dayStage));
-                    }
-                    int timeCellIndex = 2;
-                    if (row.getCell(timeCellIndex) != null && (row.getCell(timeCellIndex).getLocalDateTimeCellValue() != null)) {
-                        localTime = (row.getCell(timeCellIndex).getLocalDateTimeCellValue().toLocalTime());
-                    }
-
-                    int systoleIndex = 3;
-                    if (row.getCell(systoleIndex) != null) {
-                        int numericCellValue = (int) (row.getCell(systoleIndex).getNumericCellValue());
-                        bloodPressureReading.setSystole(numericCellValue);
-                    }
-                    if (row.getCell(4) != null) {
-                        int numericCellValue = (int) (row.getCell(4).getNumericCellValue());
-                        bloodPressureReading.setDiastole(numericCellValue);
-                    }
-                    if (row.getCell(5) != null) {
-                        int numericCellValue = (int) (row.getCell(5).getNumericCellValue());
-                        bloodPressureReading.setHeartRate(numericCellValue);
-                    }
-
-                    if (bloodPressureReading.hasData()) {
-                        bloodPressureReading.setReadingTime(LocalDateTime.of(localDate, localTime));
-                        newBloodPressureReadings.add(bloodPressureReading);
-                    }
-                }
-            });
-        } catch (EncryptedDocumentException | IOException e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            try {
-                if (workbook != null) workbook.close();
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        List<LocalDate> dates = newBloodPressureReadings.stream().map(BloodPressureReading::getReadingTime).map(LocalDateTime::toLocalDate).distinct().toList();
-        List<UserModel> userModelList = Arrays.asList(userModels.get(3));
-        ensureDailyEvaluations(dates, userModelList);
-
-        newBloodPressureReadings.forEach(dose -> {
-            dose.setDailyEvaluation(dailyEvaluations.get(this.getDailyEvaluationKey(dose.getReadingTime().toLocalDate(), userModels.get(3))));
-        });
-
-        patientsService.saveBloodPressureReadings(newBloodPressureReadings);
-    }
-
-    private void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels) {
-        dates.forEach(localDate -> {
-            userModels.forEach(userModel -> {
-                DailyEvaluationId dailyEvaluationKey = this.getDailyEvaluationKey(localDate, userModel);
-                if (!dailyEvaluations.containsKey(dailyEvaluationKey)) {
-                    DailyEvaluation dailyEvaluation = new DailyEvaluation();
-                    dailyEvaluation.setRecordDate(localDate);
-                    dailyEvaluation.setUserModel(userModel);
-                    evaluationDataService.addDailyEvaluation(dailyEvaluation);
-                    dailyEvaluations.put(dailyEvaluationKey, dailyEvaluation);
-                }
-            });
-        });
-
-    }
-
-    private DailyEvaluationId getDailyEvaluationKey(LocalDate localDate, UserModel userModel) {
-        return new DailyEvaluationId(userModel.getId(), localDate);
+        new BloodPressureFileImporter(importContext.getUserModel(), evaluationDataService, patientsService)
+                .processFileNamed("./src/main/resources/initialDataFiles/bloodPressureReadings.xlsx");
     }
 }

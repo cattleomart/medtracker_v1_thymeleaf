@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -35,22 +34,15 @@ public class PatientsService {
 
 
     public PrescriptionsDTO getPrescriptionsDTO() {
-        Map<Integer, List<Medication>> medicationById = prescriptionsService.getMedicationsById();
-
         PrescriptionsDTO prescriptionsDTO = new PrescriptionsDTO(new ArrayList<>());
         prescriptionsService.getPrescriptions().forEach(prescription -> {
             PrescriptionDTO prescriptionDTO = new PrescriptionDTO();
             prescriptionDTO.setMedication(prescription.getMedication());
             prescriptionDTO.setDoseMg(prescription.getDoseMg());
-
             prescriptionsDTO.getPrescriptions().add(prescriptionDTO);
-//        prescriptionDTO.setDaystage(prescription);
-
         });
         return prescriptionsDTO;
     }
-
-
 
     public void saveBloodPressureReadings(List<BloodPressureReading> bloodPressureReadings) {
         bloodPressureDataService.saveBloodPressureReadings(bloodPressureReadings);
@@ -182,9 +174,9 @@ public class PatientsService {
     }
 
     public void importDoseFile(MultipartFile file, UserModel userModel) {
-        new DoseFileImporter(userModel, evaluationDataService, prescriptionsService).processFile(file);
+        new DoseFileImporter(userModel, evaluationDataService, prescriptionsService).processMultipartFile(file);
     }
     public void importBloodPressureFile(MultipartFile file, UserModel userModel) {
-        new BloodPressureFileImporter(userModel,evaluationDataService, this).processFile(file);
+        new BloodPressureFileImporter(userModel,evaluationDataService, this).processMultipartFile(file);
     }
 }

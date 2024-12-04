@@ -45,17 +45,26 @@ public class PrescriptionsService {
         return medicationRepository.findAll();
     }
 
+    public Map<Integer, Medication> getMedicationsById() {
+        return medicationRepository.findAll()
+                .stream().collect(Collectors.toMap(Medication::getId, Function.identity()));
+    }
+
     public List<Prescription> getPrescriptions() {
         return prescriptionsRepository.findAll();
+    }
+
+    public Map<Integer, Prescription> getPrescriptionsById() {
+        return getPrescriptions()
+                .stream().collect(Collectors.toMap(Prescription::getId, Function.identity()));
     }
 
     private List<PrescriptionScheduleEntry> getPrescriptionScheduleEntries() {
         return prescriptionScheduleEntryRepository.findAll();
     }
 
-    public List<PrescriptionScheduleEntry> getPatientPrescriptionScheduleEntries(UserModel userModel) {
-        return prescriptionScheduleEntryRepository.findAll().stream().filter(pse -> pse.getPrescription().getPatient().getId().equals(userModel.getId()))
-                .distinct().toList();
+    public Map<Integer, PrescriptionScheduleEntry> getPrescriptionScheduleEntriesById() {
+        return prescriptionScheduleEntryRepository.findAll().stream().collect(Collectors.toMap(PrescriptionScheduleEntry::getId, Function.identity()));
     }
 
     public Map<Integer, List<PrescriptionScheduleEntry>> getPrescriptionScheduleEntriesByPrescriptionId() {
@@ -63,9 +72,9 @@ public class PrescriptionsService {
                 .stream().collect(Collectors.groupingBy(prescriptionScheduleEntry -> prescriptionScheduleEntry.getPrescription().getId()));
     }
 
-    public Map<Integer, Prescription> getPrescriptionsById() {
-        return getPrescriptions()
-                .stream().collect(Collectors.toMap(Prescription::getId, Function.identity()));
+    public List<PrescriptionScheduleEntry> getPatientPrescriptionScheduleEntries(UserModel userModel) {
+        return prescriptionScheduleEntryRepository.findAll().stream().filter(pse -> pse.getPrescription().getPatient().getId().equals(userModel.getId()))
+                .distinct().toList();
     }
 
     public List<Prescription> getPatientPrescriptions(UserModel userModel) {
@@ -105,11 +114,6 @@ public class PrescriptionsService {
         return medDates;
     }
 
-    public Map<Integer, List<Medication>> getMedicationsById() {
-        return medicationRepository.findAll()
-                .stream().collect(Collectors.groupingBy(Medication::getId));
-    }
-
 
     public void savePrescriptions(List<Prescription> newPrescriptions) {
         prescriptionsRepository.saveAll(newPrescriptions);
@@ -125,9 +129,5 @@ public class PrescriptionsService {
 
     public Map<Integer, Dose> getDosesById(){
         return doseRepository.findAll().stream().collect(Collectors.toMap(Dose::getId, Function.identity()));
-    }
-
-    public Map<Integer, PrescriptionScheduleEntry> getPrescriptionScheduleEntriesById() {
-        return prescriptionScheduleEntryRepository.findAll().stream().collect(Collectors.toMap(PrescriptionScheduleEntry::getId, Function.identity()));
     }
 }
