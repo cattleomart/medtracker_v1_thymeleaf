@@ -123,6 +123,10 @@ public class PrescriptionsService {
         doseRepository.saveAll(newDoses);
     }
 
+    public Map<Integer, Dose> getDosesById(){
+        return doseRepository.findAll().stream().collect(Collectors.toMap(Dose::getId, Function.identity()));
+    }
+
     public Map<Integer, PrescriptionScheduleEntry> getPrescriptionScheduleEntriesById() {
         return prescriptionScheduleEntryRepository.findAll().stream().collect(Collectors.toMap(PrescriptionScheduleEntry::getId, Function.identity()));
     }

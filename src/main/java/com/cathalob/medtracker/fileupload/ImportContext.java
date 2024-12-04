@@ -1,12 +1,14 @@
 package com.cathalob.medtracker.fileupload;
 
 import com.cathalob.medtracker.model.UserModel;
+import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import com.cathalob.medtracker.model.tracking.DailyEvaluationId;
 import com.cathalob.medtracker.model.tracking.Dose;
 import com.cathalob.medtracker.service.EvaluationDataService;
+
 import com.cathalob.medtracker.service.PrescriptionsService;
 import lombok.Getter;
 
@@ -18,30 +20,28 @@ import java.util.Map;
 
 public class ImportContext {
 
+    private Map<Integer, UserModel> userModels;
+    private Map<Integer, Medication> medications;
     private Map<Integer, Prescription> prescriptions;
-    @Getter
     private Map<Integer, PrescriptionScheduleEntry> prescriptionScheduleEntries;
-    private EvaluationDataService evaluationDataService;
-    @Getter
-    private Map<DailyEvaluationId, DailyEvaluation> dailyEvaluations;
     @Getter
     private Map<Integer, Dose> doses;
 
-    private PrescriptionsService prescriptionsService;
+    @Getter
+    private Map<DailyEvaluationId, DailyEvaluation> dailyEvaluations;
 
 
-    public ImportContext(EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
+
+
+    public ImportContext() {
         this.dailyEvaluations = new HashMap<>();
         this.prescriptionScheduleEntries = new HashMap<>();
         this.doses = new HashMap<>();
-        this.evaluationDataService = evaluationDataService;
-        this.prescriptionsService = prescriptionsService;
-
-        this.prescriptions = prescriptionsService.getPrescriptionsById();
-        this.prescriptionScheduleEntries = prescriptionsService.getPrescriptionScheduleEntriesById();
-        this.dailyEvaluations = evaluationDataService.getDailyEvaluationsById();
     }
 
+    public DailyEvaluation getDailyEvaluation(LocalDate localDate, UserModel userModel){
+        return dailyEvaluations.get(this.getDailyEvaluationKey(localDate, userModel));
+    }
     public DailyEvaluationId getDailyEvaluationKey(LocalDate localDate, UserModel userModel) {
         return new DailyEvaluationId(userModel.getId(), localDate);
     }
@@ -49,7 +49,7 @@ public class ImportContext {
         return prescriptionScheduleEntries.get(key);
     }
 
-    public void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels) {
+    public void ensureDailyEvaluations(List<LocalDate> dates, List<UserModel> userModels, EvaluationDataService evaluationDataService) {
         dates.forEach(localDate -> {
             userModels.forEach(userModel -> {
                 DailyEvaluationId dailyEvaluationKey = this.getDailyEvaluationKey(localDate, userModel);
@@ -65,7 +65,26 @@ public class ImportContext {
 
     }
 
-    public void saveDoses(List<Dose> newDoses) {
-        prescriptionsService.saveDoses(newDoses);
+    public void loadPrescriptions(PrescriptionsService prescriptionsService) {
+        if (prescriptions != null && !prescriptions.keySet().isEmpty()) return;
+        prescriptions = prescriptionsService.getPrescriptionsById();
+    }
+
+    public void loadPrescriptionScheduleEntries(PrescriptionsService prescriptionsService) {
+        if (prescriptionScheduleEntries != null && !prescriptionScheduleEntries.keySet().isEmpty()) return;
+        prescriptionScheduleEntries = prescriptionsService.getPrescriptionScheduleEntriesById();
+
+    }
+
+    public void loadDailyEvaluations(EvaluationDataService evaluationDataService) {
+        if (dailyEvaluations != null && !dailyEvaluations.keySet().isEmpty()) return;
+        dailyEvaluations = evaluationDataService.getDailyEvaluationsById();
+
+    }
+
+    public void loadDoses(PrescriptionsService prescriptionsService) {
+        if (doses != null && !doses.keySet().isEmpty()) return;
+        doses = prescriptionsService.getDosesById();
+
     }
 }

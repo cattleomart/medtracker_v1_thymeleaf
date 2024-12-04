@@ -22,10 +22,18 @@ import java.util.List;
 @Slf4j
 public class DoseFileImporter {
     private final ImportContext importContext;
+    private final EvaluationDataService evaluationDataService;
+    private final PrescriptionsService prescriptionsService;
     private UserModel userModel;
 
     public DoseFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
-        importContext = new ImportContext(evaluationDataService, prescriptionsService);
+        this.evaluationDataService = evaluationDataService;
+        this.prescriptionsService = prescriptionsService;
+        importContext = new ImportContext();
+        importContext.loadPrescriptions(prescriptionsService);
+        importContext.loadPrescriptionScheduleEntries(prescriptionsService);
+        importContext.loadDailyEvaluations(evaluationDataService);
+        importContext.loadDoses(prescriptionsService);
         this.userModel = userModel;
     }
 
@@ -82,14 +90,13 @@ public class DoseFileImporter {
         }
         List<LocalDate> dates = newDoses.stream().map(Dose::getDoseTime).map(LocalDateTime::toLocalDate).distinct().toList();
         List<UserModel> userModelList = Collections.singletonList(userModel);
-        importContext.ensureDailyEvaluations(dates, userModelList);
+        importContext.ensureDailyEvaluations(dates, userModelList, evaluationDataService);
 
         newDoses.forEach(dose -> {
-            dose.setEvaluation(importContext.getDailyEvaluations().get(importContext.getDailyEvaluationKey(dose.getDoseTime().toLocalDate(), userModel)));
+            dose.setEvaluation(importContext.getDailyEvaluation(dose.getDoseTime().toLocalDate(), userModel));
         });
 
-        importContext.saveDoses(newDoses);
-
+        prescriptionsService.saveDoses(newDoses);
         newDoses.forEach(dose -> {
             importContext.getDoses().put(dose.getId(), dose);
         });

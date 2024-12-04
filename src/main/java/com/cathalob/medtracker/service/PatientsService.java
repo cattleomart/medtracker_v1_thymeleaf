@@ -2,6 +2,7 @@ package com.cathalob.medtracker.service;
 
 import com.cathalob.medtracker.dto.PrescriptionDTO;
 import com.cathalob.medtracker.dto.PrescriptionsDTO;
+import com.cathalob.medtracker.fileupload.BloodPressureFileImporter;
 import com.cathalob.medtracker.fileupload.DoseFileImporter;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.enums.DAYSTAGE;
@@ -180,11 +181,10 @@ public class PatientsService {
                 ds.toString().charAt(0) + ds.toString().substring(1).toLowerCase())).toList();
     }
 
-    public void importDoseFile(MultipartFile file, UserModel userModel) throws IOException {
-        System.out.println("Upload Dose by: " + userModel.getUsername() + " FN: " + file.getOriginalFilename());
+    public void importDoseFile(MultipartFile file, UserModel userModel) {
         new DoseFileImporter(userModel, evaluationDataService, prescriptionsService).processFile(file);
     }
-    public void importBloodPressureFile(MultipartFile reapExcelDataFile, UserModel userModel) {
-        System.out.println("Upload Blood Pressure by: " + userModel.getUsername() + " FN: " + reapExcelDataFile.getOriginalFilename());
+    public void importBloodPressureFile(MultipartFile file, UserModel userModel) {
+        new BloodPressureFileImporter(userModel,evaluationDataService, this).processFile(file);
     }
 }
