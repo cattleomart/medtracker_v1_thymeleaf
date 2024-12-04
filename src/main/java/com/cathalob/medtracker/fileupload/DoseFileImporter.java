@@ -5,6 +5,7 @@ import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.Dose;
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.PrescriptionsService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,7 +19,8 @@ import java.util.List;
 
 @Slf4j
 public class DoseFileImporter extends FileImporter{
-    private final ImportContext importContext;
+    @Setter
+    private ImportContext importContext;
     private final EvaluationDataService evaluationDataService;
     private final PrescriptionsService prescriptionsService;
 
@@ -34,6 +36,11 @@ public class DoseFileImporter extends FileImporter{
         importContext.loadDailyEvaluations(evaluationDataService);
         importContext.loadDoses(prescriptionsService);
 
+    }
+
+    public DoseFileImporter(EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
+        this.evaluationDataService = evaluationDataService;
+        this.prescriptionsService = prescriptionsService;
     }
 
     @Override

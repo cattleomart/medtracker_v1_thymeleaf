@@ -5,6 +5,7 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.PatientsService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -19,8 +20,8 @@ import java.util.List;
 
 @Slf4j
 public class BloodPressureFileImporter extends FileImporter{
-
-    private final ImportContext importContext;
+    @Setter
+    private ImportContext importContext;
     private final PatientsService patientsService;
     private final EvaluationDataService evaluationDataService;
 
@@ -34,7 +35,12 @@ public class BloodPressureFileImporter extends FileImporter{
 
     }
 
-        public void processWorkbook(XSSFWorkbook workbook){
+    public BloodPressureFileImporter( EvaluationDataService evaluationDataService,PatientsService patientsService) {
+        this.evaluationDataService = evaluationDataService;
+        this.patientsService = patientsService;
+    }
+
+    public void processWorkbook(XSSFWorkbook workbook){
             List<BloodPressureReading> newBloodPressureReadings = new ArrayList<>();
 //            log.info("Number of sheets: " + workbook.getNumberOfSheets());
 

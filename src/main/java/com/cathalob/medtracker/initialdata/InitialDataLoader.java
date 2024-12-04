@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class InitialDataLoader implements ApplicationRunner {
     public InitialDataLoader() {
         this.importContext = new ImportContext();
     }
+
     @Autowired
     EvaluationDataService evaluationDataService;
     @Autowired
@@ -210,12 +212,16 @@ public class InitialDataLoader implements ApplicationRunner {
     }
 
     public void processDoseExcelFile() {
-        new DoseFileImporter(importContext.getUserModel(), evaluationDataService, prescriptionsService)
+        DoseFileImporter doseFileImporter = new DoseFileImporter(evaluationDataService, prescriptionsService);
+        doseFileImporter.setImportContext(importContext);
+        doseFileImporter
                 .processFileNamed("./src/main/resources/initialDataFiles/doses.xlsx");
     }
 
     public void processBloodPressureReadingsExcelFile() {
-        new BloodPressureFileImporter(importContext.getUserModel(), evaluationDataService, patientsService)
+        BloodPressureFileImporter bloodPressureFileImporter = new BloodPressureFileImporter(evaluationDataService, patientsService);
+        bloodPressureFileImporter.setImportContext(importContext);
+        bloodPressureFileImporter
                 .processFileNamed("./src/main/resources/initialDataFiles/bloodPressureReadings.xlsx");
     }
 }
