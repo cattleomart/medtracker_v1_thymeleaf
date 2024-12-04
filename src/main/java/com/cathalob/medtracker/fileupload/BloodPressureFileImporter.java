@@ -5,7 +5,6 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.PatientsService;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -20,22 +19,22 @@ import java.util.List;
 
 @Slf4j
 public class BloodPressureFileImporter extends FileImporter{
-    @Setter
-    private ImportCache importCache;
     private final PatientsService patientsService;
     private final EvaluationDataService evaluationDataService;
 
 
     public BloodPressureFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PatientsService patientsService) {
-        importCache = new ImportCache();
+        super(new ImportCache());
         importCache.setUserModel(userModel);
-        importCache.loadDailyEvaluations(evaluationDataService);
+
         this.evaluationDataService = evaluationDataService;
         this.patientsService = patientsService;
+        importCache.loadDailyEvaluations(this.evaluationDataService);
 
     }
 
     public BloodPressureFileImporter( EvaluationDataService evaluationDataService,PatientsService patientsService) {
+        super();
         this.evaluationDataService = evaluationDataService;
         this.patientsService = patientsService;
     }
@@ -101,8 +100,5 @@ public class BloodPressureFileImporter extends FileImporter{
             patientsService.saveBloodPressureReadings(newBloodPressureReadings);
         }
 
-    @Override
-    public void logProcessing(String filename) {
-        log.info(this.getClass() + " User: " + importCache.getUserModel().getUsername() + " FN: " + filename);
-    }
+
 }

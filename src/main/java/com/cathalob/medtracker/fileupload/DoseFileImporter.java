@@ -19,26 +19,25 @@ import java.util.List;
 
 @Slf4j
 public class DoseFileImporter extends FileImporter{
-    @Setter
-    private ImportCache importCache;
     private final EvaluationDataService evaluationDataService;
     private final PrescriptionsService prescriptionsService;
 
 
     public DoseFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
+        super(new ImportCache());
+        importCache.setUserModel(userModel);
         this.evaluationDataService = evaluationDataService;
         this.prescriptionsService = prescriptionsService;
-        importCache = new ImportCache();
-        importCache.setUserModel(userModel);
 
-        importCache.loadPrescriptions(prescriptionsService);
-        importCache.loadPrescriptionScheduleEntries(prescriptionsService);
-        importCache.loadDailyEvaluations(evaluationDataService);
-        importCache.loadDoses(prescriptionsService);
+        importCache.loadPrescriptions(this.prescriptionsService);
+        importCache.loadPrescriptionScheduleEntries(this.prescriptionsService);
+        importCache.loadDailyEvaluations(this.evaluationDataService);
+        importCache.loadDoses(this.prescriptionsService);
 
     }
 
     public DoseFileImporter(EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
+        super();
         this.evaluationDataService = evaluationDataService;
         this.prescriptionsService = prescriptionsService;
     }
@@ -95,8 +94,5 @@ public class DoseFileImporter extends FileImporter{
         });
     }
 
-    @Override
-    public void logProcessing(String filename) {
-        log.info(this.getClass() + " User: " + importCache.getUserModel().getUsername() + " FN: " + filename);
-    }
+
 }
