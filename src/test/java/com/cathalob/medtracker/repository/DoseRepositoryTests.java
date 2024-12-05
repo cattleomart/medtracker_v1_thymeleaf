@@ -8,7 +8,7 @@ import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import com.cathalob.medtracker.model.tracking.Dose;
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,6 +34,7 @@ class DoseRepositoryTests {
 private DailyEvaluationRepository dailyEvaluationRepository;
     @Autowired
     private UserModelRepository userModelRepository;
+
     @Test
     public void givenDose_whenSaved_thenReturnSavedDose(){
         UserModel userModel = new UserModel();
@@ -73,7 +74,7 @@ private DailyEvaluationRepository dailyEvaluationRepository;
 
 
         Dose saved = doseRepository.save(dose);
-        Assertions.assertThat(saved.getId()).isGreaterThan(0);
+        assertThat(saved.getId()).isGreaterThan(0);
 
     }
 
