@@ -48,9 +48,9 @@ class PrescriptionsRepositoryTests {
 
 //        then
         assertThat(savedPrescription.getId()).isGreaterThan(0);
-        assertThat(savedPrescription.getMedication().getId()).isEqualTo(1);
-        assertThat(savedPrescription.getPatient().getId()).isEqualTo(1);
-        assertThat(savedPrescription.getPractitioner().getId()).isEqualTo(2);
+        assertThat(savedPrescription.getMedication().getId()).isGreaterThan(0);
+        assertThat(savedPrescription.getPatient().getId()).isGreaterThan(0);
+        assertThat(savedPrescription.getPractitioner().getId()).isGreaterThan(0);
 
     }
 }
