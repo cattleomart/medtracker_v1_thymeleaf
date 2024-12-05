@@ -9,6 +9,8 @@ import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import com.cathalob.medtracker.model.tracking.Dose;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -35,6 +37,7 @@ private DailyEvaluationRepository dailyEvaluationRepository;
     @Autowired
     private UserModelRepository userModelRepository;
 
+    @Disabled("testing if cascade fixes need to persist so much first")
     @Test
     public void givenDose_whenSaved_thenReturnSavedDose(){
         UserModel userModel = new UserModel();
@@ -71,6 +74,50 @@ private DailyEvaluationRepository dailyEvaluationRepository;
         dose.setTaken(true);
         dose.setEvaluation(dailyEvaluation1);
         dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry1);
+
+
+        Dose saved = doseRepository.save(dose);
+        assertThat(saved.getId()).isGreaterThan(0);
+
+    }
+
+    @Test
+    public void givenDose_whenSaved_thenReturnSavedDose_cascade(){
+        UserModel userModel = new UserModel();
+        userModel.setUsername("name");
+        userModel.setPassword("abc");
+        userModel.setRole(USERROLE.USER);
+
+//        UserModel savedUserModel = userModelRepository.save(userModel);
+
+
+        DailyEvaluation dailyEvaluation = new DailyEvaluation();
+        dailyEvaluation.setUserModel(userModel);
+        dailyEvaluation.setRecordDate(LocalDate.now());
+
+
+        Medication medication = new Medication();
+        medication.setName("med");
+
+
+        Prescription prescription = new Prescription();
+        prescription.setDoseMg(15);
+        prescription.setPractitioner(userModel);
+        prescription.setPatient(userModel);
+        prescription.setBeginTime(LocalDateTime.now());
+        prescription.setMedication(medication);
+
+
+        PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
+        prescriptionScheduleEntry.setPrescription(prescription);
+        prescriptionScheduleEntry.setDayStage(DAYSTAGE.MIDDAY);
+
+
+        Dose dose = new Dose();
+        dose.setDoseTime(LocalDateTime.now());
+        dose.setTaken(true);
+        dose.setEvaluation(dailyEvaluation);
+        dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
 
 
         Dose saved = doseRepository.save(dose);

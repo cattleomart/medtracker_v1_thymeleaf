@@ -3,6 +3,8 @@ import com.cathalob.medtracker.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
@@ -19,17 +21,20 @@ public class Prescription {
     @JoinColumn
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.SET_NULL)
+    @Cascade(CascadeType.ALL)
     private Medication medication;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PATIENT_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
+    @Cascade(CascadeType.ALL)
     private UserModel patient;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRACTITIONER_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
+    @Cascade(CascadeType.ALL)
     private UserModel practitioner;
 
 

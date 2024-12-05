@@ -4,6 +4,8 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 @Data
@@ -17,6 +19,7 @@ public class PrescriptionScheduleEntry {
     @JoinColumn(name = "PRESCRIPTION_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
+    @Cascade(CascadeType.ALL)
     private Prescription prescription;
     @Enumerated(EnumType.STRING)
     private DAYSTAGE dayStage;
