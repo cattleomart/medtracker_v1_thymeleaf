@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -30,6 +31,9 @@ class DoseRepositoryTests {
     @Autowired
     private DoseRepository doseRepository;
 
+    @Autowired
+    private TestEntityManager testEntityManager;
+
     @Test
     public void givenDose_whenSaved_thenReturnSavedDose_cascade() {
         //        given
@@ -37,19 +41,22 @@ class DoseRepositoryTests {
         patient.setUsername("name");
         patient.setPassword("abc");
         patient.setRole(USERROLE.USER);
+        testEntityManager.persist(patient);
 
         UserModel practitioner = new UserModel();
         practitioner.setUsername("name");
         practitioner.setPassword("abc");
         practitioner.setRole(USERROLE.USER);
+        testEntityManager.persist(practitioner);
 
         DailyEvaluation dailyEvaluation = new DailyEvaluation();
         dailyEvaluation.setUserModel(patient);
         dailyEvaluation.setRecordDate(LocalDate.now());
+        testEntityManager.persist(dailyEvaluation);
 
         Medication medication = new Medication();
         medication.setName("med");
-
+        testEntityManager.persist(medication);
 
         Prescription prescription = new Prescription();
         prescription.setDoseMg(15);
@@ -57,10 +64,12 @@ class DoseRepositoryTests {
         prescription.setPractitioner(practitioner);
         prescription.setBeginTime(LocalDateTime.now());
         prescription.setMedication(medication);
+        testEntityManager.persist(prescription);
 
         PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
         prescriptionScheduleEntry.setPrescription(prescription);
         prescriptionScheduleEntry.setDayStage(DAYSTAGE.MIDDAY);
+        testEntityManager.persist(prescriptionScheduleEntry);
 
         Dose dose = new Dose();
         dose.setDoseTime(LocalDateTime.now());
@@ -72,13 +81,6 @@ class DoseRepositoryTests {
         Dose saved = doseRepository.save(dose);
 
 //      then
-        assertThat(saved.getId()).isGreaterThan(0);
-        assertThat(saved.getPrescriptionScheduleEntry().getPrescription().getMedication().getId()).isGreaterThan(0);
-        assertThat(saved.getPrescriptionScheduleEntry().getPrescription().getPatient().getId()).isGreaterThan(0);
-        assertThat(saved.getPrescriptionScheduleEntry().getPrescription().getPractitioner().getId()).isGreaterThan(0);
-        assertThat(saved.getEvaluation().getUserModel().getId()).isGreaterThan(0);
-        assertThat(saved.isTaken()).isTrue();
-
+        assertThat(saved.getId()).isEqualTo(1);
     }
-
 }

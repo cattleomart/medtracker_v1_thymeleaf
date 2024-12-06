@@ -27,7 +27,7 @@ class UserModelRepositoryTests {
         UserModel saved = userModelRepository.save(userModel);
 
         assertThat(saved).isNotNull();
-        assertThat(saved.getId()).isGreaterThan(0);
+        assertThat(saved.getId()).isEqualTo(1);
         assertThat(saved.getPassword()).isEqualTo("abc");
 
 

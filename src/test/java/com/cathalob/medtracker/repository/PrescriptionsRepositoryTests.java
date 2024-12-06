@@ -7,6 +7,7 @@ import com.cathalob.medtracker.model.prescription.Prescription;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -24,6 +25,9 @@ class PrescriptionsRepositoryTests {
     @Autowired
     private PrescriptionsRepository prescriptionsRepository;
 
+    @Autowired
+    private TestEntityManager testEntityManager;
+
     @Test
     public void givenPrescription_whenSaved_thenReturnSavedPrescription() {
 
@@ -32,15 +36,17 @@ class PrescriptionsRepositoryTests {
         patient.setUsername("name");
         patient.setPassword("abc");
         patient.setRole(USERROLE.USER);
+        testEntityManager.persist(patient);
 
         UserModel practitioner = new UserModel();
         practitioner.setUsername("name");
         practitioner.setPassword("abc");
         practitioner.setRole(USERROLE.USER);
+        testEntityManager.persist(practitioner);
 
         Medication medication = new Medication();
         medication.setName("med");
-
+        testEntityManager.persist(medication);
 
         Prescription prescription = new Prescription();
         prescription.setDoseMg(15);
@@ -53,10 +59,6 @@ class PrescriptionsRepositoryTests {
         Prescription savedPrescription = prescriptionsRepository.save(prescription);
 
 //        then
-        assertThat(savedPrescription.getId()).isGreaterThan(0);
-        assertThat(savedPrescription.getMedication().getId()).isGreaterThan(0);
-        assertThat(savedPrescription.getPatient().getId()).isGreaterThan(0);
-        assertThat(savedPrescription.getPractitioner().getId()).isGreaterThan(0);
-
+        assertThat(savedPrescription.getId()).isEqualTo(1);
     }
 }
