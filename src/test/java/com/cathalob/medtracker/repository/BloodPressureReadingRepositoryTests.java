@@ -8,12 +8,16 @@ import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
+@Sql({"classpath:data.sql"})
+//@ActiveProfiles("test")
 class BloodPressureReadingRepositoryTests {
 @Autowired
     private BloodPressureReadingRepository bloodPressureReadingRepository;
