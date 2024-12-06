@@ -69,7 +69,7 @@ public class ImportCache {
                     dailyEvaluation.setUserModel(userModel);
                     evaluationDataService.addDailyEvaluation(dailyEvaluation);
                     dailyEvaluations.put(dailyEvaluationKey, dailyEvaluation);
-            };
+            }
         });
 
     }
