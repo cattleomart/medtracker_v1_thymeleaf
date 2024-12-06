@@ -1,19 +1,18 @@
 server:
   port: 3100
 spring:
-  application:
-    name: MedTracker
-  h2:
-    console:
-      enabled: true
+  config:
+    activate:
+      on-profile: test
   jpa:
     generate-ddl: false
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: none
   sql:
     init:
       mode: always
+      data-locations: test-data.sql
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/h2DBs/medtracker;AUTO_SERVER=TRUE
