@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import static com.cathalob.medtracker.testdata.UserModelBuilder.aUserModel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
@@ -32,16 +33,10 @@ class PrescriptionsRepositoryTests {
     public void givenPrescription_whenSaved_thenReturnSavedPrescription() {
 
 //        given
-        UserModel patient = new UserModel();
-        patient.setUsername("name");
-        patient.setPassword("abc");
-        patient.setRole(USERROLE.USER);
+        UserModel patient = aUserModel().build();
         testEntityManager.persist(patient);
 
-        UserModel practitioner = new UserModel();
-        practitioner.setUsername("name");
-        practitioner.setPassword("abc");
-        practitioner.setRole(USERROLE.USER);
+        UserModel practitioner = aUserModel().build();
         testEntityManager.persist(practitioner);
 
         Medication medication = new Medication();
