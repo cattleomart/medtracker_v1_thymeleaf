@@ -21,8 +21,8 @@ public class BloodPressureReading {
     private DAYSTAGE dayStage;
 
     @ManyToOne
-    @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE")
-    @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID")
+    @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE", nullable = false)
+    @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID", nullable = false)
     @JsonIgnore
     @Cascade(CascadeType.MERGE)
     private DailyEvaluation dailyEvaluation;
