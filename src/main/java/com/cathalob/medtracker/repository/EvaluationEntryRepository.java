@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface EvaluationEntryRepository extends JpaRepository<EvaluationEntry, Integer> {
+public interface EvaluationEntryRepository extends JpaRepository<EvaluationEntry, Long> {
 
     @Query("FROM EVALUATIONENTRY e WHERE e.userModel.id = :userModelId")
-    List<EvaluationEntry> findEvaluationEntriesForUserId(@Param("userModelId") int userModelId);
+    List<EvaluationEntry> findEvaluationEntriesForUserId(@Param("userModelId") Long userModelId);
 }

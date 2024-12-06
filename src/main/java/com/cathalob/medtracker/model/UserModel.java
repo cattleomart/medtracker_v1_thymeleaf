@@ -12,7 +12,7 @@ import lombok.*;
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NonNull
     private String username;

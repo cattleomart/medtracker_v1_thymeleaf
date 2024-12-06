@@ -5,12 +5,12 @@ import com.cathalob.medtracker.model.enums.USERROLE;
 
 public class UserModelBuilder {
 
-    private Integer id;
+    private Long id;
 
     private String username = "username";
     private USERROLE role = USERROLE.USER;
     private String password = "abc";
-    public UserModelBuilder withId(Integer id) {
+    public UserModelBuilder withId(Long id) {
         this.id = id;
         return this;
     }

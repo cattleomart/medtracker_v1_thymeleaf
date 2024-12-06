@@ -63,7 +63,7 @@ public class DoseFileImporter extends FileImporter{
                             row.getCell(0).getDateCellValue().toInstant(), ZoneId.systemDefault());
                 }
                 if (row.getCell(1) != null) {
-                    int numericCellValue = (int) row.getCell(1).getNumericCellValue();
+                    long numericCellValue = (long) ((int) row.getCell(1).getNumericCellValue());
                     PrescriptionScheduleEntry prescriptionScheduleEntry = importCache.getPrescriptionScheduleEntry(numericCellValue);
                     dose.setPrescriptionScheduleEntry(prescriptionScheduleEntry);
                 }

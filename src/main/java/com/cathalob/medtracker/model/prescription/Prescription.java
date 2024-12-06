@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private int doseMg;
 
     @OneToOne

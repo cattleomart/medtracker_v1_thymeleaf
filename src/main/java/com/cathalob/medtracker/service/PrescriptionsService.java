@@ -45,7 +45,7 @@ public class PrescriptionsService {
         return medicationRepository.findAll();
     }
 
-    public Map<Integer, Medication> getMedicationsById() {
+    public Map<Long, Medication> getMedicationsById() {
         return medicationRepository.findAll()
                 .stream().collect(Collectors.toMap(Medication::getId, Function.identity()));
     }
@@ -54,7 +54,7 @@ public class PrescriptionsService {
         return prescriptionsRepository.findAll();
     }
 
-    public Map<Integer, Prescription> getPrescriptionsById() {
+    public Map<Long, Prescription> getPrescriptionsById() {
         return getPrescriptions()
                 .stream().collect(Collectors.toMap(Prescription::getId, Function.identity()));
     }
@@ -63,11 +63,11 @@ public class PrescriptionsService {
         return prescriptionScheduleEntryRepository.findAll();
     }
 
-    public Map<Integer, PrescriptionScheduleEntry> getPrescriptionScheduleEntriesById() {
+    public Map<Long, PrescriptionScheduleEntry> getPrescriptionScheduleEntriesById() {
         return prescriptionScheduleEntryRepository.findAll().stream().collect(Collectors.toMap(PrescriptionScheduleEntry::getId, Function.identity()));
     }
 
-    public Map<Integer, List<PrescriptionScheduleEntry>> getPrescriptionScheduleEntriesByPrescriptionId() {
+    public Map<Long, List<PrescriptionScheduleEntry>> getPrescriptionScheduleEntriesByPrescriptionId() {
         return getPrescriptionScheduleEntries()
                 .stream().collect(Collectors.groupingBy(prescriptionScheduleEntry -> prescriptionScheduleEntry.getPrescription().getId()));
     }
@@ -127,7 +127,7 @@ public class PrescriptionsService {
         doseRepository.saveAll(newDoses);
     }
 
-    public Map<Integer, Dose> getDosesById(){
+    public Map<Long, Dose> getDosesById(){
         return doseRepository.findAll().stream().collect(Collectors.toMap(Dose::getId, Function.identity()));
     }
 }

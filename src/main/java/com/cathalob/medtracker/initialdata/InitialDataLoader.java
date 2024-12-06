@@ -50,10 +50,10 @@ public class InitialDataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         importCache.loadMedications(prescriptionsService);
 //        basic data from data.sql only contains one medication, if more than one is present then we should not load from file again
-        if (importCache.getMedications().containsKey(2)) return;
+        if (importCache.getMedications().containsKey(2L)) return;
         loadDbData();
 
-        importCache.setUserModel(importCache.getUserModels().get(3));
+        importCache.setUserModel(importCache.getUserModels().get(3L));
         processMedicationExcelFile();
         processPrescriptionExcelFile();
         processPrescriptionScheduleEntriesExcelFile();
@@ -124,7 +124,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     if (index++ == 0) continue;
                     Prescription prescription = new Prescription();
                     if (row.getCell(1) != null) {
-                        int numericCellValue = (int) row.getCell(1).getNumericCellValue();
+                        long numericCellValue = (long) ((int) row.getCell(1).getNumericCellValue());
                         Medication medication = importCache.getMedications().get(numericCellValue);
 //                        log.info(String.valueOf(numericCellValue));
 //                        log.info(medications.toString());
@@ -132,12 +132,12 @@ public class InitialDataLoader implements ApplicationRunner {
                         prescription.setMedication(medication);
                     }
                     if (row.getCell(2) != null) {
-                        int numericCellValue = (int) row.getCell(2).getNumericCellValue();
+                        long numericCellValue = (long) ((int) row.getCell(2).getNumericCellValue());
                         UserModel userModel = importCache.getUserModels().get(numericCellValue);
                         prescription.setPatient(userModel);
                     }
                     if (row.getCell(3) != null) {
-                        int numericCellValue = (int) row.getCell(3).getNumericCellValue();
+                        long numericCellValue = (long) ((int) row.getCell(3).getNumericCellValue());
                         UserModel userModel = importCache.getUserModels().get(numericCellValue);
                         prescription.setPractitioner(userModel);
                     }
@@ -190,7 +190,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     if (index++ == 0) continue;
                     PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
                     if (row.getCell(0) != null) {
-                        int numericCellValue = (int) row.getCell(0).getNumericCellValue();
+                        long numericCellValue = (long) ((int) row.getCell(0).getNumericCellValue());
                         Prescription prescription = importCache.getPrescriptions().get(numericCellValue);
                         prescriptionScheduleEntry.setPrescription(prescription);
                     }

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Dose {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE")

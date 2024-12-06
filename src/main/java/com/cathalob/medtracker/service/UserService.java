@@ -56,7 +56,7 @@ public class UserService {
     public List<UserModel> getUserModels(){
         return userModelRepository.findAll();
     }
-    public Map<Integer, UserModel> getUserModelsById(){
+    public Map<Long, UserModel> getUserModelsById(){
         return getUserModels()
                 .stream().collect(Collectors.toMap(UserModel::getId, Function.identity()));
     }

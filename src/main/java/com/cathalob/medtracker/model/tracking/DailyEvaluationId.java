@@ -7,10 +7,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 @NoArgsConstructor
 public class DailyEvaluationId implements Serializable {
-    private Integer userModel;
+    private Long userModel;
     private LocalDate recordDate;
 
-    public DailyEvaluationId(int dailyEvaluationUserModelId, LocalDate dailyEvaluationDate) {
+    public DailyEvaluationId(Long dailyEvaluationUserModelId, LocalDate dailyEvaluationDate) {
         this.userModel = dailyEvaluationUserModelId;
         this.recordDate = dailyEvaluationDate;
     }

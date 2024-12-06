@@ -22,19 +22,19 @@ import java.util.Map;
 
 public class ImportCache {
     @Getter
-    private Map<Integer, UserModel> userModels;
+    private Map<Long, UserModel> userModels;
 
     @Getter
-    private Map<Integer, Medication> medications;
+    private Map<Long, Medication> medications;
 
     @Getter
-    private Map<Integer, Prescription> prescriptions;
+    private Map<Long, Prescription> prescriptions;
 
     @Getter
-    private Map<Integer, PrescriptionScheduleEntry> prescriptionScheduleEntries;
+    private Map<Long, PrescriptionScheduleEntry> prescriptionScheduleEntries;
 
     @Getter
-    private Map<Integer, Dose> doses;
+    private Map<Long, Dose> doses;
 
     @Getter
     private Map<DailyEvaluationId, DailyEvaluation> dailyEvaluations;
@@ -56,7 +56,7 @@ public class ImportCache {
     public DailyEvaluationId getDailyEvaluationKey(LocalDate localDate, UserModel userModel) {
         return new DailyEvaluationId(userModel.getId(), localDate);
     }
-    public PrescriptionScheduleEntry getPrescriptionScheduleEntry(int key){
+    public PrescriptionScheduleEntry getPrescriptionScheduleEntry(Long key){
         return prescriptionScheduleEntries.get(key);
     }
 

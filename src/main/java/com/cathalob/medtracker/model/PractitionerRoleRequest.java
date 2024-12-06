@@ -11,7 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Data
 public class PractitionerRoleRequest {
     @Id
-    private int id;
+    private Long id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)

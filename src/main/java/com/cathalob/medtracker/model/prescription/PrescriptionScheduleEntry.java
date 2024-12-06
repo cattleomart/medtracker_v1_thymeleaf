@@ -13,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class PrescriptionScheduleEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRESCRIPTION_ID", nullable = false)
