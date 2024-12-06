@@ -15,7 +15,7 @@ public class DailyEvaluation {
     @Id
     private LocalDate recordDate;
     @Id
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "USERMODEL_ID", nullable = false)
     @JsonIgnore

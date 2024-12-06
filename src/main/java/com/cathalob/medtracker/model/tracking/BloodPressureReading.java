@@ -24,7 +24,7 @@ public class BloodPressureReading {
     @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE")
     @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID")
     @JsonIgnore
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private DailyEvaluation dailyEvaluation;
 
     @Temporal(TemporalType.TIMESTAMP)

@@ -17,9 +17,7 @@ public class PrescriptionScheduleEntry {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRESCRIPTION_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private Prescription prescription;
     @Enumerated(EnumType.STRING)
     private DAYSTAGE dayStage;

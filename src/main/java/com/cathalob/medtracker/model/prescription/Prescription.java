@@ -21,20 +21,18 @@ public class Prescription {
     @JoinColumn
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private Medication medication;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PATIENT_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private UserModel patient;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRACTITIONER_ID", nullable = false)
-    @JsonIgnore
-    @Cascade(CascadeType.ALL)
+
+    @Cascade(CascadeType.MERGE)
     private UserModel practitioner;
 
 

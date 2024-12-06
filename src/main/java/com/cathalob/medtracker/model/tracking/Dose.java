@@ -21,9 +21,7 @@ public class Dose {
     @ManyToOne
     @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE")
     @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID")
-    @JsonIgnore
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @Cascade(CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private DailyEvaluation evaluation;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -31,9 +29,7 @@ public class Dose {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRESCRIPTION_SCHEDULE_ENTRY_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @Cascade(CascadeType.ALL)
-    @JsonIgnore
+    @Cascade(CascadeType.MERGE)
     private PrescriptionScheduleEntry prescriptionScheduleEntry;
 
     private boolean taken;
