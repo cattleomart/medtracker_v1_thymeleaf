@@ -16,8 +16,6 @@ spring:
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/h2DBs/medtracker;AUTO_SERVER=TRUE
-    schema: classpath:/schema.sql
-    data: classpath:/data
 
 ---
 
@@ -27,4 +25,4 @@ spring:
         on-profile: test
   datasource:
     url: jdbc:h2:mem:test;MODE=PostgreSQL
-    schema: classpath:/schema.sql
+

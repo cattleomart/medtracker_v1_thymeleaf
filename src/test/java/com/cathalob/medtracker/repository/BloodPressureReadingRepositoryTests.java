@@ -5,6 +5,8 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.enums.USERROLE;
 import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,12 +18,17 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
-@Sql({"classpath:data.sql"})
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
+@Sql(scripts = "classpath:clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class BloodPressureReadingRepositoryTests {
 @Autowired
     private BloodPressureReadingRepository bloodPressureReadingRepository;
 
+
+//@AfterAll
+//static void resetDB(){
+//
+//}
 @Test
 public void givenBloodPressureReading_whenSaved_thenReturnSavedBloodPressureReading(){
 //    given
