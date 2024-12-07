@@ -19,10 +19,13 @@ class UserModelRepositoryTests {
     private UserModelRepository userModelRepository;
     @Test
     public void givenUserModel_whenSaved_thenReturnSavedUserModel(){
+//        given
         UserModel userModel = aUserModel().build();
 
-        UserModel saved = userModelRepository.save(aUserModel().build());
+//        when
+        UserModel saved = userModelRepository.save(userModel);
 
+//        then
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isEqualTo(1);
         assertThat(saved.getPassword()).isEqualTo("abc");
