@@ -5,6 +5,7 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.enums.USERROLE;
 import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
+import com.cathalob.medtracker.testdata.UserModelBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static com.cathalob.medtracker.testdata.UserModelBuilder.aUserModel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -34,14 +36,11 @@ class BloodPressureReadingRepositoryTests {
 
     public void givenBloodPressureReading_whenSaved_thenReturnSavedBloodPressureReading() {
 //    given
-        UserModel userModel = new UserModel();
-        userModel.setUsername("name");
-        userModel.setPassword("abc");
-        userModel.setRole(USERROLE.USER);
-        testEntityManager.persist(userModel);
+        UserModel patient = aUserModel().build();
+        testEntityManager.persist(patient);
 
         DailyEvaluation dailyEvaluation = new DailyEvaluation();
-        dailyEvaluation.setUserModel(userModel);
+        dailyEvaluation.setUserModel(patient);
         dailyEvaluation.setRecordDate(LocalDate.now());
         testEntityManager.persist(dailyEvaluation);
 

@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 
+import static com.cathalob.medtracker.testdata.PrescriptionBuilder.aPrescription;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,28 +33,10 @@ class PrescriptionScheduleEntryRepositoryTests {
     @Test
     public void givenPrescriptionScheduleEntry_whenSaved_thenReturnSavedPrescriptionScheduleEntry() {
         //        given
-        UserModel patient = new UserModel();
-        patient.setUsername("name");
-        patient.setPassword("abc");
-        patient.setRole(USERROLE.USER);
-        testEntityManager.persist(patient);
-
-        UserModel practitioner = new UserModel();
-        practitioner.setUsername("name");
-        practitioner.setPassword("abc");
-        practitioner.setRole(USERROLE.USER);
-        testEntityManager.persist(practitioner);
-
-        Medication medication = new Medication();
-        medication.setName("med");
-        testEntityManager.persist(medication);
-
-        Prescription prescription = new Prescription();
-        prescription.setDoseMg(15);
-        prescription.setPatient(patient);
-        prescription.setPractitioner(practitioner);
-        prescription.setBeginTime(LocalDateTime.now());
-        prescription.setMedication(medication);
+        Prescription prescription = aPrescription().build();
+        testEntityManager.persist(prescription.getPatient());
+        testEntityManager.persist(prescription.getPractitioner());
+        testEntityManager.persist(prescription.getMedication());
         testEntityManager.persist(prescription);
 
         PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();

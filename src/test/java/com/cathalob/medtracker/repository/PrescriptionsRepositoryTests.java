@@ -4,6 +4,7 @@ import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.enums.USERROLE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
+import com.cathalob.medtracker.testdata.PrescriptionBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import static com.cathalob.medtracker.testdata.PrescriptionBuilder.aPrescription;
 import static com.cathalob.medtracker.testdata.UserModelBuilder.aUserModel;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,22 +35,10 @@ class PrescriptionsRepositoryTests {
     public void givenPrescription_whenSaved_thenReturnSavedPrescription() {
 
 //        given
-        UserModel patient = aUserModel().build();
-        testEntityManager.persist(patient);
-
-        UserModel practitioner = aUserModel().build();
-        testEntityManager.persist(practitioner);
-
-        Medication medication = new Medication();
-        medication.setName("med");
-        testEntityManager.persist(medication);
-
-        Prescription prescription = new Prescription();
-        prescription.setDoseMg(15);
-        prescription.setPatient(patient);
-        prescription.setPractitioner(practitioner);
-        prescription.setBeginTime(LocalDateTime.now());
-        prescription.setMedication(medication);
+        Prescription prescription = aPrescription().build();
+        testEntityManager.persist(prescription.getPatient());
+        testEntityManager.persist(prescription.getPractitioner());
+        testEntityManager.persist(prescription.getMedication());
 
 //        when
         Prescription savedPrescription = prescriptionsRepository.save(prescription);

@@ -2,7 +2,9 @@ package com.cathalob.medtracker.model.prescription;
 import com.cathalob.medtracker.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OnDelete;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity(name = "PRESCRIPTION")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
