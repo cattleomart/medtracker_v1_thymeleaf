@@ -2,7 +2,9 @@ package com.cathalob.medtracker.model.tracking;
 import com.cathalob.medtracker.model.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import java.time.LocalDate;
@@ -10,6 +12,8 @@ import java.time.LocalDate;
 @Entity(name = "DAILYEVALUATION")
 @Data
 @IdClass(DailyEvaluationId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class DailyEvaluation {
 
     @Id

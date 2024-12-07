@@ -1,6 +1,5 @@
 package com.cathalob.medtracker.repository;
 
-import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import static com.cathalob.medtracker.testdata.UserModelBuilder.aUserModel;
+import static com.cathalob.medtracker.testdata.DailyEvaluationBuilder.aDailyEvaluation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -30,11 +28,9 @@ class DailyEvaluationRepositoryTests {
     @Test
     public void giveDailyEvaluation_whenSaved_thenGetSavedDailyEvaluation() {
 //        given
-        UserModel patient = aUserModel().build();
-        testEntityManager.persist(patient);
-
-        DailyEvaluation dailyEvaluation = new DailyEvaluation();
-        dailyEvaluation.setUserModel(patient);
+        DailyEvaluation dailyEvaluation = aDailyEvaluation().build();
+        testEntityManager.persist(dailyEvaluation.getUserModel());
+        dailyEvaluation.setUserModel(dailyEvaluation.getUserModel());
         dailyEvaluation.setRecordDate(LocalDate.now());
 
 //        when

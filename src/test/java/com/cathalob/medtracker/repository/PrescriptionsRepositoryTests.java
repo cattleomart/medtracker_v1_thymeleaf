@@ -1,10 +1,7 @@
 package com.cathalob.medtracker.repository;
 
-import com.cathalob.medtracker.model.UserModel;
-import com.cathalob.medtracker.model.enums.USERROLE;
-import com.cathalob.medtracker.model.prescription.Medication;
+
 import com.cathalob.medtracker.model.prescription.Prescription;
-import com.cathalob.medtracker.testdata.PrescriptionBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,12 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static com.cathalob.medtracker.testdata.PrescriptionBuilder.aPrescription;
-import static com.cathalob.medtracker.testdata.UserModelBuilder.aUserModel;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
