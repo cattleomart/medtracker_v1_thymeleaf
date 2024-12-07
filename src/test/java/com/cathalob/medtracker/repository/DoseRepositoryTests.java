@@ -10,10 +10,12 @@ import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import com.cathalob.medtracker.model.tracking.Dose;
 
 import static com.cathalob.medtracker.testdata.PrescriptionBuilder.aPrescription;
+import static com.cathalob.medtracker.testdata.PrescriptionScheduleEntryBuilder.aPrescriptionScheduleEntry;
 import static com.cathalob.medtracker.testdata.UserModelBuilder.aUserModel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.cathalob.medtracker.testdata.PrescriptionBuilder;
+import com.cathalob.medtracker.testdata.PrescriptionScheduleEntryBuilder;
 import com.cathalob.medtracker.testdata.UserModelBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +43,18 @@ class DoseRepositoryTests {
     @Test
     public void givenDose_whenSaved_thenReturnSavedDose_cascade() {
 //          given
-        Prescription prescription1 = aPrescription().build();
-        testEntityManager.persist(prescription1.getPatient());
-        testEntityManager.persist(prescription1.getPractitioner());
+        PrescriptionScheduleEntry prescriptionScheduleEntry = aPrescriptionScheduleEntry().build();
+
+        testEntityManager.persist(prescriptionScheduleEntry.getPrescription().getPatient());
+        testEntityManager.persist(prescriptionScheduleEntry.getPrescription().getPractitioner());
 
         DailyEvaluation dailyEvaluation = new DailyEvaluation();
-        dailyEvaluation.setUserModel(prescription1.getPatient());
+        dailyEvaluation.setUserModel(prescriptionScheduleEntry.getPrescription().getPatient());
         dailyEvaluation.setRecordDate(LocalDate.now());
         testEntityManager.persist(dailyEvaluation);
-        testEntityManager.persist(prescription1.getMedication());
-        testEntityManager.persist(prescription1);
+        testEntityManager.persist(prescriptionScheduleEntry.getPrescription().getMedication());
+        testEntityManager.persist(prescriptionScheduleEntry.getPrescription());
 
-        PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
-        prescriptionScheduleEntry.setPrescription(prescription1);
-        prescriptionScheduleEntry.setDayStage(DAYSTAGE.MIDDAY);
         testEntityManager.persist(prescriptionScheduleEntry);
 
         Dose dose = new Dose();

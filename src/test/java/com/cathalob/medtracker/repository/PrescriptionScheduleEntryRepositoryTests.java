@@ -6,6 +6,7 @@ import com.cathalob.medtracker.model.enums.USERROLE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
+import com.cathalob.medtracker.testdata.PrescriptionScheduleEntryBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDateTime;
 
 import static com.cathalob.medtracker.testdata.PrescriptionBuilder.aPrescription;
+import static com.cathalob.medtracker.testdata.PrescriptionScheduleEntryBuilder.aPrescriptionScheduleEntry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,15 +35,13 @@ class PrescriptionScheduleEntryRepositoryTests {
     @Test
     public void givenPrescriptionScheduleEntry_whenSaved_thenReturnSavedPrescriptionScheduleEntry() {
         //        given
-        Prescription prescription = aPrescription().build();
+        PrescriptionScheduleEntry prescriptionScheduleEntry = aPrescriptionScheduleEntry().build();
+        Prescription prescription = prescriptionScheduleEntry.getPrescription();
         testEntityManager.persist(prescription.getPatient());
         testEntityManager.persist(prescription.getPractitioner());
         testEntityManager.persist(prescription.getMedication());
         testEntityManager.persist(prescription);
 
-        PrescriptionScheduleEntry prescriptionScheduleEntry = new PrescriptionScheduleEntry();
-        prescriptionScheduleEntry.setPrescription(prescription);
-        prescriptionScheduleEntry.setDayStage(DAYSTAGE.MIDDAY);
         PrescriptionScheduleEntry saved = prescriptionScheduleEntryRepository.save(prescriptionScheduleEntry);
         assertThat(saved.getId()).isEqualTo(1);
     }
