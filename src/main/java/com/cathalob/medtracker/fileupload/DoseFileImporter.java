@@ -5,7 +5,6 @@ import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.Dose;
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.PrescriptionsService;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class DoseFileImporter extends FileImporter{
+public class DoseFileImporter extends FileImporter {
     private final EvaluationDataService evaluationDataService;
     private final PrescriptionsService prescriptionsService;
 
@@ -75,23 +74,23 @@ public class DoseFileImporter extends FileImporter{
                 if (row.getCell(3) != null) {
                     localTime = (row.getCell(3).getLocalDateTimeCellValue().toLocalTime());
                 }
-                dose.setDoseTime(LocalDateTime.of(localDate,localTime));
+                dose.setDoseTime(LocalDateTime.of(localDate, localTime));
                 newDoses.add(dose);
             }
         });
 
         List<LocalDate> dates = newDoses.stream().map(Dose::getDoseTime).map(LocalDateTime::toLocalDate).distinct().toList();
 
-        importCache.ensureDailyEvaluations(dates,  evaluationDataService);
+        importCache.ensureDailyEvaluations(dates, evaluationDataService);
 
-        newDoses.forEach(dose -> {
-            dose.setEvaluation(importCache.getDailyEvaluation(dose.getDoseTime().toLocalDate()));
-        });
+        newDoses.forEach(dose ->
+                dose.setEvaluation(importCache.getDailyEvaluation(dose.getDoseTime().toLocalDate()))
+        );
 
         prescriptionsService.saveDoses(newDoses);
-        newDoses.forEach(dose -> {
-            importCache.getDoses().put(dose.getId(), dose);
-        });
+        newDoses.forEach(dose ->
+                importCache.getDoses().put(dose.getId(), dose)
+        );
     }
 
 

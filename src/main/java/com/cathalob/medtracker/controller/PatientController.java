@@ -27,23 +27,26 @@ public class PatientController {
     BloodPressureDataService bloodPressureDataService;
     @Autowired
     UserService userService;
+
     @GetMapping("/patient/prescriptions")
-    public String getPatients(Model model){
-        model.addAttribute("prescriptionsDTO", patientsService.getPrescriptionsDTO()  );
+    public String getPatients(Model model) {
+        model.addAttribute("prescriptionsDTO", patientsService.getPrescriptionsDTO());
         return "patient/prescriptionsList";
     }
 
     @GetMapping("/patient/upload")
-    public String upload(){
+    public String upload() {
         return "patient/upload";
     }
+
     @PostMapping("/patient/upload/doseUpload")
-    public String reapDoseDataFromExcelUpload(@RequestParam("dosesFile") MultipartFile reapExcelDataFile, Authentication authentication) throws IOException {
+    public String reapDoseDataFromExcelUpload(@RequestParam("dosesFile") MultipartFile reapExcelDataFile, Authentication authentication) {
         patientsService.importDoseFile(reapExcelDataFile, getUserModel(authentication));
         return "redirect:/patient/upload";
     }
+
     @PostMapping("/patient/upload/bloodPressureUpload")
-    public String reapBloodPressureDataFromExcelUpload(@RequestParam("bloodPressureFile") MultipartFile reapExcelDataFile, Authentication authentication) throws IOException {
+    public String reapBloodPressureDataFromExcelUpload(@RequestParam("bloodPressureFile") MultipartFile reapExcelDataFile, Authentication authentication) {
         patientsService.importBloodPressureFile(reapExcelDataFile, getUserModel(authentication));
         return "redirect:/patient/upload";
     }
@@ -64,11 +67,11 @@ public class PatientController {
                     .distinct()
                     .toList();
             model.addAttribute("systoleGraphTitle", "Systole");
-            model.addAttribute("systoleColls", patientsService.getBloodPressureGraphColumnNames(daystageList,List.of("Danger High","High Stage 1","Elevated")));
-            model.addAttribute("systoleChartData",  patientsService.getSystoleGraphData(bloodPressureReadings));
+            model.addAttribute("systoleColls", patientsService.getBloodPressureGraphColumnNames(daystageList, List.of("Danger High", "High Stage 1", "Elevated")));
+            model.addAttribute("systoleChartData", patientsService.getSystoleGraphData(bloodPressureReadings));
 
             model.addAttribute("diastoleGraphTitle", "Diastole");
-            model.addAttribute("diastoleColls", patientsService.getBloodPressureGraphColumnNames(daystageList,List.of("Danger High","High Stage 1")));
+            model.addAttribute("diastoleColls", patientsService.getBloodPressureGraphColumnNames(daystageList, List.of("Danger High", "High Stage 1")));
             model.addAttribute("diastoleChartData", patientsService.getDiastoleGraphData(bloodPressureReadings));
 
             model.addAttribute("doseGraphTitle", "Dose (mg)");

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -80,14 +80,14 @@ public class MainWebController {
      model.addAttribute("dcol5", "High Stage 1");
 
      ArrayList<String> strings = new ArrayList<>();
-     evaluationDataService.drugNames(evaluationEntries).stream().forEach((name)->{
+     evaluationDataService.drugNames(evaluationEntries).forEach((name)->{
          strings.add("(Morning) " + name);
          strings.add("(Lunch) " + name);
      });
      System.out.println(strings);
 
      model.addAttribute("doseGraphTitle", "Dose (mg)");
-     model.addAttribute("colls",Arrays.asList(strings));
+     model.addAttribute("colls", List.of(strings));
 
 
 

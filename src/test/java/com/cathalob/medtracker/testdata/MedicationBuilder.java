@@ -4,11 +4,11 @@ import com.cathalob.medtracker.model.prescription.Medication;
 
 public class MedicationBuilder {
 
-    private Integer id;
+    private Long id;
     private String name = "Medication";
 
 
-    public MedicationBuilder withId(Integer id) {
+    public MedicationBuilder withId(Long id) {
         this.id = id;
         return this;
     }

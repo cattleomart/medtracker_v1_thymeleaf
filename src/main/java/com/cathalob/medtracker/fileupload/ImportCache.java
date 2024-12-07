@@ -13,34 +13,25 @@ import com.cathalob.medtracker.service.PrescriptionsService;
 import com.cathalob.medtracker.service.UserService;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
+@Getter
 public class ImportCache {
-    @Getter
     private Map<Long, UserModel> userModels;
 
-    @Getter
     private Map<Long, Medication> medications;
 
-    @Getter
     private Map<Long, Prescription> prescriptions;
 
-    @Getter
     private Map<Long, PrescriptionScheduleEntry> prescriptionScheduleEntries;
 
-    @Getter
     private Map<Long, Dose> doses;
 
-    @Getter
     private Map<DailyEvaluationId, DailyEvaluation> dailyEvaluations;
 
     @Setter
-    @Getter
     private UserModel userModel;
 
 

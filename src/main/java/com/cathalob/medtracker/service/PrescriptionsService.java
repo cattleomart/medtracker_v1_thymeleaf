@@ -99,17 +99,17 @@ public class PrescriptionsService {
         this.getPatientPrescriptions(userModel)
                 .stream()
                 .collect(Collectors.groupingBy(Prescription::getMedication))
-                .forEach((medication, prescriptions) -> {
+                .forEach((medication, prescriptions) ->
 
-                     prescriptions.forEach(prescription ->{
-                                LocalDate start = prescription.getBeginTime().toLocalDate();
-                                LocalDate end = ((prescription.getEndTime() == null) ? LocalDate.now() :prescription.getEndTime().toLocalDate()).plusDays(1);
-                                long numDays = ChronoUnit.DAYS.between(start, end);
-                                List<LocalDate> dates = Stream.iterate(start, date -> date.plusDays(1)).limit(numDays).toList();
-                                medDates.putIfAbsent(medication, new HashSet<>());
-                                medDates.get(medication).addAll(dates);
-                            } );
-                });
+                        prescriptions.forEach(prescription -> {
+                            LocalDate start = prescription.getBeginTime().toLocalDate();
+                            LocalDate end = ((prescription.getEndTime() == null) ? LocalDate.now() : prescription.getEndTime().toLocalDate()).plusDays(1);
+                            long numDays = ChronoUnit.DAYS.between(start, end);
+                            List<LocalDate> dates = Stream.iterate(start, date -> date.plusDays(1)).limit(numDays).toList();
+                            medDates.putIfAbsent(medication, new HashSet<>());
+                            medDates.get(medication).addAll(dates);
+                        })
+                );
 
         return medDates;
     }
@@ -127,7 +127,7 @@ public class PrescriptionsService {
         doseRepository.saveAll(newDoses);
     }
 
-    public Map<Long, Dose> getDosesById(){
+    public Map<Long, Dose> getDosesById() {
         return doseRepository.findAll().stream().collect(Collectors.toMap(Dose::getId, Function.identity()));
     }
 }

@@ -47,7 +47,7 @@ public class InitialDataLoader implements ApplicationRunner {
     UserService userService;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         importCache.loadMedications(prescriptionsService);
 //        basic data from data.sql only contains one medication, if more than one is present then we should not load from file again
         if (importCache.getMedications().containsKey(2L)) return;
@@ -126,9 +126,7 @@ public class InitialDataLoader implements ApplicationRunner {
                     if (row.getCell(1) != null) {
                         long numericCellValue = (long) ((int) row.getCell(1).getNumericCellValue());
                         Medication medication = importCache.getMedications().get(numericCellValue);
-//                        log.info(String.valueOf(numericCellValue));
-//                        log.info(medications.toString());
-//                        log.info("Medication for prescription: " + index + " + " + medication);
+
                         prescription.setMedication(medication);
                     }
                     if (row.getCell(2) != null) {
