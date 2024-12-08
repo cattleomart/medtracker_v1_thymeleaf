@@ -2,6 +2,12 @@ package com.cathalob.medtracker.repository;
 
 import com.cathalob.medtracker.model.tracking.Dose;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface DoseRepository extends JpaRepository<Dose, Integer> {
+import java.util.List;
+
+public interface DoseRepository extends JpaRepository<Dose, Long> {
+//    @Query("FROM DOSES e WHERE e.dailyevaluation_userModel_id = :userModelId")
+//    List<Dose> findDosesForUserId(@Param("userModelId") Long userModelId);
 }

@@ -34,8 +34,8 @@ public class InitialDataLoader implements ApplicationRunner {
     private final UserService userService;
     private final DoseService doseService;
 
-    public InitialDataLoader(ImportCache importCache, EvaluationDataService evaluationDataService, PatientsService patientsService, PrescriptionsService prescriptionsService, UserService userService, DoseService doseService) {
-        this.importCache = importCache;
+    public InitialDataLoader(EvaluationDataService evaluationDataService, PatientsService patientsService, PrescriptionsService prescriptionsService, UserService userService, DoseService doseService) {
+        this.importCache = new ImportCache();
         this.evaluationDataService = evaluationDataService;
         this.patientsService = patientsService;
         this.prescriptionsService = prescriptionsService;
@@ -100,7 +100,7 @@ public class InitialDataLoader implements ApplicationRunner {
         }
         prescriptionsService.saveMedications(newMedications);
         newMedications.forEach(newMedication ->
-            importCache.getMedications().put(newMedication.getId(), newMedication)
+                importCache.getMedications().put(newMedication.getId(), newMedication)
         );
     }
 
