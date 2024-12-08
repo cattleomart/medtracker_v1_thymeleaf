@@ -1,7 +1,7 @@
 # MedTracker
 ## Description
 
-Web app to track and visualize the effects of medication prescriptions.\
+Web app to track and visualize the effects of medication prescriptions.
 
 ## Initial setup
 On startup the project will create a folder in the users home directory H2DBs, H2 database files will be stored here.\
@@ -11,17 +11,16 @@ A webserver will be started on port 3100
 After starting the application, in a browser go to localhost:3100.\
 A homepage with login and registration links will be presented.
 
-Unauthorized users can register and account. New accounts have the Basic/Patient role by default.
+Unauthorized users can register an account. New accounts have the Basic/Patient role by default.
 
 Several types of user exist in the system.
 - Basic/Patient
-  - Users can:
-    - (unimplemented) Request registration with one or more practitioners
-    - Bulk upload data from Excel files
-    - View their prescriptions
-    - Request a role upgrade to "Practitioner"
-      - this request must be reviewed and approved by a user with the "Admin" role
-    - View visualizations of their uploaded data, "Data Upload" page
+  - (unimplemented) Request registration with one or more practitioners
+  - Bulk upload data from Excel files
+  - View their prescriptions
+  - Request a role upgrade to "Practitioner"
+    - this request must be reviewed and approved by a user with the "Admin" role
+  - View visualizations of their uploaded data, "Data Upload" page
 - Practitioner
   - View a list of all "Patient" users
     - (unimplemented) filter by patients registered with the practitioner
@@ -75,7 +74,7 @@ allowing the user to request a role upgrade again in the future.
 ## Developer notes
 ### Ongoing Development
 The majority of currently unimplemented features mentioned in this document are supported by the current object model,
-with the exception of patient registration.
+except patient registration with a practitioner.
 
 ### DB Filling
 On startup of the application two sources of initial data may be loaded
@@ -85,5 +84,8 @@ On startup of the application two sources of initial data may be loaded
       src/main/resources/InitialDataFiles
       ```
     
-
+### Object Model Diagram
+```
+requirements/objectModel.graphml
+```
 
