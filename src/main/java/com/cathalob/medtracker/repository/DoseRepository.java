@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DoseRepository extends JpaRepository<Dose, Long> {
-//    @Query("FROM DOSES e WHERE e.dailyevaluation_userModel_id = :userModelId")
-//    List<Dose> findDosesForUserId(@Param("userModelId") Long userModelId);
+    @Query("FROM DOSE e WHERE e.evaluation.userModel.id = :userModelId")
+    List<Dose> findDosesForUserId(@Param("userModelId") Long userModelId);
 }

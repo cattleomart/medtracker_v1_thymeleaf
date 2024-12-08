@@ -56,6 +56,10 @@ public class DoseBuilder {
         return new DoseBuilder();
     }
 
+    public DoseBuilder but() {
+        return new DoseBuilder(this);
+    }
+
     public Dose build() {
         PrescriptionScheduleEntry prescriptionScheduleEntry = prescriptionScheduleEntryBuilder.build();
         DailyEvaluation dailyEvaluation = dailyEvaluationBuilder.build();

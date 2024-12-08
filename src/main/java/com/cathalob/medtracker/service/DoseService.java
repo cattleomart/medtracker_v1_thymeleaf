@@ -19,7 +19,7 @@ public class DoseService {
     }
 
     public List<Dose> getDoses(UserModel userModel) {
-        return doseRepository.findAll().stream().filter(dose -> dose.getEvaluation().getUserModel().getId().equals(userModel.getId())).toList();
+        return doseRepository.findDosesForUserId(userModel.getId());
     }
 
     public void saveDoses(List<Dose> newDoses) {

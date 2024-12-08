@@ -21,7 +21,7 @@ import java.util.List;
 public class DoseFileImporter extends FileImporter {
     private final EvaluationDataService evaluationDataService;
     private final PrescriptionsService prescriptionsService;
-   private final DoseService doseService;
+    private final DoseService doseService;
 
     public DoseFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService, DoseService doseService) {
         super(new ImportCache());
