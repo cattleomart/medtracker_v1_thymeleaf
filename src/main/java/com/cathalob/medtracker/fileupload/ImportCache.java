@@ -7,6 +7,7 @@ import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.DailyEvaluation;
 import com.cathalob.medtracker.model.tracking.DailyEvaluationId;
 import com.cathalob.medtracker.model.tracking.Dose;
+import com.cathalob.medtracker.service.DoseService;
 import com.cathalob.medtracker.service.EvaluationDataService;
 
 import com.cathalob.medtracker.service.PrescriptionsService;
@@ -80,9 +81,9 @@ public class ImportCache {
         dailyEvaluations = evaluationDataService.getDailyEvaluationsById();
     }
 
-    public void loadDoses(PrescriptionsService prescriptionsService) {
+    public void loadDoses(DoseService doseService) {
         if (doses != null && !doses.keySet().isEmpty()) return;
-        doses = prescriptionsService.getDosesById();
+        doses = doseService.getDosesById();
     }
     public void loadUserModels(UserService userService) {
         if (userModels != null && !userModels.keySet().isEmpty()) return;

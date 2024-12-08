@@ -3,6 +3,7 @@ package com.cathalob.medtracker.fileupload;
 import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 import com.cathalob.medtracker.model.tracking.Dose;
+import com.cathalob.medtracker.service.DoseService;
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.PrescriptionsService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,11 @@ import java.util.List;
 public class DoseFileImporter extends FileImporter {
     private final EvaluationDataService evaluationDataService;
     private final PrescriptionsService prescriptionsService;
+   private final DoseService doseService;
 
-
-    public DoseFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
+    public DoseFileImporter(UserModel userModel, EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService, DoseService doseService) {
         super(new ImportCache());
+        this.doseService = doseService;
         importCache.setUserModel(userModel);
         this.evaluationDataService = evaluationDataService;
         this.prescriptionsService = prescriptionsService;
@@ -31,14 +33,15 @@ public class DoseFileImporter extends FileImporter {
         importCache.loadPrescriptions(this.prescriptionsService);
         importCache.loadPrescriptionScheduleEntries(this.prescriptionsService);
         importCache.loadDailyEvaluations(this.evaluationDataService);
-        importCache.loadDoses(this.prescriptionsService);
+        importCache.loadDoses(this.doseService);
 
     }
 
-    public DoseFileImporter(EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService) {
+    public DoseFileImporter(EvaluationDataService evaluationDataService, PrescriptionsService prescriptionsService, DoseService doseService) {
         super();
         this.evaluationDataService = evaluationDataService;
         this.prescriptionsService = prescriptionsService;
+        this.doseService = doseService;
     }
 
     @Override
@@ -87,7 +90,7 @@ public class DoseFileImporter extends FileImporter {
                 dose.setEvaluation(importCache.getDailyEvaluation(dose.getDoseTime().toLocalDate()))
         );
 
-        prescriptionsService.saveDoses(newDoses);
+        doseService.saveDoses(newDoses);
         newDoses.forEach(dose ->
                 importCache.getDoses().put(dose.getId(), dose)
         );

@@ -13,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,15 +31,16 @@ import java.util.stream.StreamSupport;
 @Service
 public class EvaluationDataService {
 
+    private final DailyEvaluationRepository dailyEvaluationRepository;
     private final EvaluationEntryRepository evaluationEntryRepository;
 
-    public EvaluationDataService(EvaluationEntryRepository medTrackerRepository) {
+
+    public EvaluationDataService(EvaluationEntryRepository medTrackerRepository, DailyEvaluationRepository dailyEvaluationRepository) {
         this.evaluationEntryRepository = medTrackerRepository;
+        this.dailyEvaluationRepository = dailyEvaluationRepository;
     }
 
 
-    @Autowired
-    DailyEvaluationRepository dailyEvaluationRepository;
 
     public Iterable<EvaluationEntry> getEvaluationEntries(UserModel userModel) {
         return evaluationEntryRepository.findEvaluationEntriesForUserId(userModel.getId());

@@ -27,14 +27,9 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class PrescriptionsService {
 
-    @Autowired
     private final MedicationRepository medicationRepository;
-
-    @Autowired
     private final PrescriptionScheduleEntryRepository prescriptionScheduleEntryRepository;
-    @Autowired
     private final PrescriptionsRepository prescriptionsRepository;
-    private final DoseRepository doseRepository;
 
     public void saveMedications(List<Medication> medicationList) {
         medicationRepository.saveAll(medicationList);
@@ -123,11 +118,4 @@ public class PrescriptionsService {
         prescriptionScheduleEntryRepository.saveAll(newPrescriptionScheduleEntries);
     }
 
-    public void saveDoses(List<Dose> newDoses) {
-        doseRepository.saveAll(newDoses);
-    }
-
-    public Map<Long, Dose> getDosesById() {
-        return doseRepository.findAll().stream().collect(Collectors.toMap(Dose::getId, Function.identity()));
-    }
 }

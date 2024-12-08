@@ -9,10 +9,7 @@ import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
 
-import com.cathalob.medtracker.service.EvaluationDataService;
-import com.cathalob.medtracker.service.PatientsService;
-import com.cathalob.medtracker.service.PrescriptionsService;
-import com.cathalob.medtracker.service.UserService;
+import com.cathalob.medtracker.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
@@ -45,6 +42,9 @@ public class InitialDataLoader implements ApplicationRunner {
     PrescriptionsService prescriptionsService;
     @Autowired
     UserService userService;
+
+    @Autowired
+    DoseService doseService;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -213,7 +213,7 @@ public class InitialDataLoader implements ApplicationRunner {
     }
 
     public void processDoseExcelFile() {
-        DoseFileImporter doseFileImporter = new DoseFileImporter(evaluationDataService, prescriptionsService);
+        DoseFileImporter doseFileImporter = new DoseFileImporter(evaluationDataService, prescriptionsService, doseService);
         doseFileImporter.setImportCache(importCache);
         doseFileImporter
                 .processFileNamed("./src/main/resources/initialDataFiles/doses.xlsx");

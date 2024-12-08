@@ -9,7 +9,6 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.model.tracking.Dose;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,16 +21,17 @@ import java.util.stream.Stream;
 
 @Service
 public class PatientsService {
-    @Autowired
-    PrescriptionsService prescriptionsService;
-    @Autowired
-    BloodPressureDataService bloodPressureDataService;
-    @Autowired
-    DoseService doseService;
+    private final PrescriptionsService prescriptionsService;
+    private final BloodPressureDataService bloodPressureDataService;
+    private final DoseService doseService;
+    private final EvaluationDataService evaluationDataService;
 
-    @Autowired
-    EvaluationDataService evaluationDataService;
-
+    public PatientsService(PrescriptionsService prescriptionsService, BloodPressureDataService bloodPressureDataService, DoseService doseService, EvaluationDataService evaluationDataService) {
+        this.prescriptionsService = prescriptionsService;
+        this.bloodPressureDataService = bloodPressureDataService;
+        this.doseService = doseService;
+        this.evaluationDataService = evaluationDataService;
+    }
 
     public PrescriptionsDTO getPrescriptionsDTO() {
         PrescriptionsDTO prescriptionsDTO = new PrescriptionsDTO(new ArrayList<>());
@@ -174,7 +174,7 @@ public class PatientsService {
     }
 
     public void importDoseFile(MultipartFile file, UserModel userModel) {
-        new DoseFileImporter(userModel, evaluationDataService, prescriptionsService).processMultipartFile(file);
+        new DoseFileImporter(userModel, evaluationDataService, prescriptionsService, doseService).processMultipartFile(file);
     }
     public void importBloodPressureFile(MultipartFile file, UserModel userModel) {
         new BloodPressureFileImporter(userModel,evaluationDataService, this).processMultipartFile(file);
