@@ -5,14 +5,11 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.cathalob.medtracker.model.prescription.Medication;
 import com.cathalob.medtracker.model.prescription.Prescription;
 import com.cathalob.medtracker.model.prescription.PrescriptionScheduleEntry;
-import com.cathalob.medtracker.model.tracking.Dose;
-import com.cathalob.medtracker.repository.DoseRepository;
 import com.cathalob.medtracker.repository.MedicationRepository;
 import com.cathalob.medtracker.repository.PrescriptionScheduleEntryRepository;
 import com.cathalob.medtracker.repository.PrescriptionsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -62,10 +59,6 @@ public class PrescriptionsService {
         return prescriptionScheduleEntryRepository.findAll().stream().collect(Collectors.toMap(PrescriptionScheduleEntry::getId, Function.identity()));
     }
 
-    public Map<Long, List<PrescriptionScheduleEntry>> getPrescriptionScheduleEntriesByPrescriptionId() {
-        return getPrescriptionScheduleEntries()
-                .stream().collect(Collectors.groupingBy(prescriptionScheduleEntry -> prescriptionScheduleEntry.getPrescription().getId()));
-    }
 
     public List<PrescriptionScheduleEntry> getPatientPrescriptionScheduleEntries(UserModel userModel) {
         return prescriptionScheduleEntryRepository.findAll().stream().filter(pse -> pse.getPrescription().getPatient().getId().equals(userModel.getId()))

@@ -1,7 +1,6 @@
 package com.cathalob.medtracker.config;
 
 import com.cathalob.medtracker.service.CustomUserDetailsService;
-import com.cathalob.medtracker.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

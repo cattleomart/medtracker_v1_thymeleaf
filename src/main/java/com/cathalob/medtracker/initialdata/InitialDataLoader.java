@@ -99,9 +99,9 @@ public class InitialDataLoader implements ApplicationRunner {
             }
         }
         prescriptionsService.saveMedications(newMedications);
-        newMedications.forEach(newMedication -> {
-            importCache.getMedications().put(newMedication.getId(), newMedication);
-        });
+        newMedications.forEach(newMedication ->
+            importCache.getMedications().put(newMedication.getId(), newMedication)
+        );
     }
 
     public void processPrescriptionExcelFile() {
