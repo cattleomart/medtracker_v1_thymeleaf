@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -29,22 +28,20 @@ import java.util.*;
 @Component
 public class InitialDataLoader implements ApplicationRunner {
     private final ImportCache importCache;
+    private final EvaluationDataService evaluationDataService;
+    private final PatientsService patientsService;
+    private final PrescriptionsService prescriptionsService;
+    private final UserService userService;
+    private final DoseService doseService;
 
-    public InitialDataLoader() {
-        this.importCache = new ImportCache();
+    public InitialDataLoader(ImportCache importCache, EvaluationDataService evaluationDataService, PatientsService patientsService, PrescriptionsService prescriptionsService, UserService userService, DoseService doseService) {
+        this.importCache = importCache;
+        this.evaluationDataService = evaluationDataService;
+        this.patientsService = patientsService;
+        this.prescriptionsService = prescriptionsService;
+        this.userService = userService;
+        this.doseService = doseService;
     }
-
-    @Autowired
-    EvaluationDataService evaluationDataService;
-    @Autowired
-    PatientsService patientsService;
-    @Autowired
-    PrescriptionsService prescriptionsService;
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    DoseService doseService;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -103,7 +100,6 @@ public class InitialDataLoader implements ApplicationRunner {
         }
         prescriptionsService.saveMedications(newMedications);
         newMedications.forEach(newMedication -> {
-            log.info(newMedication.toString());
             importCache.getMedications().put(newMedication.getId(), newMedication);
         });
     }

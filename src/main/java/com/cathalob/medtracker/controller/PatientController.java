@@ -6,7 +6,6 @@ import com.cathalob.medtracker.model.tracking.BloodPressureReading;
 import com.cathalob.medtracker.service.BloodPressureDataService;
 import com.cathalob.medtracker.service.PatientsService;
 import com.cathalob.medtracker.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,19 +14,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
 public class PatientController {
-    @Autowired
-    PatientsService patientsService;
+    private final PatientsService patientsService;
+    private final BloodPressureDataService bloodPressureDataService;
+    private final UserService userService;
 
-    @Autowired
-    BloodPressureDataService bloodPressureDataService;
-    @Autowired
-    UserService userService;
-
+    public PatientController(PatientsService patientsService, BloodPressureDataService bloodPressureDataService, UserService userService) {
+        this.patientsService = patientsService;
+        this.bloodPressureDataService = bloodPressureDataService;
+        this.userService = userService;
+    }
     @GetMapping("/patient/prescriptions")
     public String getPatients(Model model) {
         model.addAttribute("prescriptionsDTO", patientsService.getPrescriptionsDTO());

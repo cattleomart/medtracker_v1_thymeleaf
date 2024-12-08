@@ -4,7 +4,6 @@ import com.cathalob.medtracker.model.UserModel;
 import com.cathalob.medtracker.service.EvaluationDataService;
 import com.cathalob.medtracker.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,15 +18,14 @@ import java.util.List;
 @Slf4j
 public class MainWebController {
 
-@Autowired
-   EvaluationDataService evaluationDataService;
+private final EvaluationDataService evaluationDataService;
+private final UserService userService;
 
-@Autowired
- UserService userService;
-
-    public MainWebController() {
-
+public MainWebController(EvaluationDataService evaluationDataService, UserService userService) {
+        this.evaluationDataService = evaluationDataService;
+        this.userService = userService;
     }
+
     @GetMapping("/")
     public String index() {
         log.info("Index started");
