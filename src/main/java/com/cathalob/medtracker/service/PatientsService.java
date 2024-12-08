@@ -33,9 +33,11 @@ public class PatientsService {
         this.evaluationDataService = evaluationDataService;
     }
 
-    public PrescriptionsDTO getPrescriptionsDTO() {
+    public PrescriptionsDTO getPrescriptionsDTO(UserModel patient) {
         PrescriptionsDTO prescriptionsDTO = new PrescriptionsDTO(new ArrayList<>());
-        prescriptionsService.getPrescriptions().forEach(prescription -> {
+        prescriptionsService.getPrescriptions().stream()
+                .filter(prescription -> prescription.getPatient().getId().equals(patient.getId()))
+                .forEach(prescription -> {
             PrescriptionDTO prescriptionDTO = new PrescriptionDTO();
             prescriptionDTO.setMedication(prescription.getMedication());
             prescriptionDTO.setDoseMg(prescription.getDoseMg());

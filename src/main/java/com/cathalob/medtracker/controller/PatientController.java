@@ -28,8 +28,8 @@ public class PatientController {
         this.userService = userService;
     }
     @GetMapping("/patient/prescriptions")
-    public String getPatients(Model model) {
-        model.addAttribute("prescriptionsDTO", patientsService.getPrescriptionsDTO());
+    public String getPatients(Model model, Authentication authentication) {
+        model.addAttribute("prescriptionsDTO", patientsService.getPrescriptionsDTO(getUserModel(authentication)));
         return "patient/prescriptionsList";
     }
 

@@ -55,6 +55,9 @@ public class UserService {
     public List<UserModel> getUserModels() {
         return userModelRepository.findAll();
     }
+    public List<UserModel> getPatientUserModels() {
+        return userModelRepository.findAll().stream().filter(userModel -> userModel.getRole().equals(USERROLE.USER)).toList();
+    }
 
     public Map<Long, UserModel> getUserModelsById() {
         return getUserModels()

@@ -15,7 +15,7 @@ public class PractitionerController {
 
     @GetMapping("/practitioner/patients")
     public String getPatients(Model model) {
-        model.addAttribute("users", userService.getUserModels());
+        model.addAttribute("users", userService.getPatientUserModels());
         return "practitioner/patientsList";
     }
 
