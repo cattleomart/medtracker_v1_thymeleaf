@@ -1,7 +1,13 @@
 # MedTracker
 ## Description
 
-Web app to track and visualize the effects of medication prescriptions.
+Web app to track and visualize the effects of medication prescriptions.\
+
+Technologies used:
+- Spring Boot
+- DB: H2
+- Front-end: Static pages created using Thymeleaf templating engine
+- File Upload processing: Apache POI XSSF
 
 ## Initial setup
 On startup the project will create a folder in the users home directory H2DBs, H2 database files will be stored here.\
