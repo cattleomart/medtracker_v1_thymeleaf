@@ -1,7 +1,7 @@
 # MedTracker
 ## Description
 
-Web app to track and visualize the effects of medication prescriptions.\
+Web app to track and visualize the effects of medication prescriptions.
 
 Technologies used:
 - Spring Boot
