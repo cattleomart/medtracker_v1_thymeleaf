@@ -60,11 +60,11 @@ Navigating to the "Data Overview" page will display some visualizations of the u
 Navigating to the "Prescriptions" page will display a list of prescriptions for the patient
 
 #### Practitioner
-##### Patients
+###### Patients
 Navigating to the "Patients" page will display a list of all patients in the system
 
 #### Admin
-##### Admin: User Management
+###### Admin: User Management
 Navigating to the "ADMIN: User Management" page will:
 - display a list of all users in the system
 - display a list of all practitioner role requests and their current status
@@ -88,4 +88,11 @@ On startup of the application two sources of initial data may be loaded
 ```
 requirements/objectModel.graphml
 ```
+### Client Testing
+Selenium project file location
+```
+testing/MedTracker.side
+```
 
+### Backend Testing
+- Repository Tests for basic queries

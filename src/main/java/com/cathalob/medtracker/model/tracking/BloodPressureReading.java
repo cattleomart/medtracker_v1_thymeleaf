@@ -4,8 +4,6 @@ import com.cathalob.medtracker.model.enums.DAYSTAGE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +22,6 @@ public class BloodPressureReading {
     @JoinColumn(name = "DAILYEVALUATION_RECORD_DATE", nullable = false)
     @JoinColumn(name = "DAILYEVALUATION_USERMODEL_ID", nullable = false)
     @JsonIgnore
-    @Cascade(CascadeType.MERGE)
     private DailyEvaluation dailyEvaluation;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -34,7 +31,7 @@ public class BloodPressureReading {
     private Integer diastole;
     private Integer heartRate;
 
-    public boolean hasData(){
+    public boolean hasData() {
         return systole != null && diastole != null && heartRate != null;
     }
 }

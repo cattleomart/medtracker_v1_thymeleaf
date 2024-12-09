@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import java.time.LocalDate;
 
 @Entity(name = "DAILYEVALUATION")
@@ -19,7 +17,6 @@ public class DailyEvaluation {
     @Id
     private LocalDate recordDate;
     @Id
-    @Cascade(CascadeType.MERGE)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "USERMODEL_ID", nullable = false)
     @JsonIgnore
