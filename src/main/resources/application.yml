@@ -1,8 +1,8 @@
 server:
-  port: 3100
+  port: 3111
 spring:
   application:
-    name: MedTracker
+    name: MedTracker_v1_thymeleaf
   h2:
     console:
       enabled: true
@@ -16,6 +16,6 @@ spring:
       mode: always
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:file:~/h2DBs/medtracker;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:~/h2DBs/medtracker_thymeleaf;AUTO_SERVER=TRUE
 
 
